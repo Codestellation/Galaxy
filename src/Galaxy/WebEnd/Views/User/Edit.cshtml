@@ -1,0 +1,57 @@
+﻿@using Codestellation.Galaxy.WebEnd
+@using Codestellation.Galaxy.WebEnd.Misc
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.UserModel>
+@{ Layout = "Master";}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Edit User</h3>
+    </div>
+</div>
+
+<div class="row">
+    <form class="form-horizontal" role="form" method="POST">
+        @Html.LabeledTextBox(x => x.Login)
+        @Html.LabeledPasswordBox(x => x.Password)
+        @Html.LabeledPasswordBox(x => x.ConfirmPassword)
+        @Html.LabeledTextBox(x => x.DisplayName)
+        @Html.LabeledCheckBox(x => x.IsAdmin)
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-success" value="Submit" />
+            </div>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function() {
+
+            validateWithBootstrap();
+
+            $('form').validate({
+                rules: {
+                    Login: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 50,
+                        @if (Model.IsNew)
+                        {
+                            @Html.Raw("remote: \"check-login\"")
+                        }
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 50
+                    },
+                    ConfirmPassword: {
+                        required: true,
+                        equalTo: "[name=Password]"
+                    },
+                    DisplayName: {
+                        required: true,
+                        maxlength: 50
+                    }
+                }
+            });
+        });
+    </script>
+</div>

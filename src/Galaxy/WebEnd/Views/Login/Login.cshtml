@@ -1,0 +1,11 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.LoginModel>
+@{ Layout = "Master";}
+<div>
+    <form class="form-signin" role="form" method="POST">
+        <h2 class="form-signin-heading">Log in</h2>
+        <input name="Login" type="text" class="form-control" placeholder="Username" required autofocus>
+        <input name="Password" type="password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Login">Log in</button>
+    </form>
+</div>
+<!-- /container -->
