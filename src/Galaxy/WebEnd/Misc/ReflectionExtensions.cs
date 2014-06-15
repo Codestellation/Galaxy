@@ -17,14 +17,26 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 
         public static DisplayAttribute GetDisplay(this MemberInfo property)
         {
-            var result = property.GetCustomAttributes(typeof(DisplayAttribute), true);
-            if (result.Length != 0)
+            DisplayAttribute result;
+            if (property.TryGetDisplay(out result))
             {
-                return (DisplayAttribute)result[0];
+                return result;
             }
 
             var errorMessage = string.Format("Please mark property {0}.{1} with {2}.", property.DeclaringType, property.Name, typeof(DisplayAttribute));
             throw new InvalidOperationException(errorMessage);
+        }
+
+        public static bool TryGetDisplay(this MemberInfo property, out DisplayAttribute display)
+        {
+            var result = property.GetCustomAttributes(typeof(DisplayAttribute), true);
+            if (result.Length != 0)
+            {
+                display =  (DisplayAttribute)result[0];
+                return true;
+            }
+            display = null;
+            return false;
         }
 
         public static MemberInfo GetMember<TModel, TProperty>(this Expression<Func<TModel, TProperty>> property)

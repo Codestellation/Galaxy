@@ -60,9 +60,26 @@ namespace Codestellation.Galaxy
 
             var collections = container.Resolve<Collections>();
             collections.Start();
-            TemporyCreateUser(collections);
+            
+            CreateDefaultUser(collections);
+
+            FillDashBoard(container, collections);
 
             base.ApplicationStartup(container, pipelines);
+        }
+
+        private void FillDashBoard(TinyIoCContainer container,  Collections collections)
+        {
+            var dashBoard = container.Resolve<DashBoard>();
+
+            using(var query = collections.Feeds.CreateQuery<NugetFeed>())
+            using(var cursor = query.Execute())
+            {
+                foreach (var feed in cursor)
+                {
+                    dashBoard.Add(feed);
+                }
+            }
         }
 
         protected override NancyInternalConfiguration InternalConfiguration
@@ -75,7 +92,7 @@ namespace Codestellation.Galaxy
             x.ViewLocationProvider = typeof(ResourceViewLocationProvider);
         }
 
-        private void TemporyCreateUser(Collections collections)
+        private void CreateDefaultUser(Collections collections)
         {
             var users = collections.Users;
 

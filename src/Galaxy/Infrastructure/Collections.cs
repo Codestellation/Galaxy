@@ -13,8 +13,7 @@ namespace Codestellation.Galaxy.Infrastructure
 
         public Collection Settings { get; private set; }
         public Collection Users { get; private set; }
-        
-        private Collection _connection;
+        public Collection Feeds { get; private set; }
 
         public void Start()
         {
@@ -24,9 +23,9 @@ namespace Codestellation.Galaxy.Infrastructure
             var dbPath = GetDatabasePath();
             
             _database.Open(dbPath, Database.DefaultOpenMode | OpenMode.SyncTransactionToStorage);
-            Settings = _database.CreateCollection("settings", CollectionOptions.None);
-            Users = _database.CreateCollection("users", CollectionOptions.None);
-            _connection = _database.CreateCollection("connection", CollectionOptions.None);
+            Settings = _database.CreateCollection("settings", new CollectionOptions(false, false, 32,32));
+            Users = _database.CreateCollection("users", new CollectionOptions(false, false, 32, 32));
+            Feeds = _database.CreateCollection("feeds", new CollectionOptions(false, false, 32, 32));
         }
 
         public void Dispose()

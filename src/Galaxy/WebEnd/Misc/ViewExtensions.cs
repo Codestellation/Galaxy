@@ -44,18 +44,6 @@ namespace Codestellation.Galaxy.WebEnd.Misc
                         )
                     )
                 );
-/*            
-            const string template = @"
-<div class=""form-group"">
-    <div class=""col-sm-offset-2 col-sm-10"">
-      <div class=""checkbox"">
-        <label>
-          <input name=""{0}"" type=""checkbox""{1} value=""true""> {2}
-        </label>
-      </div>
-    </div>
-</div>";*/
-
             return formGroup;
         }
 
@@ -63,28 +51,36 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         {
             var member = property.GetMember();
             var path = property.ToMemberPath();
-            var display = member.GetDisplay();
+            
+            DisplayAttribute display;
+            string placeholder = string.Empty;
+            string name = member.Name;
+
+            if (member.TryGetDisplay(out display))
+            {
+                placeholder = display.Prompt;
+                name = display.Name;
+            }
 
             TProperty value = Reader.Read(htmlHelper.Model, property);
-
 
             input.Classes(BootstrapClass.FormControl)
                 .Id(path)
                 .Name(path)
                 .Value(value);
-
-            if (!string.IsNullOrWhiteSpace(display.Prompt))
+            
+            if (!string.IsNullOrWhiteSpace(placeholder))
             {
-                input.Placeholder(display.GetPrompt());
+                input.Placeholder(placeholder);
             }
 
-            return BuildFormControl(path, display, input);
+            return BuildFormControl(path, name, input);
         }
 
-        private static IHtmlString BuildFormControl(string path, DisplayAttribute display, Tag input)
+        private static IHtmlString BuildFormControl(string path, string name, Tag input)
         {
             var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
-                Tags.Label().For(path).Classes(BootstrapClass.ColSm2, BootstrapClass.ControlLabel).Content(display.Name),
+                Tags.Label().For(path).Classes(BootstrapClass.ColSm2, BootstrapClass.ControlLabel).Content(name),
                 Tags.Div().Classes(BootstrapClass.ColSm4).Content(input));
 
             return new NonEncodedHtmlString(formGroup.ToHtmlString());

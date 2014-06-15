@@ -81,12 +81,12 @@ namespace Codestellation.Galaxy.WebEnd
             throw new System.NotImplementedException();
         }
 
-        protected virtual object GetDelete(object parameters)
+        protected virtual object GetDelete(dynamic parameters)
         {
             throw new System.NotImplementedException();
         }
 
-        protected virtual object PostDelete(object parameters)
+        protected virtual object PostDelete(dynamic parameters)
         {
             throw new System.NotImplementedException();
         }
