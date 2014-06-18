@@ -1,0 +1,64 @@
+﻿using System;
+using System.IO;
+using System.Xml.Serialization;
+using NLog;
+using Topshelf;
+
+namespace Codestellation.Galaxy.Host
+{
+    class Program
+    {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private static void Main()
+        {
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+            var config = GetSettings();
+            
+            HostFactory.Run(x =>
+                {
+                    x.UseNLog();
+
+                    x.Service<ServiceProxy>(s =>
+                        {
+                            s.ConstructUsing(name => new ServiceProxy(config));
+                            s.WhenStarted(tc => tc.Start());
+                            s.WhenStopped(tc => tc.Stop());
+                        });
+
+                    x.RunAsLocalSystem();
+
+                    x.SetDescription(config.Description);
+
+                    
+                    x.SetServiceName(config.ServiceName);
+                    x.SetDisplayName(config.DisplayName);
+
+                    string instanceName = string.Empty;
+
+                    if (!string.IsNullOrEmpty(instanceName))
+                    {
+                        x.SetInstanceName(instanceName);
+                    }
+                });
+        }
+
+        private static ServiceConfig GetSettings()
+        {
+            var serializer = new XmlSerializer(typeof (ServiceConfig));
+
+            using (var stream = File.OpenRead("service-config.xml"))
+            {
+                return (ServiceConfig) serializer.Deserialize(stream);
+            }
+        }
+
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var exception = e.ExceptionObject as Exception;
+            Log.FatalException("Unhandled exception.", exception);
+            LogManager.Flush(3000);
+        }
+    }
+}
