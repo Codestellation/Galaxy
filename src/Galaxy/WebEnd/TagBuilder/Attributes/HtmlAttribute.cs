@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Codestellation.Galaxy.WebEnd.TagBuilder
+namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
 {
     public abstract class HtmlAttribute
     {
@@ -25,18 +25,9 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
 
         public static readonly HtmlAttribute Checked = new SimpleAttribute<string>("checked", "checked");
 
-        public void WriteTo(TextWriter writer)
-        {
-            writer.Write(Name);
-            writer.Write('=');
-            writer.Write('"');
+        public static readonly HtmlAttribute Selected = new AbsentValueAttribute("selected");
 
-            WriteValue(writer);
-
-            writer.Write('"');
-        }
-
-        protected abstract void WriteValue(TextWriter writer);
+        public abstract void WriteTo(TextWriter writer);
 
         public static HtmlAttribute CreateName<TValue>(TValue value)
         {

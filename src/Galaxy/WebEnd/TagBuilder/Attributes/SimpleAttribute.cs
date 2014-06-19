@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Codestellation.Galaxy.WebEnd.TagBuilder
+namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
 {
-    public class SimpleAttribute<TValue> : HtmlAttribute
+    public class SimpleAttribute<TValue> : PresentValueAttribute
     {
         public readonly TValue Value;
 

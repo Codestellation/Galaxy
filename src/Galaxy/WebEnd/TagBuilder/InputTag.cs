@@ -1,3 +1,5 @@
+using Codestellation.Galaxy.WebEnd.TagBuilder.Attributes;
+
 namespace Codestellation.Galaxy.WebEnd.TagBuilder
 {
     public class InputTag : Tag

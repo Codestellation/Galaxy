@@ -1,4 +1,9 @@
-﻿namespace Codestellation.Galaxy.WebEnd.TagBuilder
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Codestellation.Galaxy.WebEnd.TagBuilder.Attributes;
+
+namespace Codestellation.Galaxy.WebEnd.TagBuilder
 {
     public static class Tags
     {
@@ -22,6 +27,16 @@
             public static CheckboxTag CheckBox()
             {
                 return new CheckboxTag();
+            }
+
+            internal static SelectTag Select()
+            {
+                return new SelectTag();
+            }
+
+            internal static OptionTag Option()
+            {
+                return new OptionTag();
             }
         }
         

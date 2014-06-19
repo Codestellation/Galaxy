@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Codestellation.Galaxy.WebEnd.TagBuilder;
@@ -25,6 +28,20 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         public static IHtmlString LabeledPasswordBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, TModel instance = default(TModel))
         {
             return BuildInput(htmlHelper, property, Tags.Input.Password());
+        }
+
+        public static IHtmlString DropDownList<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, IEnumerable values)
+            where TProperty : IEnumerable
+        {
+            var currentValue = Reader.Read(htmlHelper.Model, property) as string;
+
+            var options = values.Cast<object>().Select(item => 
+                {
+                    bool isSelected = (!string.IsNullOrEmpty(currentValue)) && currentValue.Equals(item);
+                    return Tags.Input.Option().Selected(isSelected).Content(item);
+                }).ToArray();
+
+            return BuildInput(htmlHelper, property, Tags.Input.Select().Content(options));
         }
 
         public static IHtmlString LabeledCheckBox<TModel>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, bool>> property)

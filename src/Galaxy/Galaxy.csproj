@@ -66,6 +66,8 @@
     <EmbeddedResource Include="WebEnd\Views\User\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Feed\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Feed\Edit.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Service\Edit.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Service\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -124,6 +126,8 @@
   <ItemGroup>
     <Compile Include="Domain\DashBoard.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
+    <Compile Include="Domain\ServiceApp.cs" />
+    <Compile Include="Domain\ServiceAppList.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
@@ -137,13 +141,19 @@
     <Compile Include="WebEnd\Misc\EmbeddedFileContentResponse.cs" />
     <Compile Include="WebEnd\Misc\EmbeddedResource.cs" />
     <Compile Include="WebEnd\FeedModule.cs" />
+    <Compile Include="WebEnd\Models\ServiceAppModel.cs" />
+    <Compile Include="WebEnd\ServiceModule.cs" />
+    <Compile Include="WebEnd\TagBuilder\Attributes\PresentValueAttribute.cs" />
+    <Compile Include="WebEnd\TagBuilder\Attributes\AbsentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\BootstrapClass.cs" />
     <Compile Include="WebEnd\TagBuilder\CheckboxTag.cs" />
-    <Compile Include="WebEnd\TagBuilder\ClassAttribute.cs" />
-    <Compile Include="WebEnd\TagBuilder\HtmlAttribute.cs" />
+    <Compile Include="WebEnd\TagBuilder\Attributes\ClassAttribute.cs" />
+    <Compile Include="WebEnd\TagBuilder\Attributes\HtmlAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\InputTag.cs" />
+    <Compile Include="WebEnd\TagBuilder\OptionTag.cs" />
     <Compile Include="WebEnd\TagBuilder\Reader.cs" />
-    <Compile Include="WebEnd\TagBuilder\SimpleAttribute.cs" />
+    <Compile Include="WebEnd\TagBuilder\SelectTag.cs" />
+    <Compile Include="WebEnd\TagBuilder\Attributes\SimpleAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\Tag.cs" />
     <Compile Include="WebEnd\TagBuilder\Tags.cs" />
     <Compile Include="WebEnd\Misc\ForbiddenErrorHandler.cs" />

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Codestellation.Galaxy.WebEnd.TagBuilder
+namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
 {
-    public class ClassAttribute : HtmlAttribute
+    public class ClassAttribute : PresentValueAttribute
     {
         public readonly ISet<string> Values;
 
