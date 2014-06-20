@@ -27,19 +27,20 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetList(dynamic parameters)
         {
-            //TODO: Using dashboard this way is not thread safe. Create a read-only model later
-            return View["list", _dashBoard];
+            return View["list", new FeedListModel(_dashBoard)];
         }
 
         protected override object GetCreate(dynamic parameters)
         {
-            return View["Edit", new NugetFeed()];
+            return View["Edit", new FeedModel()];
         }
 
         protected override object PostCreate(dynamic parameters)
         {
-            NugetFeed feed = this.Bind();
+            FeedModel model = this.Bind();
+            var feed = model.ToFeed();
             _feeds.Save(feed, false);
+            
             _dashBoard.Add(feed);
 
             return new RedirectResponse("/feed");
@@ -48,16 +49,18 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var feed = _dashBoard[id];
-            return View["Edit", feed];
+            var model = new FeedModel(_dashBoard[id]);
+            return View["Edit", model];
         }
 
         protected override object PostEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            NugetFeed updatedFeed = this.Bind();
+            FeedModel model = this.Bind();
 
             var currentFeed = _dashBoard[id];
+            var updatedFeed = model.ToFeed();
+
             currentFeed.Merge(updatedFeed);
 
             _feeds.Save(currentFeed, false);
