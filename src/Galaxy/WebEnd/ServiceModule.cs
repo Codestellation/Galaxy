@@ -12,15 +12,15 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class ServiceModule : CrudModule
     {
+        private readonly DashBoard _dashBoard;
         private readonly Collection _serviceApps;
-        private readonly Collection _feeds;
         public const string Path = "service";
 
-        public ServiceModule(Collections collections)
+        public ServiceModule(Collections collections, DashBoard dashBoard)
             : base(Path)
         {
+            _dashBoard = dashBoard;
             _serviceApps = collections.ServiceApps;
-            _feeds = collections.Feeds;
         }
 
         protected override CrudOperations SupportedOperations
@@ -73,7 +73,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             using (var tx = _serviceApps.BeginTransaction())
             {
-                _serviceApps.Save<ServiceApp>(serviceApp, false);
+                _serviceApps.Save(serviceApp, false);
                 tx.Commit();
             }
 
@@ -91,9 +91,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
-            var avaliableFeeds = _feeds.PerformQuery<NugetFeed>();
-
-            var allFeeds = avaliableFeeds
+            var allFeeds = _dashBoard.Feeds
                 .Select(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name))
                 .ToArray();
             return allFeeds;

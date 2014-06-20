@@ -77,7 +77,7 @@ namespace Codestellation.Galaxy
             {
                 foreach (var feed in cursor)
                 {
-                    dashBoard.Add(feed);
+                    dashBoard.AddFeed(feed);
                 }
             }
         }

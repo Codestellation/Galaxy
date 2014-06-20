@@ -41,7 +41,7 @@ namespace Codestellation.Galaxy.WebEnd
             var feed = model.ToFeed();
             _feeds.Save(feed, false);
             
-            _dashBoard.Add(feed);
+            _dashBoard.AddFeed(feed);
 
             return new RedirectResponse("/feed");
         }
@@ -49,7 +49,8 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var model = new FeedModel(_dashBoard[id]);
+            var feed = _dashBoard.GetFeed(id);
+            var model = new FeedModel(feed);
             return View["Edit", model];
         }
 
@@ -58,7 +59,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             FeedModel model = this.Bind();
 
-            var currentFeed = _dashBoard[id];
+            var currentFeed = _dashBoard.GetFeed(id);
             var updatedFeed = model.ToFeed();
 
             currentFeed.Merge(updatedFeed);
@@ -72,7 +73,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            _dashBoard.Remove(id);
+            _dashBoard.RemoveFeed(id);
             _feeds.Delete(id);
 
             return new RedirectResponse("/feed");

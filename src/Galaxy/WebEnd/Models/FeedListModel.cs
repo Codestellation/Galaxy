@@ -8,7 +8,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public FeedListModel(DashBoard dashBoard)
         {
-            _feeds = new FeedModel[dashBoard.FeedCount];
+            _feeds = new FeedModel[dashBoard.Feeds.Count];
             int index = 0;
             foreach (var feed in dashBoard.Feeds)
             {
@@ -26,7 +26,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public int FeedCount
         {
             get { return _feeds.Length; }
-
         }
     }
 }

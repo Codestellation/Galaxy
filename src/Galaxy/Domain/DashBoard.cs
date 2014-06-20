@@ -12,29 +12,24 @@ namespace Codestellation.Galaxy.Domain
             _feeds = new Dictionary<ObjectId, NugetFeed>();
         }
 
-        public IEnumerable<NugetFeed> Feeds
+        public IReadOnlyCollection<NugetFeed> Feeds
         {
-            get { return _feeds.Values; }
+            get { return new List<NugetFeed>(_feeds.Values); }
         }
 
-        public int FeedCount
-        {
-            get { return _feeds.Count; }
-        }
-
-        public void Add(NugetFeed feed)
+        public void AddFeed(NugetFeed feed)
         {
             _feeds.Add(feed.Id, feed);
         }
 
-        public NugetFeed this[ObjectId id]
-        {
-            get { return _feeds[id]; }
-        }
-
-        public void Remove(ObjectId id)
+        public void RemoveFeed(ObjectId id)
         {
             _feeds.Remove(id);
+        }
+
+        public NugetFeed GetFeed(ObjectId id)
+        {
+            return _feeds[id];
         }
     }
 }
