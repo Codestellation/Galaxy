@@ -1,5 +1,7 @@
 ﻿@using Codestellation.Galaxy.WebEnd
 @using Codestellation.Galaxy.WebEnd.Misc
+@using Codestellation.Galaxy.WebEnd.Models
+
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.ServiceAppModel>
 @{ Layout = "Master";}
 <div class="row">
@@ -13,7 +15,7 @@
         @Html.LabeledTextBox(x => x.DisplayName)
         @Html.LabeledTextBox(x => x.ServiceName)
         @Html.LabeledTextBox(x => x.Description)
-        @Html.DropDownList(x => x.FeedName, Model.AvaliableFeeds)
+        @Html.DropDownList(x => x.FeedId, Model.AllFeeds)
         @Html.LabeledTextBox(x => x.PackageName)
         @Html.LabeledTextBox(x => x.AssemblyQualifiedType)
         <div class="form-group">

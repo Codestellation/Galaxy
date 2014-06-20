@@ -7,7 +7,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
 {
     public class ServiceAppModel
     {
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         public bool IsNew { get; set; }
         [Display(Name = "Service name", Prompt = "Service name")]
         public string ServiceName { get; set; }
@@ -15,39 +15,43 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string DisplayName { get; set; }
         public string Description { get; set; }
         [Display(Name = "Feed name", Prompt = "Feed name")]
-        public string FeedName { get; set; }
+        public ObjectId FeedId { get; set; }
         [Display(Name = "Assembly-qualified type name", Prompt = "Assembly-qualified type name")]
         public string AssemblyQualifiedType { get; set; }
         [Display(Name = "Package name", Prompt = "Package name")]
         public string PackageName { get; set; }
 
-        readonly IEnumerable<string> _avaliableFeeds;
-        public IEnumerable<string> AvaliableFeeds { get { return _avaliableFeeds; } }
+        readonly IEnumerable<KeyValuePair<ObjectId, string>> _allFeeds;
+
+        public IEnumerable<KeyValuePair<ObjectId, string>> AllFeeds
+        {
+            get { return _allFeeds; }
+        }
 
         public ServiceAppModel()
         {
             IsNew = true;
-            Id = new ObjectId().ToString();
+            Id = new ObjectId();
         }
 
-        public ServiceAppModel(IEnumerable<string> avaliableFeeds)
+        public ServiceAppModel(IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
             IsNew = true;
-            Id = new ObjectId().ToString();
-            _avaliableFeeds = avaliableFeeds;
+            Id = new ObjectId();
+            _allFeeds = allFeeds;
         }
 
-        public ServiceAppModel(ServiceApp serviceApp, IEnumerable<string> avaliableFeeds)
+        public ServiceAppModel(ServiceApp serviceApp, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
-            Id = serviceApp.Id.ToString();
+            Id = serviceApp.Id;
 
             DisplayName = serviceApp.DisplayName;
             ServiceName = serviceApp.ServiceName;
             AssemblyQualifiedType = serviceApp.AssemblyQualifiedType;
             Description = serviceApp.Description;
-            FeedName = serviceApp.FeedName;
+            FeedId = serviceApp.FeedId;
             PackageName = serviceApp.PackageName;
-            _avaliableFeeds = avaliableFeeds;
+            _allFeeds = allFeeds;
 
             IsNew = false;
         }
@@ -59,14 +63,14 @@ namespace Codestellation.Galaxy.WebEnd.Models
             serviceApp.AssemblyQualifiedType = AssemblyQualifiedType;
             serviceApp.PackageName = PackageName;
             serviceApp.Description = Description;
-            serviceApp.FeedName = FeedName;
+            serviceApp.FeedId = FeedId;
         }
 
         public ServiceApp ToServiceApp()
         {
             var serviceApp = new ServiceApp
             {
-                Id = new ObjectId(Id)
+                Id = Id
             };
 
             Update(serviceApp);

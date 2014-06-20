@@ -31,8 +31,10 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return BuildInput(htmlHelper, property, Tags.Input.Password());
         }
 
-        public static IHtmlString DropDownList<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, IEnumerable<TProperty> values)
-            where TProperty : IEnumerable
+        public static IHtmlString DropDownList<TModel, TProperty, TDisplayValue>(
+            this HtmlHelpers<TModel> htmlHelper, 
+            Expression<Func<TModel, TProperty>> property, 
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
             var currentValue = Reader.Read(htmlHelper.Model, property);
 
@@ -41,15 +43,15 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             //TODO: Use id of feed instead of values
             var options = values.Select(item =>
                 {
-                    bool isSelected = item.Equals(currentValue);
+                    bool isSelected = item.Key.Equals(currentValue);
                     if (isSelected) hasSelected = true;
-                    return Tags.Input.Option().Selected(isSelected).Content(item);
+                    return Tags.Input.Option().Selected(isSelected).Content(item.Value).Value(item.Key);
                 });
 
             if (!hasSelected)
             {
                 //TODO: Instead of hardcoded string use placeholder from display attribute
-                var placeholderOption = Tags.Input.Option().Disabled().Selected(true).Value("disabled").Content(HttpUtility.HtmlEncode("<Select..>"));
+                var placeholderOption = Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode("<Select..>"));
                 options = new[] { placeholderOption }.Union(options);
             }
 

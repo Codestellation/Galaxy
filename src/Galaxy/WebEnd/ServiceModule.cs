@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Nejdb;
@@ -39,9 +36,9 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetCreate(dynamic parameters)
         {
-            var avaliableFeeds = _feeds.PerformQuery<NugetFeed>();
+            var allFeeds = GetAvailableFeeds();
 
-            return View["edit", new ServiceAppModel(avaliableFeeds.Select(feed => feed.Name))];
+            return View["edit", new ServiceAppModel(allFeeds)];
         }
 
         protected override object PostCreate(dynamic parameters)
@@ -53,7 +50,7 @@ namespace Codestellation.Galaxy.WebEnd
             {
                 _serviceApps.Save<ServiceApp>(serviceApp, false);
                 tx.Commit();
-            }            
+            }
 
             return new RedirectResponse("/service");
         }
@@ -62,9 +59,8 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var item = _serviceApps.Load<ServiceApp>(id);
-            var avaliableFeeds = _feeds.PerformQuery<NugetFeed>();
 
-            return View["Edit", new ServiceAppModel(item, avaliableFeeds.Select(feed => feed.Name))];
+            return View["Edit", new ServiceAppModel(item, GetAvailableFeeds())];
         }
 
         protected override object PostEdit(dynamic parameters)
@@ -91,6 +87,16 @@ namespace Codestellation.Galaxy.WebEnd
             _serviceApps.Delete(id);
 
             return new RedirectResponse("/service");
+        }
+
+        private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
+        {
+            var avaliableFeeds = _feeds.PerformQuery<NugetFeed>();
+
+            var allFeeds = avaliableFeeds
+                .Select(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name))
+                .ToArray();
+            return allFeeds;
         }
     }
 }
