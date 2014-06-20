@@ -27,6 +27,8 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
 
         public static readonly HtmlAttribute Selected = new AbsentValueAttribute("selected");
 
+        public static readonly HtmlAttribute Disabled = new AbsentValueAttribute("disabled");
+
         public abstract void WriteTo(TextWriter writer);
 
         public static HtmlAttribute CreateName<TValue>(TValue value)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Codestellation.Galaxy.WebEnd.TagBuilder.Attributes;
 
 namespace Codestellation.Galaxy.WebEnd.TagBuilder
@@ -30,6 +26,12 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
             }
 
             base.WriteAttributes(writer);
+        }
+
+        public OptionTag Disabled()
+        {
+            SetAttribute(HtmlAttribute.Disabled);
+            return this;
         }
     }
 }

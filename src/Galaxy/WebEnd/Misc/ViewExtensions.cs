@@ -5,6 +5,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Codestellation.Galaxy.WebEnd.TagBuilder;
+using Nancy.Helpers;
 using Nancy.ViewEngines.Razor;
 
 namespace Codestellation.Galaxy.WebEnd.Misc
@@ -25,23 +26,34 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return BuildInput(htmlHelper, property, input);
         }
 
-        public static IHtmlString LabeledPasswordBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, TModel instance = default(TModel))
+        public static IHtmlString LabeledPasswordBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
             return BuildInput(htmlHelper, property, Tags.Input.Password());
         }
 
-        public static IHtmlString DropDownList<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, IEnumerable values)
+        public static IHtmlString DropDownList<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, IEnumerable<TProperty> values)
             where TProperty : IEnumerable
         {
-            var currentValue = Reader.Read(htmlHelper.Model, property) as string;
+            var currentValue = Reader.Read(htmlHelper.Model, property);
 
-            var options = values.Cast<object>().Select(item => 
+            var hasSelected = false;
+
+            //TODO: Use id of feed instead of values
+            var options = values.Select(item =>
                 {
-                    bool isSelected = (!string.IsNullOrEmpty(currentValue)) && currentValue.Equals(item);
+                    bool isSelected = item.Equals(currentValue);
+                    if (isSelected) hasSelected = true;
                     return Tags.Input.Option().Selected(isSelected).Content(item);
-                }).ToArray();
+                });
 
-            return BuildInput(htmlHelper, property, Tags.Input.Select().Content(options));
+            if (!hasSelected)
+            {
+                //TODO: Instead of hardcoded string use placeholder from display attribute
+                var placeholderOption = Tags.Input.Option().Disabled().Selected(true).Value("disabled").Content(HttpUtility.HtmlEncode("<Select..>"));
+                options = new[] { placeholderOption }.Union(options);
+            }
+
+            return BuildInput(htmlHelper, property, Tags.Input.Select().Content(options.ToArray()));
         }
 
         public static IHtmlString LabeledCheckBox<TModel>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, bool>> property)
@@ -68,7 +80,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         {
             var member = property.GetMember();
             var path = property.ToMemberPath();
-            
+
             DisplayAttribute display;
             string placeholder = string.Empty;
             string name = member.Name;
@@ -85,7 +97,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
                 .Id(path)
                 .Name(path)
                 .Value(value);
-            
+
             if (!string.IsNullOrWhiteSpace(placeholder))
             {
                 input.Placeholder(placeholder);

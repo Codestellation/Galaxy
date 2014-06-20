@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
 {
     /// <summary>
-    /// parent class for attributes with value part
-    /// someattribute = "value"
+    ///     Parent class for attributes with value part
+    ///     someattribute = "value"
     /// </summary>
-    public abstract class PresentValueAttribute: HtmlAttribute
+    public abstract class PresentValueAttribute : HtmlAttribute
     {
-        public PresentValueAttribute(string name):
+        public PresentValueAttribute(string name) :
             base(name)
         {
-
         }
 
         public override void WriteTo(TextWriter writer)

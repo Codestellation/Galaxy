@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.IO;
 
 namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
 {
@@ -14,8 +9,7 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
     /// </summary>
     public class AbsentValueAttribute: HtmlAttribute
     {
-        public AbsentValueAttribute(string name):
-            base(name)
+        public AbsentValueAttribute(string name):base(name)
         {
 
         }
@@ -24,6 +18,5 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder.Attributes
         {
             writer.Write(Name);
         }
-
     }
 }

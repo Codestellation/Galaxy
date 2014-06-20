@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Nejdb.Bson;
 using Codestellation.Galaxy.Domain;
@@ -45,12 +41,12 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             Id = serviceApp.Id.ToString();
 
-            this.DisplayName = serviceApp.DisplayName;
-            this.ServiceName = serviceApp.ServiceName;
-            this.AssemblyQualifiedType = serviceApp.AssemblyQualifiedType;
-            this.Description = serviceApp.Description;
-            this.FeedName = serviceApp.FeedName;
-            this.PackageName = serviceApp.PackageName;
+            DisplayName = serviceApp.DisplayName;
+            ServiceName = serviceApp.ServiceName;
+            AssemblyQualifiedType = serviceApp.AssemblyQualifiedType;
+            Description = serviceApp.Description;
+            FeedName = serviceApp.FeedName;
+            PackageName = serviceApp.PackageName;
             _avaliableFeeds = avaliableFeeds;
 
             IsNew = false;
