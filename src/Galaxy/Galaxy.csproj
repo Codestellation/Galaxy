@@ -90,9 +90,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.Viewengines.Razor.0.23.0\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Nejdb, Version=0.2.26.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Nejdb, Version=0.2.31.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nejdb.Unofficial.0.2.26\lib\net45\Nejdb.dll</HintPath>
+      <HintPath>..\packages\Nejdb.Unofficial.0.2.31\lib\net45\Nejdb.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
