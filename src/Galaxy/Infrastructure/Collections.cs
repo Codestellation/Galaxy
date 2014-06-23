@@ -51,12 +51,11 @@ namespace Codestellation.Galaxy.Infrastructure
 
         private string GetDatabasePath()
         {
-            const string databaseFolder = "database";
-
             const string databaseName = "galaxy.db";
-            var domainFolder = AppDomain.CurrentDomain.BaseDirectory;
 
-            var dbPath = Path.Combine(domainFolder, databaseFolder, databaseName);
+            var domainFolder = AppDomain.CurrentDomain.BaseDirectory;
+            var databaseFolder = Path.Combine(domainFolder, "database");
+            var dbPath = Path.Combine(databaseFolder, databaseName);
 
             Logger.Debug("Path to database: {0}", dbPath);
             
