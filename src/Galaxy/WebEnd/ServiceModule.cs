@@ -9,7 +9,6 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
-using Nejdb.Queries;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -56,7 +55,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             using (var tx = _serviceApps.BeginTransaction())
             {
-                _serviceApps.Save<ServiceApp>(serviceApp, false);
+                _serviceApps.Save(serviceApp, false);
                 tx.Commit();
             }
 
@@ -118,8 +117,6 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var serviceApp = _serviceApps.Load<ServiceApp>(id);
           
-            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
-
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
             if(targetFeed != null)
@@ -130,12 +127,12 @@ namespace Codestellation.Galaxy.WebEnd
 
                 ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
                 srvCtrl.AddInstall(
-                    new ServiceApp()
+                    new ServiceApp
                     {
                         DisplayName = serviceApp.DisplayName,
                         PackageName = hostPackageName
                     },
-                    new NugetFeed()
+                    new NugetFeed
                     {
                         Name = hostPackageName,
                         Uri = hostPackageFeedUri
@@ -153,8 +150,6 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var serviceApp = _serviceApps.Load<ServiceApp>(id);
           
-            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
-
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
             if (targetFeed != null)
@@ -172,8 +167,6 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var serviceApp = _serviceApps.Load<ServiceApp>(id);
-
-            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
 
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
@@ -194,8 +187,6 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var serviceApp = _serviceApps.Load<ServiceApp>(id);
-
-            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
 
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
@@ -219,7 +210,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             using (var tx = _serviceApps.BeginTransaction())
             {
-                _serviceApps.Save<ServiceApp>(serviceApp, false);
+                _serviceApps.Save(serviceApp, false);
                 tx.Commit();
             }
         }
