@@ -37,7 +37,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetList(dynamic parameters)
         {
-            var queryResults = _serviceApps.PerformQuery<ServiceApp>();
+            var queryResults = _dashBoard.Deployments;
             return View["list", queryResults];
         }
 
@@ -59,13 +59,15 @@ namespace Codestellation.Galaxy.WebEnd
                 tx.Commit();
             }
 
+            _dashBoard.AddDeployment(serviceApp);
+
             return new RedirectResponse("/service");
         }
 
         protected override object GetEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var item = _serviceApps.Load<ServiceApp>(id);
+            var item = _dashBoard.GetDeployment(id);
 
             return View["Edit", new ServiceAppModel(item, GetAvailableFeeds())];
         }
@@ -74,7 +76,8 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var updatedItem = this.Bind<ServiceAppModel>();
-            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+
+            var serviceApp = _dashBoard.GetDeployment(id);
 
             updatedItem.Update(serviceApp);
 
@@ -92,6 +95,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
 
             _serviceApps.Delete(id);
+            _dashBoard.RemoveDeployment(id);
 
             return new RedirectResponse("/service");
         }
@@ -99,7 +103,7 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetDetails(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var item = _serviceApps.Load<ServiceApp>(id);
+            var item = _dashBoard.GetDeployment(id);
 
             return View["details", new ServiceAppModel(item, null)];
         }
@@ -115,7 +119,7 @@ namespace Codestellation.Galaxy.WebEnd
         private object PostInstall(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+            var serviceApp = _dashBoard.GetDeployment(id);
           
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
@@ -148,7 +152,7 @@ namespace Codestellation.Galaxy.WebEnd
         private object PostStart(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+            var serviceApp = _dashBoard.GetDeployment(id);
           
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
@@ -166,7 +170,7 @@ namespace Codestellation.Galaxy.WebEnd
         private object PostStop(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+            var serviceApp = _dashBoard.GetDeployment(id);
 
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
@@ -186,7 +190,7 @@ namespace Codestellation.Galaxy.WebEnd
         private object PostUninstall(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+            var serviceApp = _dashBoard.GetDeployment(id);
 
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
@@ -205,7 +209,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         void nugetMan_OnOperationCompleted(object sender, ServiceManager.EventParams.OperationCompletedEventArgs e)
         {
-            var serviceApp = _serviceApps.Load<ServiceApp>(e.ServiceApp.Id);
+            var serviceApp = _dashBoard.GetDeployment(e.ServiceApp.Id);
             serviceApp.Status = e.Result.ToString();
 
             using (var tx = _serviceApps.BeginTransaction())

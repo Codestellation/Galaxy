@@ -1,4 +1,5 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.Domain.ServiceApp[]>
+﻿@using System.Collections.Generic;
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<IReadOnlyCollection<Codestellation.Galaxy.Domain.ServiceApp>>
 @{ Layout = "Master";}
 <div class="row">
     <div class="panel panel-default">
@@ -7,7 +8,7 @@
         </div>
         <ul class="list-group">
             
-            @if (Model.Length == 0)
+            @if (Model.Count == 0)
             {
                 <li class="list-group-item">Add service</li>
             }

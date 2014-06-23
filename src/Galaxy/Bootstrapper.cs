@@ -80,6 +80,16 @@ namespace Codestellation.Galaxy
                     dashBoard.AddFeed(feed);
                 }
             }
+            
+            using (var query = collections.ServiceApps.CreateQuery<ServiceApp>())
+            using (var cursor = query.Execute())
+            {
+                foreach (var serviceApp in cursor)
+                {
+                    dashBoard.AddDeployment(serviceApp);
+                }
+            }
+
         }
 
         protected override NancyInternalConfiguration InternalConfiguration
