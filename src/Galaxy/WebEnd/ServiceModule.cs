@@ -37,8 +37,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetList(dynamic parameters)
         {
-            var queryResults = _dashBoard.Deployments;
-            return View["list", queryResults];
+            return View["list", new DeploymentListModel(_dashBoard)];
         }
 
         protected override object GetCreate(dynamic parameters)

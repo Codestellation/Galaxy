@@ -1,24 +1,23 @@
-﻿using Nejdb;
-using Nejdb.Queries;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
     public static class CollectionExtensions
     {
-        public static TItem[] PerformQuery<TItem>(this Collection self, QueryBuilder queryBuilder = null)
+        public static TOutput[] ConvertToArray<TInput, TOutput>(this IReadOnlyCollection<TInput> self, Func<TInput, TOutput> converter)
         {
-            using (var query = queryBuilder == null ? self.CreateQuery<TItem>() : self.CreateQuery<TItem>(queryBuilder))
+            var outputs = new TOutput[self.Count];
 
-            using (var cursor = query.Execute())
+            int index = 0;
+            foreach (TInput input in self)
             {
-                var resultsAsArray = new TItem[cursor.Count];
-                for (int resultIndex = 0; resultIndex < cursor.Count; resultIndex++)
-                {
-                    resultsAsArray[resultIndex] = cursor[resultIndex];
-                }
-                return resultsAsArray;
+                TOutput model = converter(input);
+                outputs[index] = model;
+                index++;
             }
 
+            return outputs;
         }
     }
 }

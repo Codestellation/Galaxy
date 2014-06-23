@@ -132,8 +132,9 @@
     <Compile Include="Domain\ServiceApp.cs" />
     <Compile Include="Domain\ServiceAppList.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
+    <Compile Include="Infrastructure\UserIdentity.cs" />
+    <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Collections.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
     <Compile Include="WebEnd\Misc\ObjectIdTypeConverter.cs" />
+    <Compile Include="WebEnd\Models\DeploymentListModel.cs" />
     <Compile Include="WebEnd\Models\FeedListModel.cs" />
     <Compile Include="WebEnd\Misc\EmbeddedFileContentResponse.cs" />
     <Compile Include="WebEnd\Misc\EmbeddedResource.cs" />

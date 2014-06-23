@@ -1,5 +1,6 @@
 ﻿@using System.Collections.Generic;
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<IReadOnlyCollection<Codestellation.Galaxy.Domain.ServiceApp>>
+@using System.Linq
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentListModel>
 @{ Layout = "Master";}
 <div class="row">
     <div class="panel panel-default">
@@ -12,46 +13,48 @@
             {
                 <li class="list-group-item">Add service</li>
             }
-
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Display name</th>
-                        <th>Service name</th>
-                        <th>Assembly-qualified type name</th>
-                        <th>Feed name</th>
-                        <th>Package name</th>
-                        <th>Status</th>
-                        <th>Description</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody data-link="row" class="rowlink">
-                    @foreach (var serviceApp in Model)
-                    {
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <td>
-                                <form action="/service/edit/@serviceApp.Id" method="GET">
-                                    <input type="submit" class="btn btn-primary btn-xs" value="Edit" />
-                                </form>
-                            </td>
-                            <td><a href="/service/details/@serviceApp.Id">@serviceApp.DisplayName</a></td>
-                            <td>@serviceApp.ServiceName</td>
-                            <td>@serviceApp.AssemblyQualifiedType</td>
-                            <td>@serviceApp.FeedName</td>
-                            <td>@serviceApp.PackageName</td>
-                            <td>@serviceApp.Status</td>
-                            <td>@serviceApp.Description</td>
-                            <td>
-                                <form action="/service/delete/@serviceApp.Id" method="POST">
-                                    <input type="submit" class="btn btn-danger btn-xs" value="Delete" />
-                                </form>
-                            </td>
+                            <th></th>
+                            <th>Display name</th>
+                            <th>Service name</th>
+                            <th>Assembly-qualified type name</th>
+                            <th>Feed name</th>
+                            <th>Package name</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody data-link="row" class="rowlink">
+                        @foreach (var serviceApp in Model.Deployments)
+                        {
+                            <tr>
+                                <td>
+                                    <form action="/service/edit/@serviceApp.Id" method="GET">
+                                        <input type="submit" class="btn btn-primary btn-xs" value="Edit" />
+                                    </form>
+                                </td>
+                                <td><a href="/service/details/@serviceApp.Id">@serviceApp.DisplayName</a></td>
+                                <td>@serviceApp.ServiceName</td>
+                                <td>@serviceApp.AssemblyQualifiedType</td>
+                                <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == serviceApp.FeedId).Value</td>
+                                <td>@serviceApp.PackageName</td>
+                                <td>@serviceApp.Status</td>
+                                <td>@serviceApp.Description</td>
+                                <td>
+                                    <form action="/service/delete/@serviceApp.Id" method="POST">
+                                        <input type="submit" class="btn btn-danger btn-xs" value="Delete" />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </ul>
         <div class="panel-footer">
             <a class="btn btn-success" href="/service/create">New</a>

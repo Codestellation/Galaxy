@@ -1,4 +1,5 @@
 ﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
 
 namespace Codestellation.Galaxy.WebEnd.Models
 {
@@ -8,14 +9,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public FeedListModel(DashBoard dashBoard)
         {
-            _feeds = new FeedModel[dashBoard.Feeds.Count];
-            int index = 0;
-            foreach (var feed in dashBoard.Feeds)
-            {
-                var model = new FeedModel(feed);
-                _feeds[index] = model;
-                index++;
-            }
+            _feeds = dashBoard.Feeds.ConvertToArray(x => new FeedModel(x));
         }
 
         public FeedModel[] Feeds
