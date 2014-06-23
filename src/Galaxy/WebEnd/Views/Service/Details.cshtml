@@ -1,0 +1,36 @@
+﻿@using Codestellation.Galaxy.WebEnd
+@using Codestellation.Galaxy.WebEnd.Misc
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.ServiceAppModel>
+@{ Layout = "Master";}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Details</h3>
+    </div>
+</div>
+
+<div class="row">
+    @if (!string.IsNullOrEmpty(@Model.Status))
+    {
+        <p>Status = @Model.Status</p>
+    }
+    <p>
+        <form action="/service/install/@Model.Id" method="POST">
+            <input type="submit" class="btn btn-danger btn-xs" value="Install" />
+        </form>
+    </p>
+    <p>
+        <form action="/service/start/@Model.Id" method="POST">
+            <input type="submit" class="btn btn-danger btn-xs" value="Start" />
+        </form>
+    </p>
+    <p>
+        <form action="/service/stop/@Model.Id" method="POST">
+            <input type="submit" class="btn btn-danger btn-xs" value="Stop" />
+        </form>
+    </p>
+    <p>
+        <form action="/service/uninstall/@Model.Id" method="POST">
+            <input type="submit" class="btn btn-danger btn-xs" value="Uninstall" />
+        </form>
+    </p>
+</div>

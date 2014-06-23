@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Infrastructure;
+﻿using System.Linq;
+using System.Configuration;
+using System.Collections.Generic;
 using Nejdb;
 using Nejdb.Bson;
 using Nancy.Responses;
 using Nancy.ModelBinding;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.WebEnd.Models;
+using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Galaxy.ServiceManager;
+using Nejdb.Queries;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -21,11 +24,16 @@ namespace Codestellation.Galaxy.WebEnd
         {
             _dashBoard = dashBoard;
             _serviceApps = collections.ServiceApps;
+
+            Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
+            Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
+            Post["/stop/{id}", true] = (parameters, token) => ProcessRequest(() => PostStop(parameters), token);
+            Post["/uninstall/{id}", true] = (parameters, token) => ProcessRequest(() => PostUninstall(parameters), token);
         }
 
         protected override CrudOperations SupportedOperations
         {
-            get { return CrudOperations.GetList | CrudOperations.GetCreate | CrudOperations.PostCreate | CrudOperations.GetEdit | CrudOperations.PostEdit | CrudOperations.PostDelete; }
+            get { return CrudOperations.GetList | CrudOperations.GetCreate | CrudOperations.PostCreate | CrudOperations.GetEdit | CrudOperations.PostEdit | CrudOperations.PostDelete | CrudOperations.GetDetails; }
         }
 
         protected override object GetList(dynamic parameters)
@@ -89,12 +97,131 @@ namespace Codestellation.Galaxy.WebEnd
             return new RedirectResponse("/service");
         }
 
+        protected override object GetDetails(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var item = _serviceApps.Load<ServiceApp>(id);
+
+            return View["details", new ServiceAppModel(item, null)];
+        }
+		
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
             var allFeeds = _dashBoard.Feeds
                 .Select(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name))
                 .ToArray();
             return allFeeds;
+        }		
+
+        private object PostInstall(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+          
+            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
+
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
+
+            if(targetFeed != null)
+            {
+                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
+                string hostPackageFeedUri = ConfigurationManager.AppSettings["hostPackageFeedUri"];
+                string hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
+
+                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
+                srvCtrl.AddInstall(
+                    new ServiceApp()
+                    {
+                        DisplayName = serviceApp.DisplayName,
+                        PackageName = hostPackageName
+                    },
+                    new NugetFeed()
+                    {
+                        Name = hostPackageName,
+                        Uri = hostPackageFeedUri
+                    });
+
+                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
+                srvCtrl.Operate();
+            }
+
+            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));
+        }
+
+        private object PostStart(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+          
+            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
+
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
+
+            if (targetFeed != null)
+            {
+                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
+                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
+                srvCtrl.AddStart();
+                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
+                srvCtrl.Operate();
+            }
+
+            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));
+        }
+        private object PostStop(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+
+            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
+
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
+
+            if (targetFeed != null)
+            {
+                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
+                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
+
+                srvCtrl.AddStop();
+                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
+                srvCtrl.Operate();
+            }
+
+            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));
+        }
+        
+        private object PostUninstall(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var serviceApp = _serviceApps.Load<ServiceApp>(id);
+
+            QueryBuilder qb = new QueryBuilder(Criterions.Field("Name", Criterions.Equals(serviceApp.FeedName)));
+
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
+
+            if (targetFeed != null)
+            {
+                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
+                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
+
+                srvCtrl.AddUninstall();
+                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
+                srvCtrl.Operate();
+            }
+
+            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));            
+        }
+
+        void nugetMan_OnOperationCompleted(object sender, ServiceManager.EventParams.OperationCompletedEventArgs e)
+        {
+            var serviceApp = _serviceApps.Load<ServiceApp>(e.ServiceApp.Id);
+            serviceApp.Status = e.Result.ToString();
+
+            using (var tx = _serviceApps.BeginTransaction())
+            {
+                _serviceApps.Save<ServiceApp>(serviceApp, false);
+                tx.Commit();
+            }
         }
     }
 }

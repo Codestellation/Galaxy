@@ -12,17 +12,45 @@
                 <li class="list-group-item">Add service</li>
             }
 
-            @foreach (var serviceApp in Model)
-            {
-                <a href="service/edit/@serviceApp.Id" class="list-group-item">
-                    <h4 class="list-group-item-heading">@serviceApp.DisplayName [@serviceApp.ServiceName: @serviceApp.AssemblyQualifiedType] </h4>
-                    <h5>feed\package: @serviceApp.FeedName \ @serviceApp.PackageName</h5>
-                    <h6 class="list-group-item-heading">@serviceApp.Description</h6>
-                    <form action="/service/delete/@serviceApp.Id" method="POST">
-                        <input type="submit" class="btn btn-danger" value="Delete" />
-                    </form>
-                </a>
-            }
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Display name</th>
+                        <th>Service name</th>
+                        <th>Assembly-qualified type name</th>
+                        <th>Feed name</th>
+                        <th>Package name</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-link="row" class="rowlink">
+                    @foreach (var serviceApp in Model)
+                    {
+                        <tr>
+                            <td>
+                                <form action="/service/edit/@serviceApp.Id" method="GET">
+                                    <input type="submit" class="btn btn-primary btn-xs" value="Edit" />
+                                </form>
+                            </td>
+                            <td><a href="/service/details/@serviceApp.Id">@serviceApp.DisplayName</a></td>
+                            <td>@serviceApp.ServiceName</td>
+                            <td>@serviceApp.AssemblyQualifiedType</td>
+                            <td>@serviceApp.FeedName</td>
+                            <td>@serviceApp.PackageName</td>
+                            <td>@serviceApp.Status</td>
+                            <td>@serviceApp.Description</td>
+                            <td>
+                                <form action="/service/delete/@serviceApp.Id" method="POST">
+                                    <input type="submit" class="btn btn-danger btn-xs" value="Delete" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </ul>
         <div class="panel-footer">
             <a class="btn btn-success" href="/service/create">New</a>

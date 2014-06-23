@@ -20,6 +20,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string AssemblyQualifiedType { get; set; }
         [Display(Name = "Package name", Prompt = "Package name")]
         public string PackageName { get; set; }
+        public string Status { get; set; }
 
         readonly IEnumerable<KeyValuePair<ObjectId, string>> _allFeeds;
 
@@ -51,6 +52,8 @@ namespace Codestellation.Galaxy.WebEnd.Models
             Description = serviceApp.Description;
             FeedId = serviceApp.FeedId;
             PackageName = serviceApp.PackageName;
+            Status = serviceApp.Status;
+
             _allFeeds = allFeeds;
 
             IsNew = false;

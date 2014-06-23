@@ -15,7 +15,7 @@ namespace Codestellation.Galaxy.Host
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
             var config = GetSettings();
-            
+
             HostFactory.Run(x =>
                 {
                     x.UseNLog();
@@ -46,11 +46,13 @@ namespace Codestellation.Galaxy.Host
 
         private static ServiceConfig GetSettings()
         {
-            var serializer = new XmlSerializer(typeof (ServiceConfig));
+            var serializer = new XmlSerializer(typeof(ServiceConfig));
 
-            using (var stream = File.OpenRead("service-config.xml"))
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "service-config.xml");
+
+            using (var stream = File.OpenRead(path))
             {
-                return (ServiceConfig) serializer.Deserialize(stream);
+                return (ServiceConfig)serializer.Deserialize(stream);
             }
         }
 

@@ -42,6 +42,8 @@
     <StartupObject>Codestellation.Galaxy.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WebEnd\Content\jasny-bootstrap.min.css" />
+    <EmbeddedResource Include="WebEnd\Content\jasny-bootstrap.min.js" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -68,6 +70,7 @@
     <EmbeddedResource Include="WebEnd\Views\Feed\Edit.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Service\Edit.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Service\List.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Service\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -133,6 +136,19 @@
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
     <Compile Include="Infrastructure\Collections.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
+    <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
+    <Compile Include="ServiceManager\Helpers\CopyDirectoryHelper.cs" />
+    <Compile Include="ServiceManager\Helpers\ServiceAppSerializeable.cs" />
+    <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
+    <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
+    <Compile Include="ServiceManager\Operations\InstallService.cs" />
+    <Compile Include="ServiceManager\Operations\ServiceOperation.cs" />
+    <Compile Include="ServiceManager\Operations\ProvideServiceConfig.cs" />
+    <Compile Include="ServiceManager\Operations\StartService.cs" />
+    <Compile Include="ServiceManager\Operations\StopService.cs" />
+    <Compile Include="ServiceManager\Operations\UninstallService.cs" />
+    <Compile Include="ServiceManager\Operations\UninstallPackage.cs" />
+    <Compile Include="ServiceManager\ServiceControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
@@ -191,6 +207,7 @@
     <EmbeddedResource Include="WebEnd\Content\glyphicons-halflings-regular.svg" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WebEnd\Content\jasny-bootstrap.css.map" />
     <None Include="WebEnd\Content\jquery-2.1.0.intellisense.js" />
   </ItemGroup>
   <ItemGroup>
