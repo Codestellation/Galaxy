@@ -139,6 +139,7 @@
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectoryHelper.cs" />
+    <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
     <Compile Include="ServiceManager\Helpers\ServiceAppSerializeable.cs" />
     <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
