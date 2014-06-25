@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Codestellation.Galaxy.Domain;
+using System.ServiceProcess;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -10,23 +11,21 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
 
         }
+
+        void DoStartService()
+        {
+            using (ServiceController sc = new ServiceController(_serviceApp.ServiceName))
+            {
+                sc.Start();
+                sc.WaitForStatus(ServiceControllerStatus.StartPending);
+            }
+        }
+
         public override void Execute()
         {
             try
             {
-                string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
-
-                string exePath = Path.Combine(serviceTargetPath, serviceHostFileName);
-
-                string exeParams = "start";
-
-                int resultCode = 0;
-                if ((resultCode = ExecuteWithParams(exePath, exeParams)) != 0)
-                {
-                    StoreResult(OperationResult.OR_FAIL,
-                                string.Format("execution of {0} with params {1} returned {2}", exePath, exeParams, resultCode));
-                    return;
-                }
+                DoStartService();
 
                 StoreResult(OperationResult.OR_OK, "");
             }
