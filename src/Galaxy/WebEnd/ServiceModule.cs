@@ -160,7 +160,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             if (targetFeed != null)
             {
-                ServiceControl srvCtrl = new ServiceControl(serviceApp, targetFeed);
+                ServiceControl srvCtrl = new ServiceControl(new OperationsFactory(), serviceApp, targetFeed);
                 customAction(srvCtrl);
                 srvCtrl.OnCompleted += srvCtrl_OnOperationCompleted;
                 srvCtrl.Operate();

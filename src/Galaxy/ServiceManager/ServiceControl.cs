@@ -27,14 +27,17 @@ namespace Codestellation.Galaxy.ServiceManager
         readonly string _hostPackageFeedUri;
         readonly string _hostPackageName;
 
-        public ServiceControl(ServiceApp serviceApp, NugetFeed feed)
+        readonly IOperationsFactory _opFactory;
+
+        public ServiceControl(IOperationsFactory opFactory, ServiceApp serviceApp, NugetFeed feed)
         {
             _targetPath = ConfigurationManager.AppSettings["appsdestination"];
             _hostPackageFeedUri = ConfigurationManager.AppSettings["hostPackageFeedUri"];
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
 
-            this._feed = feed;
-            this._serviceApp = serviceApp;
+            _feed = feed;
+            _serviceApp = serviceApp;
+            _opFactory = opFactory;
         }
 
         #region public operations part
@@ -57,25 +60,25 @@ namespace Codestellation.Galaxy.ServiceManager
                 Uri = _hostPackageFeedUri
             };
 
-            _operations.Enqueue(new InstallPackage(_targetPath, hostServiceApp, hostFeed));
-            _operations.Enqueue(new InstallPackage(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(new CopyNugetsToRoot(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(new ProvideServiceConfig(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(new InstallService(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetInstallPackageOp(_targetPath, hostServiceApp, hostFeed));
+            _operations.Enqueue(_opFactory.GetInstallPackageOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetCopyNugetsToRootOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetProvideServiceConfigOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetInstallServiceOp(_targetPath, _serviceApp, _feed));
         }
         public void AddUninstall()
         {
-            _operations.Enqueue(new StopService(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(new UninstallService(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(new UninstallPackage(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetStopServiceOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetUninstallServiceOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetUninstallPackageOp(_targetPath, _serviceApp, _feed));
         }
         public void AddStart()
         {
-            _operations.Enqueue(new StartService(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetStartServiceOp(_targetPath, _serviceApp, _feed));
         }
         public void AddStop()
         {
-            _operations.Enqueue(new StopService(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetStopServiceOp(_targetPath, _serviceApp, _feed));
         }       
         #endregion
 
