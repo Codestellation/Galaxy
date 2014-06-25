@@ -9,6 +9,7 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
+using System;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -116,97 +117,57 @@ namespace Codestellation.Galaxy.WebEnd
         }		
 
         private object PostInstall(dynamic parameters)
-        {
+        {          
             var id = new ObjectId(parameters.id);
-            var serviceApp = _dashBoard.GetDeployment(id);
-          
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
-            if(targetFeed != null)
-            {
-                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
-                string hostPackageFeedUri = ConfigurationManager.AppSettings["hostPackageFeedUri"];
-                string hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
+            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddInstall());
 
-                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
-                srvCtrl.AddInstall(
-                    new ServiceApp
-                    {
-                        DisplayName = serviceApp.DisplayName,
-                        PackageName = hostPackageName
-                    },
-                    new NugetFeed
-                    {
-                        Name = hostPackageName,
-                        Uri = hostPackageFeedUri
-                    });
-
-                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
-                srvCtrl.Operate();
-            }
-
-            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));
+            return new RedirectResponse(string.Format("/service/details/{0}", id));   
         }
 
         private object PostStart(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _dashBoard.GetDeployment(id);
-          
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
-            if (targetFeed != null)
-            {
-                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
-                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
-                srvCtrl.AddStart();
-                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
-                srvCtrl.Operate();
-            }
+            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddStart());
 
-            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));
+            return new RedirectResponse(string.Format("/service/details/{0}", id)); 
         }
         private object PostStop(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _dashBoard.GetDeployment(id);
 
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
+            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddStop());
 
-            if (targetFeed != null)
-            {
-                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
-                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
-
-                srvCtrl.AddStop();
-                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
-                srvCtrl.Operate();
-            }
-
-            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));
+            return new RedirectResponse(string.Format("/service/details/{0}", id));
         }
         
         private object PostUninstall(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var serviceApp = _dashBoard.GetDeployment(id);
+
+            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddUninstall());
+
+            return new RedirectResponse(string.Format("/service/details/{0}", id));            
+        }
+
+
+        void ExecuteServiceControlAction(ObjectId serviceAppId, Action<ServiceControl> customAction)
+        {
+            var serviceApp = _dashBoard.GetDeployment(serviceAppId);
 
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
 
             if (targetFeed != null)
             {
-                string targetPath = ConfigurationManager.AppSettings["appsdestination"];
-                ServiceControl srvCtrl = new ServiceControl(targetPath, serviceApp, targetFeed);
-
-                srvCtrl.AddUninstall();
-                srvCtrl.OnCompleted += nugetMan_OnOperationCompleted;
+                ServiceControl srvCtrl = new ServiceControl(serviceApp, targetFeed);
+                customAction(srvCtrl);
+                srvCtrl.OnCompleted += srvCtrl_OnOperationCompleted;
                 srvCtrl.Operate();
             }
-
-            return new RedirectResponse(string.Format("/service/details/{0}", serviceApp.Id));            
         }
 
-        void nugetMan_OnOperationCompleted(object sender, ServiceManager.EventParams.OperationCompletedEventArgs e)
+        void srvCtrl_OnOperationCompleted(object sender, ServiceManager.EventParams.OperationCompletedEventArgs e)
         {
             var serviceApp = _dashBoard.GetDeployment(e.ServiceApp.Id);
             serviceApp.Status = e.Result.ToString();

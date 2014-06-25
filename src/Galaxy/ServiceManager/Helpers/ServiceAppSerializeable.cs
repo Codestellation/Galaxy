@@ -31,23 +31,14 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             this.ServiceName = serviceApp.ServiceName;
         }
 
-        public bool Serialize(string fileName)
+        public void Serialize(string fileName)
         {
-            try
+            using (var writer = new System.IO.StreamWriter(fileName))
             {
-	            using (var writer = new System.IO.StreamWriter(fileName))
-	            {
-	                var serializer = new XmlSerializer(this.GetType());
-	                serializer.Serialize(writer, this);
-	                writer.Flush();
-	            }
-
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                return false;
-            }
+                var serializer = new XmlSerializer(this.GetType());
+                serializer.Serialize(writer, this);
+                writer.Flush();
+            }            
         }
     }
 }

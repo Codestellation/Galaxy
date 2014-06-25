@@ -5,6 +5,7 @@ using Codestellation.Galaxy.ServiceManager.Operations;
 using NuGet;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,9 +24,15 @@ namespace Codestellation.Galaxy.ServiceManager
 
         readonly NugetFeed _feed;
 
-        public ServiceControl(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        readonly string _hostPackageFeedUri;
+        readonly string _hostPackageName;
+
+        public ServiceControl(ServiceApp serviceApp, NugetFeed feed)
         {
-            this._targetPath = targetPath;
+            _targetPath = ConfigurationManager.AppSettings["appsdestination"];
+            _hostPackageFeedUri = ConfigurationManager.AppSettings["hostPackageFeedUri"];
+            _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
+
             this._feed = feed;
             this._serviceApp = serviceApp;
         }
@@ -37,8 +44,20 @@ namespace Codestellation.Galaxy.ServiceManager
         /// </summary>
         /// <param name="hostServiceApp"> service host app</param>
         /// <param name="hostFeed"> service host feed </param>
-        public void AddInstall(ServiceApp hostServiceApp, NugetFeed hostFeed)
+        public void AddInstall()
         {
+            var hostServiceApp = new ServiceApp
+            {
+                DisplayName = _serviceApp.DisplayName,
+                PackageName = _hostPackageName
+            };
+
+            var hostFeed = new NugetFeed
+            {
+                Name = _hostPackageName,
+                Uri = _hostPackageFeedUri
+            };
+
             _operations.Enqueue(new InstallPackage(_targetPath, hostServiceApp, hostFeed));
             _operations.Enqueue(new InstallPackage(_targetPath, _serviceApp, _feed));
             _operations.Enqueue(new CopyNugetsToRoot(_targetPath, _serviceApp, _feed));
