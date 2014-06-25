@@ -51,7 +51,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
             AssemblyQualifiedType = serviceApp.AssemblyQualifiedType;
             Description = serviceApp.Description;
             FeedId = serviceApp.FeedId;
-            PackageName = serviceApp.PackageName;
             Status = serviceApp.Status;
 
             _allFeeds = allFeeds;
@@ -64,7 +63,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
             serviceApp.DisplayName = DisplayName;
             serviceApp.ServiceName = ServiceName;
             serviceApp.AssemblyQualifiedType = AssemblyQualifiedType;
-            serviceApp.PackageName = PackageName;
             serviceApp.Description = Description;
             serviceApp.FeedId = FeedId;
         }

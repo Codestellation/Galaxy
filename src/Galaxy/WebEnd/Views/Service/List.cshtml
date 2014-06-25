@@ -23,7 +23,6 @@
                             <th>Service name</th>
                             <th>Assembly-qualified type name</th>
                             <th>Feed name</th>
-                            <th>Package name</th>
                             <th>Status</th>
                             <th>Description</th>
                             <th></th>
@@ -42,7 +41,6 @@
                                 <td>@serviceApp.ServiceName</td>
                                 <td>@serviceApp.AssemblyQualifiedType</td>
                                 <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == serviceApp.FeedId).Value</td>
-                                <td>@serviceApp.PackageName</td>
                                 <td>@serviceApp.Status</td>
                                 <td>@serviceApp.Description</td>
                                 <td>

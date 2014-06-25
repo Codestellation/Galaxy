@@ -156,7 +156,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var serviceApp = _dashBoard.GetDeployment(serviceAppId);
 
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Name == serviceApp.FeedName);
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(serviceApp.FeedId));
 
             if (targetFeed != null)
             {

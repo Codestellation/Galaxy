@@ -11,7 +11,6 @@ namespace Codestellation.Galaxy.Domain
         public string Description { get; set; }
         public string FeedName { get; set; }
         public ObjectId FeedId { get; internal set; }
-        public string PackageName { get; set; }
         public string Status { get; set; }
     }
 }

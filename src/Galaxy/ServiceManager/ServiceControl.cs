@@ -48,8 +48,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             var hostServiceApp = new ServiceApp
             {
-                DisplayName = _serviceApp.DisplayName,
-                PackageName = _hostPackageName
+                DisplayName = _serviceApp.DisplayName
             };
 
             var hostFeed = new NugetFeed
