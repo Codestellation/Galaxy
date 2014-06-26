@@ -8,8 +8,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         const string serviceConfigFileName = "service-config.xml";
 
-        public ProvideServiceConfig(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public ProvideServiceConfig(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
 
         }
@@ -17,10 +17,10 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-	            string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
+	            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 	            string serviceConfigFileNameFull = Path.Combine(serviceTargetPath, serviceConfigFileName);
 	
-	            var config = new ServiceAppSerializeable(_serviceApp);
+	            var config = new ServiceConfig(Deployment);
 		            
 	            config.Serialize(serviceConfigFileNameFull);
 	            StoreResult(OperationResult.OR_OK, "");

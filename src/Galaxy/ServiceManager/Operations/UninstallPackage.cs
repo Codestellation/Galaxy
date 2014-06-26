@@ -5,8 +5,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallPackage: ServiceOperation
     {
-        public UninstallPackage(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public UninstallPackage(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
 
         }
@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-                string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
+                string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
                 if (!Directory.Exists(serviceTargetPath))
                 {

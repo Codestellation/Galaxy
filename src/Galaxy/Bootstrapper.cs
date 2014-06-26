@@ -81,12 +81,12 @@ namespace Codestellation.Galaxy
                 }
             }
             
-            using (var query = collections.ServiceApps.CreateQuery<ServiceApp>())
+            using (var query = collections.Deployments.CreateQuery<Deployment>())
             using (var cursor = query.Execute())
             {
-                foreach (var serviceApp in cursor)
+                foreach (var deployment in cursor)
                 {
-                    dashBoard.AddDeployment(serviceApp);
+                    dashBoard.AddDeployment(deployment);
                 }
             }
 

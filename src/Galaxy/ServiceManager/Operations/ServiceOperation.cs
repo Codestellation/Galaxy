@@ -17,32 +17,34 @@ namespace Codestellation.Galaxy.ServiceManager
         string _details;
         readonly protected string _targetPath;
         readonly protected NugetFeed _feed;
-        readonly protected ServiceApp _serviceApp;
+        readonly protected Deployment _deployment;
 
         public NugetFeed Feed
         {
             get { return _feed; }
         }
-        public ServiceApp ServiceApp
+
+        public Deployment Deployment
         {
-            get { return _serviceApp; }
+            get { return _deployment; }
         }
+
         public OperationResult Result
         {
             get { return _result; }
         }
 
-        public ServiceOperation(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            this._targetPath = targetPath;
-            this._serviceApp = serviceApp;
-            this._feed = feed;
+            _targetPath = targetPath;
+            _deployment = deployment;
+            _feed = feed;
         }
 
         protected void StoreResult(OperationResult result, string details)
         {
-            this._result = result;
-            this._details = details;
+            _result = result;
+            _details = details;
         }
 
         protected int ExecuteWithParams(string exePath, string exeParams)

@@ -15,8 +15,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         const string libFolder = "lib";
         string _hostPackageName;
 
-        public CopyNugetsToRoot(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public CopyNugetsToRoot(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
         }
@@ -74,7 +74,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-                string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
+                string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
                 var packageFolders = Directory.EnumerateDirectories(serviceTargetPath);
 

@@ -6,44 +6,44 @@ namespace Codestellation.Galaxy.ServiceManager
     public class OperationsFactory : IOperationsFactory
     {
 
-        public ServiceOperation GetInstallPackageOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetInstallPackageOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new InstallPackage(targetPath, serviceApp, feed);
+            return new InstallPackage(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetCopyNugetsToRootOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetCopyNugetsToRootOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new CopyNugetsToRoot(targetPath, serviceApp, feed);
+            return new CopyNugetsToRoot(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetProvideServiceConfigOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetProvideServiceConfigOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new ProvideServiceConfig(targetPath, serviceApp, feed);
+            return new ProvideServiceConfig(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetInstallServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetInstallServiceOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new InstallService(targetPath, serviceApp, feed);
+            return new InstallService(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetStartServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetStartServiceOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new StartService(targetPath, serviceApp, feed);
+            return new StartService(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetStopServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetStopServiceOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new StopService(targetPath, serviceApp, feed);
+            return new StopService(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetUninstallServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetUninstallServiceOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new UninstallService(targetPath, serviceApp, feed);
+            return new UninstallService(targetPath, deployment, feed);
         }
 
-        public ServiceOperation GetUninstallPackageOp(string targetPath, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceOperation GetUninstallPackageOp(string targetPath, Deployment deployment, NugetFeed feed)
         {
-            return new UninstallPackage(targetPath, serviceApp, feed);
+            return new UninstallPackage(targetPath, deployment, feed);
         }
     }
 }

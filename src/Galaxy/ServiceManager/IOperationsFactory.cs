@@ -4,13 +4,13 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public interface IOperationsFactory
     {
-        ServiceOperation GetInstallPackageOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetCopyNugetsToRootOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetProvideServiceConfigOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetInstallServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetStartServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetStopServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetUninstallServiceOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
-        ServiceOperation GetUninstallPackageOp(string targetPath, ServiceApp serviceApp, NugetFeed feed);
+        ServiceOperation GetInstallPackageOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetCopyNugetsToRootOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetProvideServiceConfigOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetInstallServiceOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetStartServiceOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetStopServiceOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetUninstallServiceOp(string targetPath, Deployment deployment, NugetFeed feed);
+        ServiceOperation GetUninstallPackageOp(string targetPath, Deployment deployment, NugetFeed feed);
     }
 }

@@ -6,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallService: ServiceOperation
     {
-        public UninstallService(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public UninstallService(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
             
         }
@@ -16,7 +16,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-                string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
+                string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
                 string exePath = Path.Combine(serviceTargetPath, serviceHostFileName);
 

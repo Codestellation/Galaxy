@@ -25,7 +25,7 @@ namespace Codestellation.Galaxy.Tests.ServiceManager
             OperationsFactory opFac = new OperationsFactory();
 
             string targetPath = "";
-            ServiceApp app = new ServiceApp();
+            Deployment app = new Deployment();
             NugetFeed feed = new NugetFeed();
 
             var op = opFac.GetCopyNugetsToRootOp(targetPath, app, feed);

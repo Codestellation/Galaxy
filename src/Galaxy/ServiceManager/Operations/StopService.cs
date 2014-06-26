@@ -6,15 +6,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StopService: ServiceOperation
     {
-        public StopService(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public StopService(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
 
         }
 
         void DoStopService()
         {
-            using(ServiceController sc = new ServiceController(_serviceApp.ServiceName))
+            using(ServiceController sc = new ServiceController(Deployment.ServiceName))
             {
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);

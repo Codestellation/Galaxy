@@ -10,8 +10,8 @@ namespace Codestellation.Galaxy.Tests.ServiceManager.Fakes
 {
     public class FakeOpSuccess: ServiceOperation
     {
-        public FakeOpSuccess(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public FakeOpSuccess(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
         }
 

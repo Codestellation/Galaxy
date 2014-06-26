@@ -6,15 +6,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StartService: ServiceOperation
     {
-        public StartService(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public StartService(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
 
         }
 
         void DoStartService()
         {
-            using (ServiceController sc = new ServiceController(_serviceApp.ServiceName))
+            using (ServiceController sc = new ServiceController(Deployment.ServiceName))
             {
                 sc.Start();
                 sc.WaitForStatus(ServiceControllerStatus.StartPending);

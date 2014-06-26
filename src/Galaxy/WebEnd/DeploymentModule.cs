@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Configuration;
 using System.Collections.Generic;
 using Nejdb;
 using Nejdb.Bson;
@@ -13,17 +12,17 @@ using System;
 
 namespace Codestellation.Galaxy.WebEnd
 {
-    public class ServiceModule : CrudModule
+    public class DeploymentModule : CrudModule
     {
         private readonly DashBoard _dashBoard;
-        private readonly Collection _serviceApps;
-        public const string Path = "service";
+        private readonly Collection _deployments;
+        public const string Path = "deployment";
 
-        public ServiceModule(Collections collections, DashBoard dashBoard)
+        public DeploymentModule(Collections collections, DashBoard dashBoard)
             : base(Path)
         {
             _dashBoard = dashBoard;
-            _serviceApps = collections.ServiceApps;
+            _deployments = collections.Deployments;
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
@@ -45,23 +44,23 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var allFeeds = GetAvailableFeeds();
 
-            return View["edit", new ServiceAppModel(allFeeds)];
+            return View["edit", new DeploymentModel(allFeeds)];
         }
 
         protected override object PostCreate(dynamic parameters)
         {
-            var item = this.Bind<ServiceAppModel>();
-            var serviceApp = item.ToServiceApp();
+            var item = this.Bind<DeploymentModel>();
+            var deployment = item.ToDeployment();
 
-            using (var tx = _serviceApps.BeginTransaction())
+            using (var tx = _deployments.BeginTransaction())
             {
-                _serviceApps.Save(serviceApp, false);
+                _deployments.Save(deployment, false);
                 tx.Commit();
             }
 
-            _dashBoard.AddDeployment(serviceApp);
+            _dashBoard.AddDeployment(deployment);
 
-            return new RedirectResponse("/service");
+            return RedirectToList();
         }
 
         protected override object GetEdit(dynamic parameters)
@@ -69,35 +68,35 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var item = _dashBoard.GetDeployment(id);
 
-            return View["Edit", new ServiceAppModel(item, GetAvailableFeeds())];
+            return View["Edit", new DeploymentModel(item, GetAvailableFeeds())];
         }
 
         protected override object PostEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var updatedItem = this.Bind<ServiceAppModel>();
+            var updatedItem = this.Bind<DeploymentModel>();
 
-            var serviceApp = _dashBoard.GetDeployment(id);
+            var deployment = _dashBoard.GetDeployment(id);
 
-            updatedItem.Update(serviceApp);
+            updatedItem.Update(deployment);
 
-            using (var tx = _serviceApps.BeginTransaction())
+            using (var tx = _deployments.BeginTransaction())
             {
-                _serviceApps.Save(serviceApp, false);
+                _deployments.Save(deployment, false);
                 tx.Commit();
             }
 
-            return new RedirectResponse("/service");
+            return new RedirectResponse("/" + Path);
         }
 
         protected override object PostDelete(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
 
-            _serviceApps.Delete(id);
+            _deployments.Delete(id);
             _dashBoard.RemoveDeployment(id);
 
-            return new RedirectResponse("/service");
+            return new RedirectResponse("/" + Path);
         }
 
         protected override object GetDetails(dynamic parameters)
@@ -105,24 +104,24 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var item = _dashBoard.GetDeployment(id);
 
-            return View["details", new ServiceAppModel(item, null)];
+            return View["details", new DeploymentModel(item, null)];
         }
-		
+
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
             var allFeeds = _dashBoard.Feeds
                 .Select(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name))
                 .ToArray();
             return allFeeds;
-        }		
+        }
 
         private object PostInstall(dynamic parameters)
-        {          
+        {
             var id = new ObjectId(parameters.id);
 
             ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddInstall());
 
-            return new RedirectResponse(string.Format("/service/details/{0}", id));   
+            return RedirectToDetails(id);
         }
 
         private object PostStart(dynamic parameters)
@@ -131,36 +130,37 @@ namespace Codestellation.Galaxy.WebEnd
 
             ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddStart());
 
-            return new RedirectResponse(string.Format("/service/details/{0}", id)); 
+            return RedirectToDetails(id);
         }
+
         private object PostStop(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
 
             ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddStop());
 
-            return new RedirectResponse(string.Format("/service/details/{0}", id));
+            return RedirectToDetails(id);
         }
-        
+
         private object PostUninstall(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
 
             ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddUninstall());
 
-            return new RedirectResponse(string.Format("/service/details/{0}", id));            
+            return RedirectToDetails(id);
         }
 
 
-        void ExecuteServiceControlAction(ObjectId serviceAppId, Action<ServiceControl> customAction)
+        void ExecuteServiceControlAction(ObjectId deploymentId, Action<ServiceControl> customAction)
         {
-            var serviceApp = _dashBoard.GetDeployment(serviceAppId);
+            var deployment = _dashBoard.GetDeployment(deploymentId);
 
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(serviceApp.FeedId));
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
 
             if (targetFeed != null)
             {
-                ServiceControl srvCtrl = new ServiceControl(new OperationsFactory(), serviceApp, targetFeed);
+                ServiceControl srvCtrl = new ServiceControl(new OperationsFactory(), deployment, targetFeed);
                 customAction(srvCtrl);
                 srvCtrl.OnCompleted += srvCtrl_OnOperationCompleted;
                 srvCtrl.Operate();
@@ -169,14 +169,25 @@ namespace Codestellation.Galaxy.WebEnd
 
         void srvCtrl_OnOperationCompleted(object sender, ServiceManager.EventParams.OperationCompletedEventArgs e)
         {
-            var serviceApp = _dashBoard.GetDeployment(e.ServiceApp.Id);
-            serviceApp.Status = e.Result.ToString();
+            var deployment = _dashBoard.GetDeployment(e.Deployment.Id);
+            deployment.Status = e.Result.ToString();
 
-            using (var tx = _serviceApps.BeginTransaction())
+            using (var tx = _deployments.BeginTransaction())
             {
-                _serviceApps.Save(serviceApp, false);
+                _deployments.Save(deployment, false);
                 tx.Commit();
             }
+        }
+
+        private static object RedirectToList()
+        {
+            return new RedirectResponse("/" + Path);
+        }
+
+        private static object RedirectToDetails(ObjectId id)
+        {
+            var detailsPath = string.Format("/{0}/details/{1}", Path, id);
+            return new RedirectResponse(detailsPath);
         }
     }
 }

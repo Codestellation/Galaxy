@@ -6,12 +6,12 @@ namespace Codestellation.Galaxy.Domain
     public class DashBoard
     {
         private readonly Dictionary<ObjectId, NugetFeed> _feeds;
-        private readonly Dictionary<ObjectId, ServiceApp> _deployments;
+        private readonly Dictionary<ObjectId, Deployment> _deployments;
 
         public DashBoard()
         {
             _feeds = new Dictionary<ObjectId, NugetFeed>();
-            _deployments = new Dictionary<ObjectId, ServiceApp>();
+            _deployments = new Dictionary<ObjectId, Deployment>();
         }
 
         public IReadOnlyCollection<NugetFeed> Feeds
@@ -19,9 +19,9 @@ namespace Codestellation.Galaxy.Domain
             get { return new List<NugetFeed>(_feeds.Values); }
         }
 
-        public IReadOnlyCollection<ServiceApp> Deployments
+        public IReadOnlyCollection<Deployment> Deployments
         {
-            get { return new List<ServiceApp>(_deployments.Values); }
+            get { return new List<Deployment>(_deployments.Values); }
         }
 
         public void AddFeed(NugetFeed feed)
@@ -39,12 +39,12 @@ namespace Codestellation.Galaxy.Domain
             return _feeds[id];
         }
 
-        public void AddDeployment(ServiceApp serviceApp)
+        public void AddDeployment(Deployment deployment)
         {
-            _deployments.Add(serviceApp.Id, serviceApp);
+            _deployments.Add(deployment.Id, deployment);
         }
 
-        public ServiceApp GetDeployment(ObjectId id)
+        public Deployment GetDeployment(ObjectId id)
         {
             return _deployments[id];
         }

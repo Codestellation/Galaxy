@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.Infrastructure
         public Collection Settings { get; private set; }
         public Collection Users { get; private set; }
         public Collection Feeds { get; private set; }
-        public Collection ServiceApps { get; private set; }
+        public Collection Deployments { get; private set; }
 
         public void Start()
         {
@@ -27,14 +27,14 @@ namespace Codestellation.Galaxy.Infrastructure
             Settings = _database.CreateCollection("settings", new CollectionOptions(false, false, 32,32));
             Users = _database.CreateCollection("users", new CollectionOptions(false, false, 32, 32));
             Feeds = _database.CreateCollection("feeds", new CollectionOptions(false, false, 32, 32));
-            ServiceApps = _database.CreateCollection("serviceapps", new CollectionOptions(false, false, 32, 32));
+            Deployments = _database.CreateCollection("deployments", new CollectionOptions(false, false, 32, 32));
         }
 
         public void Dispose()
         {
             Dispose(Settings);
             Dispose(Users);
-            Dispose(ServiceApps);
+            Dispose(Deployments);
             
             _database.Close();
             Dispose(_database);

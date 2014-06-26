@@ -68,9 +68,9 @@
     <EmbeddedResource Include="WebEnd\Views\User\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Feed\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Feed\Edit.cshtml" />
-    <EmbeddedResource Include="WebEnd\Views\Service\Edit.cshtml" />
-    <EmbeddedResource Include="WebEnd\Views\Service\List.cshtml" />
-    <EmbeddedResource Include="WebEnd\Views\Service\Details.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Deployment\Edit.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Deployment\List.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Deployment\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -130,8 +130,8 @@
   <ItemGroup>
     <Compile Include="Domain\DashBoard.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
-    <Compile Include="Domain\ServiceApp.cs" />
-    <Compile Include="Domain\ServiceAppList.cs" />
+    <Compile Include="Domain\Deployment.cs" />
+    <Compile Include="Domain\DeploymentList.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectoryHelper.cs" />
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
-    <Compile Include="ServiceManager\Helpers\ServiceAppSerializeable.cs" />
+    <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\OperationsFactory.cs" />
     <Compile Include="ServiceManager\IOperationsFactory.cs" />
     <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
@@ -165,9 +165,9 @@
     <Compile Include="WebEnd\Misc\EmbeddedFileContentResponse.cs" />
     <Compile Include="WebEnd\Misc\EmbeddedResource.cs" />
     <Compile Include="WebEnd\FeedModule.cs" />
-    <Compile Include="WebEnd\Models\ServiceAppModel.cs" />
+    <Compile Include="WebEnd\Models\DeploymentModel.cs" />
     <Compile Include="WebEnd\Models\FeedModel.cs" />
-    <Compile Include="WebEnd\ServiceModule.cs" />
+    <Compile Include="WebEnd\DeploymentModule.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\PresentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\AbsentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\BootstrapClass.cs" />

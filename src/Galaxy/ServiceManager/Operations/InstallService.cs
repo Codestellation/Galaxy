@@ -6,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class InstallService: ServiceOperation
     {
-        public InstallService(string targetPath, ServiceApp serviceApp, NugetFeed feed) :
-            base(targetPath, serviceApp, feed)
+        public InstallService(string targetPath, Deployment deployment, NugetFeed feed) :
+            base(targetPath, deployment, feed)
         {
 
         }
@@ -16,12 +16,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-                string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
+                string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
                 string exePath = Path.Combine(serviceTargetPath, serviceHostFileName);
 
                 string exeParams = string.Format("install -servicename \"{0}\"",
-                        _serviceApp.ServiceName);
+                        Deployment.ServiceName);
 
                 int resultCode = 0;
                 if ((resultCode = ExecuteWithParams(exePath, exeParams)) != 0)

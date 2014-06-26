@@ -7,13 +7,13 @@ namespace Codestellation.Galaxy.WebEnd.Models
 {
     public class DeploymentListModel 
     {
-        public readonly ServiceAppModel[] Deployments;
+        public readonly DeploymentModel[] Deployments;
         public readonly KeyValuePair<ObjectId, string>[] AllFeeds;
 
         public DeploymentListModel(DashBoard dashBoard)
         {
             AllFeeds = dashBoard.Feeds.ConvertToArray(x => new KeyValuePair<ObjectId, string>(x.Id, x.Name));
-            Deployments = dashBoard.Deployments.ConvertToArray(x => new ServiceAppModel(x, AllFeeds));
+            Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentModel(x, AllFeeds));
         }
 
         public int Count

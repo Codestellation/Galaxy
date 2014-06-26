@@ -1,32 +1,27 @@
 ﻿using Codestellation.Galaxy.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codestellation.Galaxy.ServiceManager.EventParams
 {
     public class OperationCompletedEventArgs: EventArgs
     {
-        readonly string _operation;
+        private readonly string _operation;
 
-        readonly OperationResult _result;
+        private readonly OperationResult _result;
 
-        readonly string _details;
+        private readonly string _details;
 
-        readonly ServiceApp _serviceApp;
+        private readonly Deployment _deployment;
 
-        readonly NugetFeed _feed;
+        private readonly NugetFeed _feed;
 
-        public OperationCompletedEventArgs(ServiceApp serviceApp, NugetFeed feed, 
-                                           string operation, OperationResult result, string details)
+        public OperationCompletedEventArgs(Deployment deployment, NugetFeed feed, string operation, OperationResult result, string details)
         {
-            this._operation = operation;
-            this._result = result;
-            this._details = details;
-            this._feed = feed;
-            this._serviceApp = serviceApp;
+            _operation = operation;
+            _result = result;
+            _details = details;
+            _feed = feed;
+            _deployment = deployment;
         }
         public string Operation
         {
@@ -40,9 +35,9 @@ namespace Codestellation.Galaxy.ServiceManager.EventParams
         {
             get { return _details; }
         }
-        public ServiceApp ServiceApp
+        public Deployment Deployment
         {
-            get { return _serviceApp; }
+            get { return _deployment; }
         }
     }
 }

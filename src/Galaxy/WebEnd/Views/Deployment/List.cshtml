@@ -1,5 +1,6 @@
 ﻿@using System.Collections.Generic;
 @using System.Linq
+@using Codestellation.Galaxy.WebEnd
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentListModel>
 @{ Layout = "Master";}
 <div class="row">
@@ -29,22 +30,22 @@
                         </tr>
                     </thead>
                     <tbody data-link="row" class="rowlink">
-                        @foreach (var serviceApp in Model.Deployments)
+                        @foreach (var deployment in Model.Deployments)
                         {
                             <tr>
                                 <td>
-                                    <form action="/service/edit/@serviceApp.Id" method="GET">
+                                    <form action="/@DeploymentModule.Path/edit/@deployment.Id" method="GET">
                                         <input type="submit" class="btn btn-primary btn-xs" value="Edit" />
                                     </form>
                                 </td>
-                                <td><a href="/service/details/@serviceApp.Id">@serviceApp.DisplayName</a></td>
-                                <td>@serviceApp.ServiceName</td>
-                                <td>@serviceApp.AssemblyQualifiedType</td>
-                                <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == serviceApp.FeedId).Value</td>
-                                <td>@serviceApp.Status</td>
-                                <td>@serviceApp.Description</td>
+                                <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.DisplayName</a></td>
+                                <td>@deployment.ServiceName</td>
+                                <td>@deployment.AssemblyQualifiedType</td>
+                                <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == deployment.FeedId).Value</td>
+                                <td>@deployment.Status</td>
+                                <td>@deployment.Description</td>
                                 <td>
-                                    <form action="/service/delete/@serviceApp.Id" method="POST">
+                                    <form action="/@DeploymentModule.Path/delete/@deployment.Id" method="POST">
                                         <input type="submit" class="btn btn-danger btn-xs" value="Delete" />
                                     </form>
                                 </td>
@@ -55,7 +56,7 @@
             }
         </ul>
         <div class="panel-footer">
-            <a class="btn btn-success" href="/service/create">New</a>
+            <a class="btn btn-success" href="/@DeploymentModule.Path/create">New</a>
         </div>
     </div>
 </div>

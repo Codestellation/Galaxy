@@ -18,9 +18,9 @@ namespace Codestellation.Galaxy.Tests.ServiceManager
         {
             StubIOperationsFactory stub = new StubIOperationsFactory();
 
-            stub.GetStartServiceOpStringServiceAppNugetFeed =
-                new Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func<string, ServiceApp, NugetFeed, ServiceOperation>(
-                    (path, serviceApp, feed) => new FakeOpFail(path, serviceApp, feed));
+            stub.GetStartServiceOpStringDeploymentNugetFeed =
+                new Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func<string, Deployment, NugetFeed, ServiceOperation>(
+                    (path, deployment, feed) => new FakeOpFail(path, deployment, feed));
 
             startFailFactory = stub;
         }
@@ -28,7 +28,7 @@ namespace Codestellation.Galaxy.Tests.ServiceManager
         [Test]
         public void ServiceControl_Create_instance()
         {
-            ServiceControl sc = new ServiceControl(new FakeOpFactory(), new ServiceApp(), new NugetFeed());
+            ServiceControl sc = new ServiceControl(new FakeOpFactory(), new Deployment(), new NugetFeed());
 
             Assert.IsNotNull(sc);
         }
@@ -39,7 +39,7 @@ namespace Codestellation.Galaxy.Tests.ServiceManager
 
             var opFactoryLocal = opFactory == null ? new FakeOpFactory() : opFactory;
 
-            ServiceControl sc = new ServiceControl(opFactoryLocal, new ServiceApp(), new NugetFeed());
+            ServiceControl sc = new ServiceControl(opFactoryLocal, new Deployment(), new NugetFeed());
 
             action(sc);            
 

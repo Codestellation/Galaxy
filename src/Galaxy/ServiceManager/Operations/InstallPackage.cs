@@ -6,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class InstallPackage: ServiceOperation
     {
-        public InstallPackage(string targetPath, ServiceApp serviceApp, NugetFeed feed):
-            base(targetPath, serviceApp, feed)
+        public InstallPackage(string targetPath, Deployment deployment, NugetFeed feed):
+            base(targetPath, deployment, feed)
         {
 
         }
@@ -18,7 +18,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 string packageID = _feed.Name;
 
-                string serviceTargetPath = Path.Combine(_targetPath, _serviceApp.DisplayName);
+                string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
                 IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(_feed.Uri);
 

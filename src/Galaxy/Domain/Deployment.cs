@@ -2,7 +2,7 @@
 
 namespace Codestellation.Galaxy.Domain
 {
-    public class ServiceApp
+    public class Deployment
     {
         public ObjectId Id { get; internal set; }
         public string AssemblyQualifiedType { get; set; }

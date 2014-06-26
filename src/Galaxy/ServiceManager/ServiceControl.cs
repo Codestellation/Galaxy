@@ -20,7 +20,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         readonly Queue<ServiceOperation> _operations = new Queue<ServiceOperation>();
 
-        readonly ServiceApp _serviceApp;
+        readonly Deployment Deployment;
 
         readonly NugetFeed _feed;
 
@@ -29,29 +29,24 @@ namespace Codestellation.Galaxy.ServiceManager
 
         readonly IOperationsFactory _opFactory;
 
-        public ServiceControl(IOperationsFactory opFactory, ServiceApp serviceApp, NugetFeed feed)
+        public ServiceControl(IOperationsFactory opFactory, Deployment deployment, NugetFeed feed)
         {
             _targetPath = ConfigurationManager.AppSettings["appsdestination"];
             _hostPackageFeedUri = ConfigurationManager.AppSettings["hostPackageFeedUri"];
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
 
             _feed = feed;
-            _serviceApp = serviceApp;
+            Deployment = deployment;
             _opFactory = opFactory;
         }
 
         #region public operations part
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hostServiceApp"> service host app</param>
-        /// <param name="hostFeed"> service host feed </param>
         public void AddInstall()
         {
-            var hostServiceApp = new ServiceApp
+            var deployment = new Deployment
             {
-                DisplayName = _serviceApp.DisplayName
+                DisplayName = Deployment.DisplayName
             };
 
             var hostFeed = new NugetFeed
@@ -60,25 +55,26 @@ namespace Codestellation.Galaxy.ServiceManager
                 Uri = _hostPackageFeedUri
             };
 
-            _operations.Enqueue(_opFactory.GetInstallPackageOp(_targetPath, hostServiceApp, hostFeed));
-            _operations.Enqueue(_opFactory.GetInstallPackageOp(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(_opFactory.GetCopyNugetsToRootOp(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(_opFactory.GetProvideServiceConfigOp(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(_opFactory.GetInstallServiceOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetInstallPackageOp(_targetPath, deployment, hostFeed));
+            _operations.Enqueue(_opFactory.GetInstallPackageOp(_targetPath, Deployment, _feed));
+            _operations.Enqueue(_opFactory.GetCopyNugetsToRootOp(_targetPath, Deployment, _feed));
+            _operations.Enqueue(_opFactory.GetProvideServiceConfigOp(_targetPath, Deployment, _feed));
+            _operations.Enqueue(_opFactory.GetInstallServiceOp(_targetPath, Deployment, _feed));
         }
+
         public void AddUninstall()
         {
-            _operations.Enqueue(_opFactory.GetStopServiceOp(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(_opFactory.GetUninstallServiceOp(_targetPath, _serviceApp, _feed));
-            _operations.Enqueue(_opFactory.GetUninstallPackageOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetStopServiceOp(_targetPath, Deployment, _feed));
+            _operations.Enqueue(_opFactory.GetUninstallServiceOp(_targetPath, Deployment, _feed));
+            _operations.Enqueue(_opFactory.GetUninstallPackageOp(_targetPath, Deployment, _feed));
         }
         public void AddStart()
         {
-            _operations.Enqueue(_opFactory.GetStartServiceOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetStartServiceOp(_targetPath, Deployment, _feed));
         }
         public void AddStop()
         {
-            _operations.Enqueue(_opFactory.GetStopServiceOp(_targetPath, _serviceApp, _feed));
+            _operations.Enqueue(_opFactory.GetStopServiceOp(_targetPath, Deployment, _feed));
         }       
         #endregion
 
@@ -101,16 +97,16 @@ namespace Codestellation.Galaxy.ServiceManager
 
                     var success = results.FirstOrDefault(item => item == OperationResult.OR_FAIL) == default(OperationResult);
 
-                    CallOnCompleted(_serviceApp, _feed, "all", success ? OperationResult.OR_OK : OperationResult.OR_FAIL, "");
+                    CallOnCompleted(Deployment, _feed, "all", success ? OperationResult.OR_OK : OperationResult.OR_FAIL, "");
                 });
             tsk.Start();
         }
 
-        void CallOnCompleted(ServiceApp serviceApp, NugetFeed feed, string operation, OperationResult result, string details)
+        void CallOnCompleted(Deployment deployment, NugetFeed feed, string operation, OperationResult result, string details)
         {
             var eventHanler = OnCompleted;
             if (eventHanler != null)
-                eventHanler(this, new OperationCompletedEventArgs(serviceApp, feed, operation, result, details));
+                eventHanler(this, new OperationCompletedEventArgs(deployment, feed, operation, result, details));
         }
         public event EventHandler<OperationCompletedEventArgs> OnCompleted;
     }

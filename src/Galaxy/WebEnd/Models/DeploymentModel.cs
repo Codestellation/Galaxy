@@ -5,7 +5,7 @@ using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.WebEnd.Models
 {
-    public class ServiceAppModel
+    public class DeploymentModel
     {
         public ObjectId Id { get; set; }
         public bool IsNew { get; set; }
@@ -29,53 +29,53 @@ namespace Codestellation.Galaxy.WebEnd.Models
             get { return _allFeeds; }
         }
 
-        public ServiceAppModel()
+        public DeploymentModel()
         {
             IsNew = true;
             Id = new ObjectId();
         }
 
-        public ServiceAppModel(IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
+        public DeploymentModel(IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
             IsNew = true;
             Id = new ObjectId();
             _allFeeds = allFeeds;
         }
 
-        public ServiceAppModel(ServiceApp serviceApp, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
+        public DeploymentModel(Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
-            Id = serviceApp.Id;
+            Id = deployment.Id;
 
-            DisplayName = serviceApp.DisplayName;
-            ServiceName = serviceApp.ServiceName;
-            AssemblyQualifiedType = serviceApp.AssemblyQualifiedType;
-            Description = serviceApp.Description;
-            FeedId = serviceApp.FeedId;
-            Status = serviceApp.Status;
+            DisplayName = deployment.DisplayName;
+            ServiceName = deployment.ServiceName;
+            AssemblyQualifiedType = deployment.AssemblyQualifiedType;
+            Description = deployment.Description;
+            FeedId = deployment.FeedId;
+            Status = deployment.Status;
 
             _allFeeds = allFeeds;
 
             IsNew = false;
         }
 
-        public void Update(ServiceApp serviceApp)
+        public void Update(Deployment deployment)
         {
-            serviceApp.DisplayName = DisplayName;
-            serviceApp.ServiceName = ServiceName;
-            serviceApp.AssemblyQualifiedType = AssemblyQualifiedType;
-            serviceApp.Description = Description;
-            serviceApp.FeedId = FeedId;
+            deployment.DisplayName = DisplayName;
+            deployment.ServiceName = ServiceName;
+            deployment.AssemblyQualifiedType = AssemblyQualifiedType;
+            deployment.Description = Description;
+            deployment.FeedId = FeedId;
         }
 
-        public ServiceApp ToServiceApp()
+        public Deployment ToDeployment()
         {
-            var serviceApp = new ServiceApp
+            var deployment = new Deployment
             {
                 Id = Id
             };
 
-            Update(serviceApp);
-            return serviceApp;
+            Update(deployment);
+            return deployment;
         }
     }
 }

@@ -3,8 +3,7 @@ using System.Xml.Serialization;
 
 namespace Codestellation.Galaxy.ServiceManager.Helpers
 {
-    [XmlRoot("ServiceConfig")]
-    public class ServiceAppSerializeable
+    public class ServiceConfig
     {
         [XmlElement]
         public string AssemblyQualifiedType { get; set; }
@@ -18,24 +17,24 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
         /// <summary>
         /// ctor for serializer
         /// </summary>
-        public ServiceAppSerializeable()
+        public ServiceConfig()
         {
 
         }
 
-        public ServiceAppSerializeable(ServiceApp serviceApp)
+        public ServiceConfig(Deployment deployment)
         {
-            this.AssemblyQualifiedType = serviceApp.AssemblyQualifiedType;
-            this.Description = serviceApp.Description;
-            this.DisplayName = serviceApp.DisplayName;
-            this.ServiceName = serviceApp.ServiceName;
+            AssemblyQualifiedType = deployment.AssemblyQualifiedType;
+            Description = deployment.Description;
+            DisplayName = deployment.DisplayName;
+            ServiceName = deployment.ServiceName;
         }
 
         public void Serialize(string fileName)
         {
             using (var writer = new System.IO.StreamWriter(fileName))
             {
-                var serializer = new XmlSerializer(this.GetType());
+                var serializer = new XmlSerializer(GetType());
                 serializer.Serialize(writer, this);
                 writer.Flush();
             }            
