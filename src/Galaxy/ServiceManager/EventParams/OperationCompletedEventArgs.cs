@@ -3,25 +3,27 @@ using System;
 
 namespace Codestellation.Galaxy.ServiceManager.EventParams
 {
-    public class OperationCompletedEventArgs: EventArgs
+    public class DeploymentTaskCompletedEventArgs: EventArgs
     {
         private readonly string _operation;
 
         private readonly OperationResult _result;
 
         private readonly string _details;
+        private readonly DeploymentTask _deploymentTask;
 
-        private readonly Deployment _deployment;
+        public DeploymentTask Task
+        {
+            get { return _deploymentTask; }
+        } 
 
-        private readonly NugetFeed _feed;
 
-        public OperationCompletedEventArgs(Deployment deployment, NugetFeed feed, string operation, OperationResult result, string details)
+        public DeploymentTaskCompletedEventArgs(DeploymentTask deploymentTask, string operation, OperationResult result, string details)
         {
             _operation = operation;
             _result = result;
             _details = details;
-            _feed = feed;
-            _deployment = deployment;
+            _deploymentTask = deploymentTask;
         }
         public string Operation
         {
@@ -34,10 +36,6 @@ namespace Codestellation.Galaxy.ServiceManager.EventParams
         public string Details
         {
             get { return _details; }
-        }
-        public Deployment Deployment
-        {
-            get { return _deployment; }
         }
     }
 }

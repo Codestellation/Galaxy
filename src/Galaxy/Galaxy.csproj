@@ -136,12 +136,14 @@
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Collections.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
+    <Compile Include="ServiceManager\DeploymentTaskBuilder.cs" />
+    <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectoryHelper.cs" />
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
+    <Compile Include="ServiceManager\Helpers\HostFeedHelper.cs" />
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
-    <Compile Include="ServiceManager\OperationsFactory.cs" />
-    <Compile Include="ServiceManager\IOperationsFactory.cs" />
+    <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />

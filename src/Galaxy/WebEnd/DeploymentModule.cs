@@ -9,6 +9,9 @@ using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using System;
+using Codestellation.Galaxy.ServiceManager.Helpers;
+using Codestellation.Galaxy.ServiceManager.EventParams;
+using System.Threading;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -119,7 +122,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddInstall());
+            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.InstallServiceTask(deployment, feed));         
 
             return RedirectToDetails(id);
         }
@@ -128,7 +131,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddStart());
+            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.StartServiceTask(deployment, feed));         
 
             return RedirectToDetails(id);
         }
@@ -137,7 +140,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddStop());
+            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.StopServiceTask(deployment, feed));         
 
             return RedirectToDetails(id);
         }
@@ -146,37 +149,40 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (srvCtrl) => srvCtrl.AddUninstall());
+            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.UninstallServiceTask(deployment, feed));         
 
             return RedirectToDetails(id);
         }
 
 
-        void ExecuteServiceControlAction(ObjectId deploymentId, Action<ServiceControl> customAction)
+        void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFunc)
         {
             var deployment = _dashBoard.GetDeployment(deploymentId);
 
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));            
 
             if (targetFeed != null)
             {
-                ServiceControl srvCtrl = new ServiceControl(new OperationsFactory(), deployment, targetFeed);
-                customAction(srvCtrl);
-                srvCtrl.OnCompleted += srvCtrl_OnOperationCompleted;
-                srvCtrl.Operate();
+                new DeploymentProcessor().Process(taskFunc(deployment, targetFeed), DeploymentCallbackFunc);
             }
         }
 
-        void srvCtrl_OnOperationCompleted(object sender, ServiceManager.EventParams.OperationCompletedEventArgs e)
+        void DeploymentCallbackFunc(object sender, DeploymentTaskCompletedEventArgs e)
         {
-            var deployment = _dashBoard.GetDeployment(e.Deployment.Id);
-            deployment.Status = e.Result.ToString();
+            CancellationTokenSource cts = new CancellationTokenSource();
 
-            using (var tx = _deployments.BeginTransaction())
+            ProcessRequest(() =>
             {
-                _deployments.Save(deployment, false);
-                tx.Commit();
-            }
+                var deployment = _dashBoard.GetDeployment(e.Task.Deployment.Id);
+                deployment.Status = e.Result.ToString();
+
+                using (var tx = _deployments.BeginTransaction())
+                {
+                    _deployments.Save(deployment, false);
+                    tx.Commit();
+                }
+                return null;
+            }, cts.Token);
         }
 
         private static object RedirectToList()
