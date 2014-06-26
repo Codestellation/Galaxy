@@ -42,8 +42,6 @@
     <StartupObject>Codestellation.Galaxy.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\jasny-bootstrap.min.css" />
-    <EmbeddedResource Include="WebEnd\Content\jasny-bootstrap.min.js" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -213,7 +211,6 @@
     <EmbeddedResource Include="WebEnd\Content\glyphicons-halflings-regular.svg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\jasny-bootstrap.css.map" />
     <None Include="WebEnd\Content\jquery-2.1.0.intellisense.js" />
   </ItemGroup>
   <ItemGroup>
