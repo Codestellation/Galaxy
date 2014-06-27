@@ -107,7 +107,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var item = _dashBoard.GetDeployment(id);
 
-            return View["details", new DeploymentModel(item, null)];
+            return View["details", new DeploymentModel(item, GetAvailableFeeds())];
         }
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()

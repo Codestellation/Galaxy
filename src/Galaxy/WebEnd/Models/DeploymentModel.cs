@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Nejdb.Bson;
 using Codestellation.Galaxy.Domain;
 
@@ -27,6 +28,11 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public IEnumerable<KeyValuePair<ObjectId, string>> AllFeeds
         {
             get { return _allFeeds; }
+        }
+
+        public string FeedName
+        {
+            get { return _allFeeds.Single(x => x.Key == FeedId).Value; }
         }
 
         public DeploymentModel()
