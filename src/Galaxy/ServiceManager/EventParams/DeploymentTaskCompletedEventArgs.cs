@@ -1,10 +1,8 @@
-﻿using System;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.ServiceManager.Operations;
+﻿using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager.EventParams
 {
-    public class DeploymentTaskCompletedEventArgs: EventArgs
+    public class DeploymentTaskCompletedEventArgs 
     {
         private readonly OperationResult _result;
         private readonly DeploymentTask _deploymentTask;
@@ -12,7 +10,12 @@ namespace Codestellation.Galaxy.ServiceManager.EventParams
         public DeploymentTask Task
         {
             get { return _deploymentTask; }
-        } 
+        }
+
+        public OperationResult Result
+        {
+            get { return _result; }
+        }
 
         public DeploymentTaskCompletedEventArgs(DeploymentTask deploymentTask, OperationResult result)
         {
@@ -20,9 +23,9 @@ namespace Codestellation.Galaxy.ServiceManager.EventParams
             _deploymentTask = deploymentTask;
         }
 
-        public OperationResult Result
+        public override string ToString()
         {
-            get { return _result; }
+            return string.Format("{0}:{1}", Task.Name, Result);
         }
     }
 }

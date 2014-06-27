@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Codestellation.Galaxy.Domain;
+﻿using Codestellation.Galaxy.Domain;
 using System.ServiceProcess;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations

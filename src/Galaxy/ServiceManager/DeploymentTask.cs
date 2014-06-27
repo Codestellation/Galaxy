@@ -5,8 +5,7 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class DeploymentTask
     {
-        private readonly LinkedList<ServiceOperation> _operations =
-            new LinkedList<ServiceOperation>();
+        private readonly List<ServiceOperation> _operations; 
 
         private readonly string _name;
         private readonly Deployment _deployment;
@@ -23,26 +22,32 @@ namespace Codestellation.Galaxy.ServiceManager
             get { return _targetPath; }
         } 
 
-        public IEnumerable<ServiceOperation> Operations
+        public IReadOnlyList<ServiceOperation> Operations
         {
             get { return _operations; }
         }
 
         public void Add(ServiceOperation operation)
         {
-            _operations.AddLast(operation);
+            _operations.Add(operation);
         }
 
         public Deployment Deployment
         {
             get { return _deployment; }
         }
+
         public string Name
         {
             get { return _name; }
-        } 
+        }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath)
+        private DeploymentTask()
+        {
+            _operations =new List<ServiceOperation>();
+        }
+
+        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath) : this()
         {
             _name = name;
             _deployment = deployment;
@@ -50,14 +55,15 @@ namespace Codestellation.Galaxy.ServiceManager
             _targetPath = targetPath;
         }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath, 
-            IEnumerable<ServiceOperation> operations) :
+        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath, IEnumerable<ServiceOperation> operations) :
             this(name, deployment, feed, targetPath)
         {
-            foreach (var op in operations)
-	        {
-                _operations.AddLast(op);
-	        }            
+            _operations.AddRange(operations);
+        }
+
+        public override string ToString()
+        {
+            return _name;
         }
     }
 }

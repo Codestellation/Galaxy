@@ -2,10 +2,7 @@
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.Collections.Generic;
-using System.Reflection;
 using System;
-using System.Linq;
-using System.Runtime.Versioning;
 using System.Configuration;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Codestellation.Galaxy.ServiceManager.EventParams;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.ServiceManager.Helpers;
@@ -9,43 +8,54 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class DeploymentProcessor
     {
-        public DeploymentProcessor()
+        private Task _task;
+
+        private void ProcessInternal(DeploymentTask deploymentTask, Action<DeploymentTaskCompletedEventArgs> callback)
         {
-        }
+            var results = new OperationResult[deploymentTask.Operations.Count];
 
-        private void ProcessInternal(DeploymentTask deploymentTask, EventHandler<DeploymentTaskCompletedEventArgs> callback)
-        {
-            Queue<ServiceOperation> localQueue = new Queue<ServiceOperation>(deploymentTask.Operations);
+            var failureDetected = false;
 
-            OperationResult[] results = new OperationResult[localQueue.Count];
-
-            int index = 0;
-            while (localQueue.Count > 0)
+            for (int index = 0; index < deploymentTask.Operations.Count; index++)
             {
-                var operation = localQueue.Dequeue();
+                var operation = deploymentTask.Operations[index];
+
+                string operationName = operation.GetType().Name;
+
+                if (failureDetected)
+                {
+                    results[index] = new OperationResult(operationName, ResultCode.NotRan);
+                    continue;
+                }
 
                 try
                 {
 	                operation.Execute();
-	                results[index++] = new OperationResult(operation.GetType().Name, OperationResultType.OR_OK);
+	                results[index] = new OperationResult(operationName, ResultCode.Succeed);
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    results[index++] = new OperationResult(operation.GetType().Name, OperationResultType.OR_FAIL, ex.Message);               	
+                    results[index] = new OperationResult(operationName, ResultCode.Failed, ex.Message);
+                    failureDetected = true;
                 }
             }
 
             var deploymentResult = ResultsDescriberHelper.AggregateResults(deploymentTask, results);
+
+            var args = new DeploymentTaskCompletedEventArgs(deploymentTask, deploymentResult);
             
-            callback.Invoke(this,
-                new DeploymentTaskCompletedEventArgs(
-                    deploymentTask, 
-                    deploymentResult));
+            callback.Invoke(args);
         }
 
-        public void Process(DeploymentTask deploymentTask, EventHandler<DeploymentTaskCompletedEventArgs> callback)
+        public void Process(DeploymentTask deploymentTask, Action<DeploymentTaskCompletedEventArgs> callback)
         {
-            new Task(() => ProcessInternal(deploymentTask, callback)).Start();
+            //All exceptions are catched. No need to prevent task finalizers faults.
+            _task =  Task.Factory.StartNew(() => ProcessInternal(deploymentTask, callback));
+        }
+
+        public void Wait()
+        {
+            _task.Wait();
         }
     }
 }

@@ -10,42 +10,43 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
         {
             StringBuilder details = new StringBuilder();
 
-            var success = results.All(item => item.ResultType == OperationResultType.OR_OK);
+            var success = results.All(item => item.ResultCode == ResultCode.Succeed);
 
             foreach (var result in results)
             {
-                if (result.ResultType == OperationResultType.OR_FAIL)
+                if (result.ResultCode == ResultCode.Failed)
                 {
-                    details.AppendLine(DescribeFail(result));
+                    DescribeFail(details, result);
                 }
             }
 
-            details.AppendLine(DescribeResults(success, details, deploymentTask));
+            DescribeResults(success, details, deploymentTask);
 
-            var deploymentResult = 
+            var deploymentResult =
                 new OperationResult(
-                    deploymentTask.Name, 
-                    success ? OperationResultType.OR_OK : OperationResultType.OR_FAIL, 
-                    details.ToString(), 
+                    deploymentTask.Name,
+                    success ? ResultCode.Succeed : ResultCode.Failed,
+                    details.ToString(),
                     results);
 
             return deploymentResult;
         }
 
-        private static string DescribeResults(bool success, StringBuilder details, DeploymentTask deploymentTask)
+        private static void DescribeResults(bool success, StringBuilder details, DeploymentTask deploymentTask)
         {
-            if (success)
-                return string.Format("Deployment task {0} succeeded.", deploymentTask.Name);
-            else
-                return string.Format("Deployment task {0} failed.", deploymentTask.Name);
+            var template = success ? "Deployment task {0} succeed." : "Deployment task {0} failed.";
+            
+            details
+                .AppendFormat(template, deploymentTask)
+                .AppendLine();
         }
 
-        private static string DescribeFail(OperationResult operationResult)
+        private static void DescribeFail(StringBuilder details, OperationResult operationResult)
         {
-            return string.Format("Operation {0} failed. Details:\r\n{1}", 
-                operationResult.OperationName,
-                operationResult.Details);
+            details
+                .AppendFormat("Operation {0} failed. Details:", operationResult.OperationName)
+                .AppendLine()
+                .AppendLine(operationResult.Details);
         }
-
     }
 }

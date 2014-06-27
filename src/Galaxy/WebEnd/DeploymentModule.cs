@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nejdb;
 using Nejdb.Bson;
 using Nancy.Responses;
@@ -9,7 +10,6 @@ using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using System;
-using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Galaxy.ServiceManager.EventParams;
 using System.Threading;
 
@@ -118,7 +118,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.InstallServiceTask(deployment, feed));         
+            ExecuteServiceControlAction(id, DeploymentTaskBuilder.InstallServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -127,7 +127,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.StartServiceTask(deployment, feed));         
+            ExecuteServiceControlAction(id, DeploymentTaskBuilder.StartServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -136,7 +136,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.StopServiceTask(deployment, feed));         
+            ExecuteServiceControlAction(id, DeploymentTaskBuilder.StopServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -145,37 +145,37 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, (deployment, feed) => DeploymentTaskBuilder.UninstallServiceTask(deployment, feed));         
+            ExecuteServiceControlAction(id, DeploymentTaskBuilder.UninstallServiceTask);         
 
             return RedirectToDetails(id);
         }
 
-
-        void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFunc)
+        //TODO: three following methods are not eligible for web-module
+        private void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFactory)
         {
             var deployment = _dashBoard.GetDeployment(deploymentId);
 
             var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));            
 
+            //TODO: What else? Ignore silently? 
             if (targetFeed != null)
             {
-                new DeploymentProcessor().Process(taskFunc(deployment, targetFeed), DeploymentCallbackFunc);
+                var task = taskFactory(deployment, targetFeed);
+                new DeploymentProcessor().Process(task, OnDeploymentCompleted);
             }
         }
-
-        void DeploymentCallbackFunc(object sender, DeploymentTaskCompletedEventArgs e)
+        
+        private void OnDeploymentCompleted(DeploymentTaskCompletedEventArgs e)
         {
-            CancellationTokenSource cts = new CancellationTokenSource();
+            Task.Factory.StartNew(() => UpdateDeploymentStatus(e), CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
+        }
 
-            ProcessRequest(() =>
-            {
-                var deployment = _dashBoard.GetDeployment(e.Task.Deployment.Id);
-                deployment.Status = e.Result.Details;
+        private void UpdateDeploymentStatus(DeploymentTaskCompletedEventArgs e)
+        {
+            var deployment = _dashBoard.GetDeployment(e.Task.Deployment.Id);
+            deployment.Status = e.Result.Details;
 
-                SaveDeployment(deployment);
-
-                return null;
-            }, cts.Token);
+            SaveDeployment(deployment);
         }
 
         private object PostDeploy(dynamic parameters)
@@ -188,7 +188,6 @@ namespace Codestellation.Galaxy.WebEnd
 
             SaveDeployment(deployment);
 
-            ExecuteServiceControlAction(id, (deploymentItem, feed) => DeploymentTaskBuilder.DeployServiceTask(deploymentItem, feed));
 
             return RedirectToDetails(id);
         }

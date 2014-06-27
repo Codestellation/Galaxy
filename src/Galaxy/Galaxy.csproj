@@ -139,7 +139,7 @@
     <Compile Include="Infrastructure\VersionPackageCache.cs" />
     <Compile Include="ServiceManager\DeploymentTaskBuilder.cs" />
     <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
-    <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
+    <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectoryHelper.cs" />
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
     <Compile Include="ServiceManager\Helpers\HostFeedHelper.cs" />
@@ -150,6 +150,7 @@
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />
     <Compile Include="ServiceManager\Operations\OperationResult.cs" />
+    <Compile Include="ServiceManager\Operations\ResultCode.cs" />
     <Compile Include="ServiceManager\Operations\ServiceOperation.cs" />
     <Compile Include="ServiceManager\Operations\ProvideServiceConfig.cs" />
     <Compile Include="ServiceManager\Operations\StartService.cs" />

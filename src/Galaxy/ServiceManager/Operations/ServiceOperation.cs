@@ -37,6 +37,11 @@ namespace Codestellation.Galaxy.ServiceManager
             _feed = feed;
         }
 
+        protected void StoreResult<T>(T serviceOperation, ResultCode result, string details)
+        {
+            _result = new OperationResult(typeof(T).Name, result, details);
+        }
+
         protected int ExecuteWithParams(string exePath, string exeParams)
         {
             System.Diagnostics.Process process = new System.Diagnostics.Process();

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading;
-using Codestellation.Galaxy.Domain;
+﻿using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager;
-using Codestellation.Galaxy.ServiceManager.Fakes;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes;
 using NUnit.Framework;
@@ -12,21 +9,14 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
     [TestFixture]
     public class DeploymentProcessorTests
     {
-        OperationResult ExecuteServiceControl(DeploymentTask task)
+        private OperationResult ExecuteServiceControl(DeploymentTask task)
         {
-            ManualResetEventSlim deploymentCompleted = new ManualResetEventSlim(false);
-
             OperationResult result = null;
 
-            new DeploymentProcessor().Process(task,
-                    new EventHandler<Galaxy.ServiceManager.EventParams.DeploymentTaskCompletedEventArgs>(
-                        (sender, e) => 
-                        {
-                            result = e.Result;
-                            deploymentCompleted.Set();
-                        }));
+            var processor =  new DeploymentProcessor();
+            processor.Process(task, e => { result = e.Result; });
 
-            deploymentCompleted.Wait();
+            processor.Wait();
 
             return result;
         }
@@ -40,7 +30,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
                 );
 
             var result = ExecuteServiceControl(successSequenceTask);
-            Assert.AreEqual(OperationResultType.OR_OK, result.ResultType);
+            Assert.AreEqual(ResultCode.Succeed, result.ResultCode);
         }
 
         [Test]
@@ -53,7 +43,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
 
             var result = ExecuteServiceControl(sequence);
 
-            Assert.That(result.Details, Is.StringContaining(sequence.Name).And.StringContaining("succeeded"));
+            Assert.That(result.Details, Is.StringContaining(sequence.Name).And.StringContaining("succeed"));
         }
 
         [Test]
@@ -65,7 +55,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
                 );
 
             var result = ExecuteServiceControl(sequence);
-            Assert.AreEqual(OperationResultType.OR_FAIL, result.ResultType);
+            Assert.AreEqual(ResultCode.Failed, result.ResultCode);
         }
 
         [Test]
