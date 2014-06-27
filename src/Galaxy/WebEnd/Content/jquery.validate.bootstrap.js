@@ -20,8 +20,4 @@
             }
         }
     });
-
-    $.validator.addMethod("greaterZero", function (value, el, param) {
-        return value > 0;
-    }, "Значение должно быть больше 0");
 }

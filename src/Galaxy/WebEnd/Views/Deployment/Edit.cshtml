@@ -1,6 +1,7 @@
 ﻿@using Codestellation.Galaxy.WebEnd
 @using Codestellation.Galaxy.WebEnd.Misc
 @using Codestellation.Galaxy.WebEnd.Models
+@using Nejdb.Bson
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentModel>
 @{ Layout = "Master";}
@@ -37,6 +38,9 @@
                         required: true,
                         minlength: 5,
                         maxlength: 50
+                    },
+                    FeedId: {
+                        required: true,
                     },
                     PackageName: {
                         required: true,
