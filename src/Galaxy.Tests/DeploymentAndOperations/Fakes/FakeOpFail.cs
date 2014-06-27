@@ -1,23 +1,24 @@
 ﻿using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager;
+using Codestellation.Galaxy.ServiceManager.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codestellation.Galaxy.Tests.ServiceManager.Fakes
+namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
-    public class FakeOpThrow: ServiceOperation
+    public class FakeOpFail: ServiceOperation
     {
-        public FakeOpThrow(string targetPath, Deployment deployment, NugetFeed feed) :
+        public FakeOpFail(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
         {
         }
 
         public override void Execute()
         {
-            throw new InvalidOperationException("thrown IOP");
+            StoreResult(this, OperationResultType.OR_FAIL, "Op details");
         }
     }
 }

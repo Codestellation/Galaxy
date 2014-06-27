@@ -4,10 +4,10 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Fakes;
 using Codestellation.Galaxy.ServiceManager.Operations;
-using Codestellation.Galaxy.Tests.ServiceManager.Fakes;
+using Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes;
 using NUnit.Framework;
 
-namespace Codestellation.Galaxy.Tests.ServiceManager
+namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
 {
     [TestFixture]
     public class DeploymentProcessorTests

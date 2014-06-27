@@ -1,7 +1,7 @@
 ﻿using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.Domain;
 
-namespace Codestellation.Galaxy.Tests.ServiceManager.Fakes
+namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
     public class TestTaskBuilder
     {
