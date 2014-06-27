@@ -23,11 +23,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 	            var config = new ServiceConfig(Deployment);
 		            
 	            config.Serialize(serviceConfigFileNameFull);
-	            StoreResult(OperationResult.OR_OK, "");
+                StoreResult(this, OperationResultType.OR_OK, "");
             }
             catch (System.Exception ex)
             {
-                StoreResult(OperationResult.OR_FAIL, ex.Message);
+                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
             }
         }
     }

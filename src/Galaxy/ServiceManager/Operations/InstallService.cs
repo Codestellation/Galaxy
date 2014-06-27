@@ -26,16 +26,16 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 int resultCode = 0;
                 if ((resultCode = ExecuteWithParams(exePath, exeParams)) != 0)
                 {
-                    StoreResult(OperationResult.OR_FAIL,
+                    StoreResult(this, OperationResultType.OR_FAIL,
                                 string.Format("execution of {0} with params {1} returned {2}", exePath, exeParams, resultCode));
                     return;
                 }
 
-                StoreResult(OperationResult.OR_OK, "");
+                StoreResult(this, OperationResultType.OR_OK, "");
             }
             catch (System.Exception ex)
             {
-                StoreResult(OperationResult.OR_FAIL, ex.Message);
+                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
             }
         }
     }

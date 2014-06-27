@@ -18,17 +18,17 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
                 if (!Directory.Exists(serviceTargetPath))
                 {
-                    StoreResult(OperationResult.OR_FAIL, "uninstall unavaliable: run install first");
+                    StoreResult(this, OperationResultType.OR_FAIL, "uninstall unavaliable: run install first");
                     return;
                 }
 
                 Directory.Delete(serviceTargetPath, true);
 
-                StoreResult(OperationResult.OR_OK, "");
+                StoreResult(this, OperationResultType.OR_OK, "");
             }
             catch (System.Exception ex)
             {
-                StoreResult(OperationResult.OR_FAIL,
+                StoreResult(this, OperationResultType.OR_FAIL,
                             string.Format("uninstall error: {0}", ex.Message));
             }            
         }

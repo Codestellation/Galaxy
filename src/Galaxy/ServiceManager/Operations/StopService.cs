@@ -27,11 +27,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 DoStopService();
 
-                StoreResult(OperationResult.OR_OK, "");
+                StoreResult(this, OperationResultType.OR_OK, "");
             }
             catch (System.Exception ex)
             {
-                StoreResult(OperationResult.OR_FAIL, ex.Message);
+                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
             }
         }
     }

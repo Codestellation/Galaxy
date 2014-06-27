@@ -98,7 +98,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
                 if (packagesDotNetVersionMax > hostPackageDotNetVersion)
                 {
-                    StoreResult(OperationResult.OR_FAIL, "Found incompatible package with host service application, reason: .NET framework version");
+                    StoreResult(this, OperationResultType.OR_FAIL, "Found incompatible package with host service application, reason: .NET framework version");
                     return;
                 }
 
@@ -114,11 +114,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
                 Clean(packageFolders);
 
-                StoreResult(OperationResult.OR_OK, "");
+                StoreResult(this, OperationResultType.OR_OK, "");
             }
             catch (System.Exception ex)
             {
-                StoreResult(OperationResult.OR_FAIL, ex.Message);
+                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
             }
         }
 

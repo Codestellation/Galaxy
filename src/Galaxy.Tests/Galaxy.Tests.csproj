@@ -79,7 +79,7 @@
     <Compile Include="ServiceManager\Fakes\FakeOpSuccess.cs" />
     <Compile Include="ServiceManager\Fakes\FakeOpThrow.cs" />
     <Compile Include="ServiceManager\Fakes\TestTaskBuilder.cs" />
-    <Compile Include="ServiceManager\ServiceControlTests.cs" />
+    <Compile Include="ServiceManager\DeploymentProcessorTests.cs" />
     <Compile Include="WebEnd\FeedModuleTest.cs" />
   </ItemGroup>
   <ItemGroup>

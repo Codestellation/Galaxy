@@ -26,11 +26,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
                 packageManager.InstallPackage(packageID);
 
-                StoreResult(OperationResult.OR_OK, "install succeeded");
+                StoreResult(this, OperationResultType.OR_OK, "install succeeded");
             }
             catch (System.Exception ex)
             {
-                StoreResult(OperationResult.OR_FAIL,
+                StoreResult(this, OperationResultType.OR_FAIL,
                             string.Format("install error: {0}", ex.Message));
             }            
         }

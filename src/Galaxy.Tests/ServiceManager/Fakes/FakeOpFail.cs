@@ -1,5 +1,6 @@
 ﻿using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager;
+using Codestellation.Galaxy.ServiceManager.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Codestellation.Galaxy.Tests.ServiceManager.Fakes
 
         public override void Execute()
         {
-            StoreResult(OperationResult.OR_FAIL, "Op details");
+            StoreResult(this, OperationResultType.OR_FAIL, "Op details");
         }
     }
 }

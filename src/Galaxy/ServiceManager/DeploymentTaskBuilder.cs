@@ -15,7 +15,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask(deployment, deploymentFeed, _targetPath)
+            return new DeploymentTask("InstallService", deployment, deploymentFeed, _targetPath)
                 .InstallPackageOp()
                 .InstallPackageOp(HostFeedHelper.Create())
                 .CopyNugetsToRootOp()
@@ -25,19 +25,19 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask(deployment, deploymentFeed, _targetPath)
+            return new DeploymentTask("UninstallService", deployment, deploymentFeed, _targetPath)
                 .StopServiceOp()
                 .UninstallServiceOp()
                 .UninstallPackageOp();
         }
         public static DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask(deployment, deploymentFeed, _targetPath)
+            return new DeploymentTask("StartService", deployment, deploymentFeed, _targetPath)
                 .StartServiceOp();
         }
         public static DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask(deployment, deploymentFeed, _targetPath)
+            return new DeploymentTask("StopService", deployment, deploymentFeed, _targetPath)
                 .StopServiceOp();
         }
     }

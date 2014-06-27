@@ -7,7 +7,7 @@ namespace Codestellation.Galaxy.ServiceManager
     {
         public static DeploymentTask InstallPackageOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new InstallPackage(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -16,7 +16,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask InstallPackageOp(this DeploymentTask deploymentTask, NugetFeed feed)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new InstallPackage(deploymentTask.TargetPath, deploymentTask.Deployment, feed)
                 );
@@ -25,7 +25,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask InstallServiceOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new InstallService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -34,7 +34,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask ProvideServiceConfigOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new ProvideServiceConfig(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -43,7 +43,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask StartServiceOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new StartService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -52,7 +52,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask StopServiceOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new StopService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -61,7 +61,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask UninstallPackageOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new UninstallPackage(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -70,7 +70,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public static DeploymentTask UninstallServiceOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new UninstallService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
@@ -78,7 +78,7 @@ namespace Codestellation.Galaxy.ServiceManager
         }
         public static DeploymentTask CopyNugetsToRootOp(this DeploymentTask deploymentTask)
         {
-            deploymentTask.Operations.AddLast
+            deploymentTask.Add
                 (
                     new CopyNugetsToRoot(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );

@@ -174,7 +174,7 @@ namespace Codestellation.Galaxy.WebEnd
             ProcessRequest(() =>
             {
                 var deployment = _dashBoard.GetDeployment(e.Task.Deployment.Id);
-                deployment.Status = e.Result.ToString();
+                deployment.Status = e.Result.Details;
 
                 using (var tx = _deployments.BeginTransaction())
                 {

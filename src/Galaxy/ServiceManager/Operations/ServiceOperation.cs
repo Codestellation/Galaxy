@@ -1,13 +1,9 @@
 ﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
-    public enum OperationResult
-    {
-        OR_DEFAULT,
-        OR_OK,
-        OR_FAIL
-    }
+
 
     public abstract class ServiceOperation
     {
@@ -41,10 +37,9 @@ namespace Codestellation.Galaxy.ServiceManager
             _feed = feed;
         }
 
-        protected void StoreResult(OperationResult result, string details)
+        protected void StoreResult<T>(T serviceOperation, OperationResultType result, string details)
         {
-            _result = result;
-            _details = details;
+            _result = new OperationResult(typeof(T).Name, result, details);
         }
 
         protected int ExecuteWithParams(string exePath, string exeParams)
