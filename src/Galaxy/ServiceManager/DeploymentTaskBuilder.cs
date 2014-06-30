@@ -13,6 +13,15 @@ namespace Codestellation.Galaxy.ServiceManager
             _targetPath = ConfigurationManager.AppSettings["appsdestination"];
         }
 
+        public static DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
+        {
+            return new DeploymentTask("DeployService", deployment, deploymentFeed, _targetPath)
+                .InstallPackageOp()
+                .InstallPackageOp(HostFeedHelper.Create())
+                .CopyNugetsToRootOp()
+                .ProvideServiceConfigOp();
+        }
+
         public static DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("InstallService", deployment, deploymentFeed, _targetPath)

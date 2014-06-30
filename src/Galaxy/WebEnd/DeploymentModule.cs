@@ -31,6 +31,7 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
             Post["/stop/{id}", true] = (parameters, token) => ProcessRequest(() => PostStop(parameters), token);
             Post["/uninstall/{id}", true] = (parameters, token) => ProcessRequest(() => PostUninstall(parameters), token);
+            Post["/deploy/{id}", true] = (parameters, token) => ProcessRequest(() => PostDeploy(parameters), token);
         }
 
         protected override CrudOperations SupportedOperations
@@ -55,11 +56,7 @@ namespace Codestellation.Galaxy.WebEnd
             var item = this.Bind<DeploymentModel>();
             var deployment = item.ToDeployment();
 
-            using (var tx = _deployments.BeginTransaction())
-            {
-                _deployments.Save(deployment, false);
-                tx.Commit();
-            }
+            SaveDeployment(deployment);
 
             _dashBoard.AddDeployment(deployment);
 
@@ -69,9 +66,9 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var item = _dashBoard.GetDeployment(id);
+            var deployment = _dashBoard.GetDeployment(id);
 
-            return View["Edit", new DeploymentModel(item, GetAvailableFeeds())];
+            return View["Edit", new DeploymentModel(deployment, GetAvailableFeeds())];
         }
 
         protected override object PostEdit(dynamic parameters)
@@ -83,11 +80,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             updatedItem.Update(deployment);
 
-            using (var tx = _deployments.BeginTransaction())
-            {
-                _deployments.Save(deployment, false);
-                tx.Commit();
-            }
+            SaveDeployment(deployment);
 
             return new RedirectResponse("/" + Path);
         }
@@ -105,9 +98,12 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetDetails(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var item = _dashBoard.GetDeployment(id);
+            var deployment = _dashBoard.GetDeployment(id);
+            var feed = _dashBoard.GetFeed(deployment.FeedId);
 
-            return View["details", new DeploymentModel(item, GetAvailableFeeds())];
+            var versions = _dashBoard.VersionCache.GetPackageVersions(feed);
+
+            return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions.Select(item => item.Version))];
         }
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
@@ -176,15 +172,36 @@ namespace Codestellation.Galaxy.WebEnd
                 var deployment = _dashBoard.GetDeployment(e.Task.Deployment.Id);
                 deployment.Status = e.Result.Details;
 
-                using (var tx = _deployments.BeginTransaction())
-                {
-                    _deployments.Save(deployment, false);
-                    tx.Commit();
-                }
+                SaveDeployment(deployment);
+
                 return null;
             }, cts.Token);
         }
 
+        private object PostDeploy(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var deploymentModel = this.Bind<DeploymentModel>();
+
+            var deployment = _dashBoard.GetDeployment(id);
+            deployment.PackageVersion = deploymentModel.PackageVersion;
+
+            SaveDeployment(deployment);
+
+            ExecuteServiceControlAction(id, (deploymentItem, feed) => DeploymentTaskBuilder.DeployServiceTask(deploymentItem, feed));
+
+            return RedirectToDetails(id);
+        }
+
+        private void SaveDeployment(Deployment deployment)
+        {
+            using (var tx = _deployments.BeginTransaction())
+            {
+                _deployments.Save(deployment, false);
+                tx.Commit();
+            }
+        }
+        
         private static object RedirectToList()
         {
             return new RedirectResponse("/" + Path);
@@ -195,5 +212,6 @@ namespace Codestellation.Galaxy.WebEnd
             var detailsPath = string.Format("/{0}/details/{1}", Path, id);
             return new RedirectResponse(detailsPath);
         }
+
     }
 }

@@ -24,7 +24,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
                 PackageManager packageManager = new PackageManager(repo, serviceTargetPath);
 
-                packageManager.InstallPackage(packageID);
+                packageManager.InstallPackage(packageID, new SemanticVersion(_deployment.PackageVersion));
 
                 StoreResult(this, OperationResultType.OR_OK, "install succeeded");
             }

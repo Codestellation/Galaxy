@@ -21,9 +21,6 @@
                         <td>Feed</td><td>@Model.FeedName</td>
                     </tr>
                     <tr>
-                        <td>Package</td><td>@Model.PackageName </td>
-                    </tr>
-                    <tr>
                         <td>Service Type</td><td>@Model.AssemblyQualifiedType</td>
                     </tr>
                     <tr>
@@ -36,7 +33,19 @@
             </div>
         </div>
     </div>
-    <div class="container col-lg-3">
+    <div class="container col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Deploy
+            </div>
+            <div class="panel-body">
+                <form role="form" action="/@DeploymentModule.Path/deploy/@Model.Id" method="POST">
+                    @Html.DropDownList(x => x.PackageVersion, Model.PackageVersions) <br>
+                    <input type="submit" class="btn btn-primary btn-sm" value="Deploy" />
+                </form>
+            </div>
+        </div>
+
         <div class="panel panel-primary">
             <div class="panel-heading">
                 Tasks

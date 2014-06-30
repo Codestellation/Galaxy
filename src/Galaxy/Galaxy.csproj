@@ -136,6 +136,7 @@
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Collections.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
+    <Compile Include="Infrastructure\VersionPackageCache.cs" />
     <Compile Include="ServiceManager\DeploymentTaskBuilder.cs" />
     <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\OperationCompletedEventArgs.cs" />
@@ -161,7 +162,8 @@
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
-    <Compile Include="WebEnd\Misc\ObjectIdTypeConverter.cs" />
+    <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />
+    <Compile Include="WebEnd\Misc\Converters\ObjectIdTypeConverter.cs" />
     <Compile Include="WebEnd\Models\DeploymentListModel.cs" />
     <Compile Include="WebEnd\Models\FeedListModel.cs" />
     <Compile Include="WebEnd\Misc\EmbeddedFileContentResponse.cs" />

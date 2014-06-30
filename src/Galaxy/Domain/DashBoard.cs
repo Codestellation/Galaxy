@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nejdb.Bson;
+using Codestellation.Galaxy.Infrastructure;
 
 namespace Codestellation.Galaxy.Domain
 {
@@ -7,6 +8,13 @@ namespace Codestellation.Galaxy.Domain
     {
         private readonly Dictionary<ObjectId, NugetFeed> _feeds;
         private readonly Dictionary<ObjectId, Deployment> _deployments;
+        private readonly VersionPackageCache _versionPackageCache = new VersionPackageCache();
+
+        public VersionPackageCache VersionCache
+        {
+            get { return _versionPackageCache; }
+        } 
+
 
         public DashBoard()
         {
@@ -27,6 +35,8 @@ namespace Codestellation.Galaxy.Domain
         public void AddFeed(NugetFeed feed)
         {
             _feeds.Add(feed.Id, feed);
+
+            VersionCache.AddPackage(feed);
         }
 
         public void RemoveFeed(ObjectId id)

@@ -2,18 +2,18 @@
 using Nancy.ModelBinding;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Misc
+namespace Codestellation.Galaxy.WebEnd.Misc.Converters
 {
-    public class ObjectIdTypeConverter : ITypeConverter
+    public class VersionTypeConverter : ITypeConverter
     {
         public bool CanConvertTo(Type destinationType, BindingContext context)
         {
-            return destinationType == typeof(ObjectId);
+            return destinationType == typeof(Version);
         }
 
         public object Convert(string input, Type destinationType, BindingContext context)
         {
-            return new ObjectId(input);
+            return new Version(input);
         }
     }
 }

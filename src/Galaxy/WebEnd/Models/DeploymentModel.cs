@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Nejdb.Bson;
 using Codestellation.Galaxy.Domain;
 
@@ -19,12 +20,19 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public ObjectId FeedId { get; set; }
         [Display(Name = "Assembly-qualified type name", Prompt = "Assembly-qualified type name")]
         public string AssemblyQualifiedType { get; set; }
-        [Display(Name = "Package name", Prompt = "Package name")]
-        public string PackageName { get; set; }
+        [Display(Name = "Package version", Prompt = "Package version")]
+        public string PreferedPackageVersion { get; set; }
         public string Status { get; set; }
 
-        readonly IEnumerable<KeyValuePair<ObjectId, string>> _allFeeds;
+        public Version PackageVersion { get; set; }
 
+        readonly IEnumerable<KeyValuePair<Version, string>> _packageVersions;
+        public IEnumerable<KeyValuePair<Version, string>> PackageVersions 
+        {
+            get { return _packageVersions; } 
+        }
+
+        readonly IEnumerable<KeyValuePair<ObjectId, string>> _allFeeds;
         public IEnumerable<KeyValuePair<ObjectId, string>> AllFeeds
         {
             get { return _allFeeds; }
@@ -39,6 +47,8 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             IsNew = true;
             Id = new ObjectId();
+            _allFeeds = null;
+            _packageVersions = null;
         }
 
         public DeploymentModel(IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
@@ -46,9 +56,10 @@ namespace Codestellation.Galaxy.WebEnd.Models
             IsNew = true;
             Id = new ObjectId();
             _allFeeds = allFeeds;
+            _packageVersions = null;
         }
 
-        public DeploymentModel(Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
+        public DeploymentModel(Deployment deployment)
         {
             Id = deployment.Id;
 
@@ -58,10 +69,26 @@ namespace Codestellation.Galaxy.WebEnd.Models
             Description = deployment.Description;
             FeedId = deployment.FeedId;
             Status = deployment.Status;
-
-            _allFeeds = allFeeds;
+            PackageVersion = deployment.PackageVersion;
 
             IsNew = false;
+        }
+
+        public DeploymentModel(Deployment deployment,
+            IEnumerable<KeyValuePair<ObjectId, string>> allFeeds):
+            this(deployment)
+        {
+            _allFeeds = allFeeds;
+            _packageVersions = null;
+        }
+
+        public DeploymentModel(Deployment deployment, 
+            IEnumerable<KeyValuePair<ObjectId, string>> allFeeds,
+            IEnumerable<Version> packageVersions):
+            this(deployment)
+        {
+            _allFeeds = allFeeds;
+            _packageVersions = packageVersions.Select(item => new KeyValuePair<Version, string>(item, item.ToString()));
         }
 
         public void Update(Deployment deployment)

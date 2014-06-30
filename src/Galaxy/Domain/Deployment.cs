@@ -1,4 +1,5 @@
 ﻿using Nejdb.Bson;
+using System;
 
 namespace Codestellation.Galaxy.Domain
 {
@@ -12,5 +13,6 @@ namespace Codestellation.Galaxy.Domain
         public string FeedName { get; set; }
         public ObjectId FeedId { get; internal set; }
         public string Status { get; set; }
+        public Version PackageVersion { get; set; }
     }
 }
