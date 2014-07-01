@@ -10,7 +10,7 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
         {
             StringBuilder details = new StringBuilder();
 
-            var success = results.FirstOrDefault(item => item.ResultType == OperationResultType.OR_FAIL) == default(OperationResult);
+            var success = results.All(item => item.ResultType == OperationResultType.OR_OK);
 
             foreach (var result in results)
             {

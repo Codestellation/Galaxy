@@ -66,9 +66,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             var dllFiles = Directory.GetFiles(targetPath, "*.dll", SearchOption.AllDirectories);
 
-            var filesCheck = dllFiles.FirstOrDefault(item => item.Contains("TestNugetPackLib.dll")) != null;
+            var expectedDll = dllFiles.FirstOrDefault(item => item.Contains("TestNugetPackLib.dll"));
 
-            Assert.IsTrue(filesCheck);
+            Assert.That(expectedDll, Is.Not.Null);
         }
 
         [TearDown]

@@ -1,5 +1,6 @@
 ﻿using NuGet;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Codestellation.Galaxy.Domain;
 using System.Collections.Concurrent;
@@ -19,9 +20,15 @@ namespace Codestellation.Galaxy.Infrastructure
         private readonly ConcurrentDictionary<NugetFeed, HashSet<SemanticVersion>> _packageVersionCache =
             new ConcurrentDictionary<NugetFeed, HashSet<SemanticVersion>>();
 
-        Timer refreshTimer = null;
+        readonly Lazy<Timer> refreshTimerLazy = null;
         readonly TimeSpan refreshInterval = TimeSpan.FromMinutes(5);
         readonly TimeSpan startupRefreshDelay = TimeSpan.FromSeconds(10);
+
+        public VersionPackageCache()
+        {
+            var callback = new TimerCallback((param) => RefreshCache());
+            refreshTimerLazy = new Lazy<Timer>(() => new Timer(callback, null, startupRefreshDelay, refreshInterval));
+        }
 
         private void CacheVersion(NugetFeed package, SemanticVersion version)
         {
@@ -43,7 +50,8 @@ namespace Codestellation.Galaxy.Infrastructure
 
         private void RefreshCache()
         {
-            var packages = _packageVersionCache.Keys;
+            var packages = _packageVersionCache.Keys.ToArray();
+
             foreach (var package in packages)
             {
                 RefreshCacheForPackage(package);
@@ -64,12 +72,7 @@ namespace Codestellation.Galaxy.Infrastructure
         {
             _packageVersionCache.TryAdd(feed, new HashSet<SemanticVersion>());
 
-            if (refreshTimer == null)
-                refreshTimer = new Timer(
-                    new TimerCallback(
-                        (param) => RefreshCache()), null, startupRefreshDelay, refreshInterval);
-
-            refreshTimer.Change(startupRefreshDelay, refreshInterval);            
+            refreshTimerLazy.Value.Change(startupRefreshDelay, refreshInterval);            
         }
     }
 }

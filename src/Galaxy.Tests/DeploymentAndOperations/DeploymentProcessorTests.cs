@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
     {
         OperationResult ExecuteServiceControl(DeploymentTask task)
         {
-            ManualResetEventSlim mre = new ManualResetEventSlim(false);
+            ManualResetEventSlim deploymentCompleted = new ManualResetEventSlim(false);
 
             OperationResult result = null;
 
@@ -23,10 +23,10 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
                         (sender, e) => 
                         {
                             result = e.Result;
-                            mre.Set();
+                            deploymentCompleted.Set();
                         }));
 
-            mre.Wait();
+            deploymentCompleted.Wait();
 
             return result;
         }
