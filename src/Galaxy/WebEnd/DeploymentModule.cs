@@ -101,9 +101,9 @@ namespace Codestellation.Galaxy.WebEnd
             var deployment = _dashBoard.GetDeployment(id);
             var feed = _dashBoard.GetFeed(deployment.FeedId);
 
-            var versions = _dashBoard.VersionCache.GetPackageVersions(feed);
+            var versions = _dashBoard.VersionCache.GetPackageVersions(deployment.PackageName);
 
-            return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions.Select(item => item.Version))];
+            return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
         }
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()

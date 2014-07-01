@@ -3,15 +3,24 @@ using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Helpers
 {
-    public static class HostFeedHelper
+    public static class HostDeployHelper
     {
-        public static NugetFeed Create()
+        public static Deployment CreateDeployment()
+        {
+            var hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
+            return new Deployment()
+            {
+                PackageName = hostPackageName,
+                PackageVersion = new System.Version(1,0)
+            };
+        }
+
+        public static NugetFeed CreateFeed()
         {
             var hostPackageFeedUri = ConfigurationManager.AppSettings["hostPackageFeedUri"];
-            var hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
             return new NugetFeed()
             {
-                Name = hostPackageName,
+                Name = "host_nuget_feed",
                 Uri = hostPackageFeedUri
             };
         }

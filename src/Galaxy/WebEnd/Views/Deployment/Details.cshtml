@@ -40,8 +40,8 @@
             </div>
             <div class="panel-body">
                 <form role="form" action="/@DeploymentModule.Path/deploy/@Model.Id" method="POST">
-                    @Html.DropDownList(x => x.PackageVersion, Model.PackageVersions) <br>
-                    <input type="submit" class="btn btn-primary btn-sm" value="Deploy" />
+                    <p>@Html.DropDownList(x => x.PackageVersion, Model.PackageVersions)</p>
+                    <p><input type="submit" class="btn btn-primary btn-sm" value="Deploy" /></p>
                 </form>
             </div>
         </div>

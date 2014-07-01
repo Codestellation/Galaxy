@@ -20,11 +20,11 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public ObjectId FeedId { get; set; }
         [Display(Name = "Assembly-qualified type name", Prompt = "Assembly-qualified type name")]
         public string AssemblyQualifiedType { get; set; }
-        [Display(Name = "Package version", Prompt = "Package version")]
-        public string PreferedPackageVersion { get; set; }
-        public string Status { get; set; }
-
+        [Display(Name = "Package name", Prompt = "Package name")]
+        public string PackageName { get; set; }
         public Version PackageVersion { get; set; }
+
+        public string Status { get; set; }
 
         readonly IEnumerable<KeyValuePair<Version, string>> _packageVersions;
         public IEnumerable<KeyValuePair<Version, string>> PackageVersions 
@@ -70,6 +70,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             FeedId = deployment.FeedId;
             Status = deployment.Status;
             PackageVersion = deployment.PackageVersion;
+            PackageName = deployment.PackageName;
 
             IsNew = false;
         }
@@ -98,6 +99,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             deployment.AssemblyQualifiedType = AssemblyQualifiedType;
             deployment.Description = Description;
             deployment.FeedId = FeedId;
+            deployment.PackageName = PackageName;
         }
 
         public Deployment ToDeployment()

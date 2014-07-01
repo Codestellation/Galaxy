@@ -14,11 +14,11 @@ namespace Codestellation.Galaxy.ServiceManager
             return deploymentTask;
         }
 
-        public static DeploymentTask InstallPackageOp(this DeploymentTask deploymentTask, NugetFeed feed)
+        public static DeploymentTask InstallPackageOp(this DeploymentTask deploymentTask, Deployment deployment, NugetFeed feed)
         {
             deploymentTask.Add
                 (
-                    new InstallPackage(deploymentTask.TargetPath, deploymentTask.Deployment, feed)
+                    new InstallPackage(deploymentTask.TargetPath, deployment, feed)
                 );
             return deploymentTask;
         }

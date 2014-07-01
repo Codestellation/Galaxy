@@ -36,7 +36,6 @@ namespace Codestellation.Galaxy.Domain
         {
             _feeds.Add(feed.Id, feed);
 
-            VersionCache.AddPackage(feed);
         }
 
         public void RemoveFeed(ObjectId id)
@@ -52,6 +51,8 @@ namespace Codestellation.Galaxy.Domain
         public void AddDeployment(Deployment deployment)
         {
             _deployments.Add(deployment.Id, deployment);
+
+            VersionCache.AddPackage(deployment.PackageName, GetFeed(deployment.FeedId));
         }
 
         public Deployment GetDeployment(ObjectId id)

@@ -17,12 +17,15 @@ namespace Codestellation.Galaxy.Infrastructure
         /// <summary>
         /// < packageID, Version[] >
         /// </summary>
-        private readonly ConcurrentDictionary<NugetFeed, HashSet<SemanticVersion>> _packageVersionCache =
-            new ConcurrentDictionary<NugetFeed, HashSet<SemanticVersion>>();
+        private readonly ConcurrentDictionary<string, HashSet<SemanticVersion>> _packageVersionCache =
+            new ConcurrentDictionary<string, HashSet<SemanticVersion>>();
 
-        readonly Lazy<Timer> refreshTimerLazy = null;
-        readonly TimeSpan refreshInterval = TimeSpan.FromMinutes(5);
-        readonly TimeSpan startupRefreshDelay = TimeSpan.FromSeconds(10);
+        private readonly ConcurrentDictionary<string, NugetFeed> _packageFeeds =
+            new ConcurrentDictionary<string, NugetFeed>();
+
+        private readonly Lazy<Timer> refreshTimerLazy = null;
+        private readonly TimeSpan refreshInterval = TimeSpan.FromMinutes(5);
+        private readonly TimeSpan startupRefreshDelay = TimeSpan.FromSeconds(10);
 
         public VersionPackageCache()
         {
@@ -30,21 +33,23 @@ namespace Codestellation.Galaxy.Infrastructure
             refreshTimerLazy = new Lazy<Timer>(() => new Timer(callback, null, startupRefreshDelay, refreshInterval));
         }
 
-        private void CacheVersion(NugetFeed package, SemanticVersion version)
+        private void CacheVersion(string packageID, SemanticVersion version)
         {
-            var packageVersions = _packageVersionCache[package];
+            var packageVersions = _packageVersionCache[packageID];
             packageVersions.Add(version);
         }
 
-        private void RefreshCacheForPackage(NugetFeed package)
+        private void RefreshCacheForPackage(string packageID)
         {
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(package.Uri);
+            var feed = _packageFeeds[packageID];
 
-            var packages = repo.FindPackagesById(package.Name);
+            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(feed.Uri);
+
+            var packages = repo.FindPackagesById(packageID);
 
             foreach (var packageItem in packages)
             {
-                CacheVersion(package, packageItem.Version);
+                CacheVersion(packageID, packageItem.Version);
             }
         }
 
@@ -58,21 +63,33 @@ namespace Codestellation.Galaxy.Infrastructure
             }
 
             Log.Info("Nuget packages versions cache successfully refreshed.");
+
+            CallOnCacheUpdated();
         }
 
-        public IEnumerable<SemanticVersion> GetPackageVersions(NugetFeed package)
+        private void CallOnCacheUpdated()
         {
-            if (_packageVersionCache.ContainsKey(package))
-                return _packageVersionCache[package];
+            var eventHander = OnCacheUpdated;
+            if (eventHander != null)
+                eventHander(this, new EventArgs());
+        }
+
+        public IEnumerable<Version> GetPackageVersions(string packageID)
+        {
+            if (_packageVersionCache.ContainsKey(packageID))
+                return _packageVersionCache[packageID].Select(item => item.Version);
             else
-                return new SemanticVersion[0];
+                return new Version[0];
         }
 
-        public void AddPackage(NugetFeed feed)
+        public void AddPackage(string packageID, NugetFeed feed)
         {
-            _packageVersionCache.TryAdd(feed, new HashSet<SemanticVersion>());
+            _packageVersionCache.TryAdd(packageID, new HashSet<SemanticVersion>());
+            _packageFeeds.TryAdd(packageID, feed);
 
             refreshTimerLazy.Value.Change(startupRefreshDelay, refreshInterval);            
         }
+
+        public event EventHandler OnCacheUpdated;
     }
 }
