@@ -15,20 +15,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         }
         public override void Execute()
         {
-            try
-            {
-	            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
-	            string serviceConfigFileNameFull = Path.Combine(serviceTargetPath, serviceConfigFileName);
-	
-	            var config = new ServiceConfig(Deployment);
-		            
-	            config.Serialize(serviceConfigFileNameFull);
-                StoreResult(this, OperationResultType.OR_OK, "");
-            }
-            catch (System.Exception ex)
-            {
-                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
-            }
+            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
+            string serviceConfigFileNameFull = Path.Combine(serviceTargetPath, serviceConfigFileName);
+
+            var config = new ServiceConfig(Deployment);
+
+            config.Serialize(serviceConfigFileNameFull);
         }
     }
 }

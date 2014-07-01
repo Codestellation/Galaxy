@@ -44,7 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             return (_children ?? new OperationResult[0]).Where(item => item._resultType == OperationResultType.OR_FAIL);
         }
 
-        public OperationResult(string operationName, OperationResultType resultType, string details)
+        public OperationResult(string operationName, OperationResultType resultType, string details = "")
         {
             _resultType = resultType;
             _details = details;

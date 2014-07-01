@@ -12,26 +12,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         }
 
-        void DoStopService()
+        public override void Execute()
         {
-            using(ServiceController sc = new ServiceController(Deployment.ServiceName))
+            using (ServiceController sc = new ServiceController(Deployment.ServiceName))
             {
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
-            }
-        }
-
-        public override void Execute()
-        {
-            try
-            {
-                DoStopService();
-
-                StoreResult(this, OperationResultType.OR_OK, "");
-            }
-            catch (System.Exception ex)
-            {
-                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
             }
         }
     }

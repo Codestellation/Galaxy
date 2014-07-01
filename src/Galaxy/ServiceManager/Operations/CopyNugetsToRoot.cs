@@ -72,54 +72,44 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            try
-            {
-                string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
+            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
-                var packageFolders = Directory.EnumerateDirectories(serviceTargetPath);
+            var packageFolders = Directory.EnumerateDirectories(serviceTargetPath);
 
-                Dictionary<string, Version> packageDotNetVersions = new Dictionary<string, Version>();
-                Version hostPackageDotNetVersion = new Version();
-                Version packagesDotNetVersionMax = new Version();
+            Dictionary<string, Version> packageDotNetVersions = new Dictionary<string, Version>();
+            Version hostPackageDotNetVersion = new Version();
+            Version packagesDotNetVersionMax = new Version();
                
-                foreach (var packagePath in packageFolders)
-                {
-                    var packageDotNetVersion = GetNugetDotNetVersion(packagePath);
-
-                    if (packagePath.Contains(_hostPackageName))
-                        hostPackageDotNetVersion = packageDotNetVersion;
-                    else 
-                    {
-                        packageDotNetVersions.Add(packagePath, packageDotNetVersion);
-                        if(packagesDotNetVersionMax < packageDotNetVersion)
-                            packagesDotNetVersionMax = packageDotNetVersion;
-                    }
-                }
-
-                if (packagesDotNetVersionMax > hostPackageDotNetVersion)
-                {
-                    StoreResult(this, OperationResultType.OR_FAIL, "Found incompatible package with host service application, reason: .NET framework version");
-                    return;
-                }
-
-                foreach (var packagePath in packageFolders)
-                {
-                    if (packagePath.Contains(_hostPackageName))
-                        // unpacking host app package
-                        UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion);
-                    else
-                        UnpackPackage(packagePath, serviceTargetPath, packageDotNetVersions[packagePath]);
-
-                }
-
-                Clean(packageFolders);
-
-                StoreResult(this, OperationResultType.OR_OK, "");
-            }
-            catch (System.Exception ex)
+            foreach (var packagePath in packageFolders)
             {
-                StoreResult(this, OperationResultType.OR_FAIL, ex.Message);
+                var packageDotNetVersion = GetNugetDotNetVersion(packagePath);
+
+                if (packagePath.Contains(_hostPackageName))
+                    hostPackageDotNetVersion = packageDotNetVersion;
+                else 
+                {
+                    packageDotNetVersions.Add(packagePath, packageDotNetVersion);
+                    if(packagesDotNetVersionMax < packageDotNetVersion)
+                        packagesDotNetVersionMax = packageDotNetVersion;
+                }
             }
+
+            if (packagesDotNetVersionMax > hostPackageDotNetVersion)
+            {
+                throw new InvalidOperationException("Found incompatible package with host service application, reason: .NET framework version");
+            }
+
+            foreach (var packagePath in packageFolders)
+            {
+                if (packagePath.Contains(_hostPackageName))
+                    // unpacking host app package
+                    UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion);
+                else
+                    UnpackPackage(packagePath, serviceTargetPath, packageDotNetVersions[packagePath]);
+
+            }
+
+            Clean(packageFolders);
         }
 
     }

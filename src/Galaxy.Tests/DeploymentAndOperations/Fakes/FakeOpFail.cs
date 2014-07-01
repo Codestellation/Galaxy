@@ -18,7 +18,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 
         public override void Execute()
         {
-            StoreResult(this, OperationResultType.OR_FAIL, "Op details");
+            throw new InvalidOperationException();
         }
     }
 }

@@ -23,8 +23,16 @@ namespace Codestellation.Galaxy.ServiceManager
             while (localQueue.Count > 0)
             {
                 var operation = localQueue.Dequeue();
-                operation.Execute();
-                results[index++] = operation.Result;
+
+                try
+                {
+	                operation.Execute();
+	                results[index++] = new OperationResult(operation.GetType().Name, OperationResultType.OR_OK);
+                }
+                catch (System.Exception ex)
+                {
+                    results[index++] = new OperationResult(operation.GetType().Name, OperationResultType.OR_FAIL, ex.Message);               	
+                }
             }
 
             var deploymentResult = ResultsDescriberHelper.AggregateResults(deploymentTask, results);

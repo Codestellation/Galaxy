@@ -17,8 +17,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
         }
 
         public override void Execute()
-        {
-            StoreResult(this, OperationResultType.OR_OK, "Op details");
+        {            
         }
     }
 }

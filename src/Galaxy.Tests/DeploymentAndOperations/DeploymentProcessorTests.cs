@@ -52,8 +52,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
                 );
 
             var result = ExecuteServiceControl(sequence);
-            Assert.IsTrue(result.Details.Contains(sequence.Name) &&
-                          result.Details.Contains("succeeded"));
+
+            Assert.That(result.Details, Is.StringContaining(sequence.Name).And.StringContaining("succeeded"));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
                 );
 
             var result = ExecuteServiceControl(sequence);
-            Assert.IsTrue(result.Details.Contains(sequence.Name) &&
-                          result.Details.Contains("failed"));
+
+            Assert.That(result.Details, Is.StringContaining(sequence.Name).And.StringContaining("failed"));
         }
 
         [Test]
@@ -90,8 +90,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
                 );
 
             var result = ExecuteServiceControl(sequence);
-            Assert.IsTrue(result.Details.Contains(typeof(FakeOpFail).Name) &&
-                          result.Details.Contains("failed"));
+
+            Assert.That(result.Details, Is.StringContaining(typeof(FakeOpFail).Name).And.StringContaining("failed"));
         } 
     }
 }
