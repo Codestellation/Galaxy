@@ -23,7 +23,7 @@ namespace Codestellation.Galaxy.Infrastructure
         private readonly ConcurrentDictionary<string, NugetFeed> _packageFeeds =
             new ConcurrentDictionary<string, NugetFeed>();
 
-        private readonly Lazy<Timer> refreshTimerLazy = null;
+        private readonly Lazy<Timer> refreshTimerLazy;
         private readonly TimeSpan refreshInterval = TimeSpan.FromMinutes(5);
         private readonly TimeSpan startupRefreshDelay = TimeSpan.FromSeconds(10);
 

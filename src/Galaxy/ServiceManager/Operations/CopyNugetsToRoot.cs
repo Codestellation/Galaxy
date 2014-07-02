@@ -79,22 +79,27 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             Dictionary<string, Version> packageDotNetVersions = new Dictionary<string, Version>();
             Version hostPackageDotNetVersion = new Version();
             Version packagesDotNetVersionMax = new Version();
-               
+
+            bool isHostPackagePresent = false;
+
             foreach (var packagePath in packageFolders)
             {
                 var packageDotNetVersion = GetNugetDotNetVersion(packagePath);
 
                 if (packagePath.Contains(_hostPackageName))
+                {
                     hostPackageDotNetVersion = packageDotNetVersion;
-                else 
+                    isHostPackagePresent = true;
+                }
+                else
                 {
                     packageDotNetVersions.Add(packagePath, packageDotNetVersion);
-                    if(packagesDotNetVersionMax < packageDotNetVersion)
+                    if (packagesDotNetVersionMax < packageDotNetVersion)
                         packagesDotNetVersionMax = packageDotNetVersion;
                 }
             }
 
-            if (packagesDotNetVersionMax > hostPackageDotNetVersion)
+            if (isHostPackagePresent && packagesDotNetVersionMax > hostPackageDotNetVersion)
             {
                 throw new InvalidOperationException("Found incompatible package with host service application, reason: .NET framework version");
             }
@@ -110,6 +115,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             }
 
             Clean(packageFolders);
+
+            if (!isHostPackagePresent)
+            {
+                throw new InvalidOperationException("Host package wasn't found");
+            }
         }
 
     }

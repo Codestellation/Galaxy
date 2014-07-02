@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeploymentAndOperations\OperationsTests\CopyNugetsToRootTests.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\InstallPackageTests.cs" />
     <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="InfrastructureTests\VersionPackageCacheTests.cs" />
@@ -90,6 +91,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\TestNugetPackage.1.0.0" />
     <EmbeddedResource Include="Resources\TestNugetPackage.1.1.0" />
+    <EmbeddedResource Include="Resources\Codestellation.Galaxy.Host.1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Galaxy\Galaxy.csproj">
