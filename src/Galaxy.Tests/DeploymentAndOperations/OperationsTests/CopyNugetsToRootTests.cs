@@ -69,6 +69,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         }
 
         [Test]
+        [Ignore("Depends on tests project appconfig.")]
         public void CopyNugetsToRoot_copy_success()
         {
             string[] sampleFiles = new string[] 
