@@ -105,7 +105,10 @@ namespace Codestellation.Galaxy.WebEnd.Misc
                 input.Placeholder(placeholder);
             }
 
-            return BuildFormControl(path, name, input);
+            if(input is SelectTag)
+                return BuildVerticalFormControl(path, name, input);
+            else
+                return BuildFormControl(path, name, input);
         }
 
         private static IHtmlString BuildFormControl(string path, string name, Tag input)
@@ -113,6 +116,14 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
                 Tags.Label().For(path).Classes(BootstrapClass.ColSm2, BootstrapClass.ControlLabel).Content(name),
                 Tags.Div().Classes(BootstrapClass.ColSm4).Content(input));
+
+            return new NonEncodedHtmlString(formGroup.ToHtmlString());
+        }
+        private static IHtmlString BuildVerticalFormControl(string path, string name, Tag input)
+        {
+            var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
+                Tags.Label().For(path).Content(name),
+                Tags.Div().Content(input));
 
             return new NonEncodedHtmlString(formGroup.ToHtmlString());
         }
