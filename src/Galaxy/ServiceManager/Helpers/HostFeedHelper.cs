@@ -5,11 +5,12 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
 {
     public static class HostDeployHelper
     {
-        public static Deployment CreateDeployment()
+        public static Deployment CreateDeployment(Deployment deployment)
         {
             var hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
             return new Deployment()
             {
+                DisplayName = deployment.DisplayName,
                 PackageName = hostPackageName,
                 PackageVersion = new System.Version(1,0)
             };

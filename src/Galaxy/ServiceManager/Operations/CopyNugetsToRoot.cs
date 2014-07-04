@@ -101,15 +101,19 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 throw new InvalidOperationException("Found incompatible package with host service application, reason: .NET framework version");
             }
 
+            Action copyHost = null;
+
             foreach (var packagePath in packageFolders)
             {
                 if (packagePath.Contains(_hostPackageName))
-                    // unpacking host app package
-                    UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion);
+                    // unpacking host app package should be after all other packages
+                    copyHost = new Action(() => UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion));
                 else
                     UnpackPackage(packagePath, serviceTargetPath, packageDotNetVersions[packagePath]);
-
             }
+
+            if (copyHost != null)
+                copyHost();
 
             Clean(packageFolders);
 

@@ -39,9 +39,7 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             foreach (FileInfo file in files)
             {
                 string temppath = Path.Combine(destDirName, file.Name);
-                // do not overwrite existing
-                if (!File.Exists(temppath))
-                    file.CopyTo(temppath, false);
+                file.CopyTo(temppath, true);
             }
 
             // If copying subdirectories, copy them and their contents to new location. 
