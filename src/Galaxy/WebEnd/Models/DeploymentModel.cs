@@ -23,7 +23,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         [Display(Name = "Package name", Prompt = "Package name")]
         public string PackageName { get; set; }
         public Version PackageVersion { get; set; }
-
+        public string ConfigFileContent { get; set; }
         public string Status { get; set; }
 
         readonly IEnumerable<KeyValuePair<Version, string>> _packageVersions;
@@ -71,6 +71,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             Status = deployment.Status;
             PackageVersion = deployment.PackageVersion;
             PackageName = deployment.PackageName;
+            ConfigFileContent = deployment.ConfigFileContent;
 
             IsNew = false;
         }

@@ -7,7 +7,7 @@ using System.Configuration;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class CopyNugetsToRoot: ServiceOperation
+    public class CopyNugetsToRoot: OperationBase
     {
         const string libFolder = "lib";
         string _hostPackageName;

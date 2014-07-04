@@ -1,9 +1,10 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.Linq;
 using System.ServiceProcess;
+using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class StopService: ServiceOperation
+    public class StopService : WinServiceOperation
     {
         public StopService(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
@@ -13,11 +14,19 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            using (ServiceController sc = new ServiceController(Deployment.ServiceName))
+            if(IsServiceExists(Deployment.ServiceName))
             {
-                sc.Stop();
-                sc.WaitForStatus(ServiceControllerStatus.Stopped);
-            }
+                using (ServiceController sc = new ServiceController(Deployment.ServiceName))
+                {
+                    if(sc.Status != ServiceControllerStatus.Stopped)
+                    {
+                        sc.Stop();
+                        sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                    }
+                }
+            
+            } 
         }
+
     }
 }

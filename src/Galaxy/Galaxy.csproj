@@ -147,12 +147,13 @@
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
+    <Compile Include="ServiceManager\Operations\DeployUserConfig.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />
     <Compile Include="ServiceManager\Operations\OperationResult.cs" />
     <Compile Include="ServiceManager\Operations\ResultCode.cs" />
-    <Compile Include="ServiceManager\Operations\ServiceOperation.cs" />
-    <Compile Include="ServiceManager\Operations\ProvideServiceConfig.cs" />
+    <Compile Include="ServiceManager\Operations\OperationBase.cs" />
+    <Compile Include="ServiceManager\Operations\ProvideHostConfig.cs" />
     <Compile Include="ServiceManager\Operations\StartService.cs" />
     <Compile Include="ServiceManager\Operations\StopService.cs" />
     <Compile Include="ServiceManager\Operations\UninstallService.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
+    <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
     <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />

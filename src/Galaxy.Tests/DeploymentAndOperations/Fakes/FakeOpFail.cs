@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
-    public class FakeOpFail: ServiceOperation
+    public class FakeOpFail: OperationBase
     {
         public FakeOpFail(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)

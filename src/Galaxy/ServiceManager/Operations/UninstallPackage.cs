@@ -4,7 +4,7 @@ using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class UninstallPackage: ServiceOperation
+    public class UninstallPackage: OperationBase
     {
         public UninstallPackage(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)

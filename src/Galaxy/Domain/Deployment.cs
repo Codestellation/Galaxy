@@ -15,5 +15,6 @@ namespace Codestellation.Galaxy.Domain
         public string Status { get; set; }
         public string PackageName { get; set; }
         public Version PackageVersion { get; set; }
+        public string ConfigFileContent { get; set; }
     }
 }

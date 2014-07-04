@@ -4,11 +4,11 @@ using Codestellation.Galaxy.ServiceManager.Helpers;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class ProvideServiceConfig: ServiceOperation
+    public class ProvideHostConfig: OperationBase
     {
         const string serviceConfigFileName = "service-config.xml";
 
-        public ProvideServiceConfig(string targetPath, Deployment deployment, NugetFeed feed) :
+        public ProvideHostConfig(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
         {
 

@@ -2,10 +2,9 @@
 using System.IO;
 using Codestellation.Galaxy.Domain;
 
-
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class InstallService: ServiceOperation
+    public class InstallService: WinServiceOperation
     {
         public InstallService(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)

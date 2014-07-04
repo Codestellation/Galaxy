@@ -12,6 +12,8 @@ using Codestellation.Galaxy.ServiceManager;
 using System;
 using Codestellation.Galaxy.ServiceManager.EventParams;
 using System.Threading;
+using System.IO;
+using Nancy;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -32,6 +34,8 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/stop/{id}", true] = (parameters, token) => ProcessRequest(() => PostStop(parameters), token);
             Post["/uninstall/{id}", true] = (parameters, token) => ProcessRequest(() => PostUninstall(parameters), token);
             Post["/deploy/{id}", true] = (parameters, token) => ProcessRequest(() => PostDeploy(parameters), token);
+            Post["/config/{id}", true] = (parameters, token) => ProcessRequest(() => PostConfig(parameters), token);
+            Get["/config/{id}", true] = (parameters, token) => ProcessRequest(() => GetConfig(parameters), token);
         }
 
         protected override CrudOperations SupportedOperations
@@ -188,6 +192,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             SaveDeployment(deployment);
 
+            ExecuteServiceControlAction(id, DeploymentTaskBuilder.DeployServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -200,7 +205,46 @@ namespace Codestellation.Galaxy.WebEnd
                 tx.Commit();
             }
         }
-        
+
+        private object PostConfig(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var content = ReceiveFile();
+            var deployment = _dashBoard.GetDeployment(id);
+            deployment.ConfigFileContent = content;
+            SaveDeployment(deployment);
+
+            return RedirectToDetails(id);
+        }
+
+        private string ReceiveFile()
+        {
+            var file = this.Request.Files.FirstOrDefault();
+            StreamReader reader = new StreamReader(file.Value);
+            var content = reader.ReadToEnd();
+            return content;
+        }
+
+        private object GetConfig(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var deployment = _dashBoard.GetDeployment(id);
+
+            var response = new Response();
+
+            response.Headers.Add("Content-Disposition", "attachment; filename=config_preview.xml");
+            response.ContentType = "text/xml";
+            response.Contents = stream =>
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(deployment.ConfigFileContent);
+                }
+            };
+
+            return response;
+        }
+
         private static object RedirectToList()
         {
             return new RedirectResponse("/" + Path);

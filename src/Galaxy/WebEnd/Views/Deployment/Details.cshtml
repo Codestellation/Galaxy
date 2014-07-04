@@ -36,14 +36,47 @@
     <div class="container col-lg-4">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                Deploy
+                Deployment
             </div>
-            <div class="panel-body">
-                <form role="form" action="/@DeploymentModule.Path/deploy/@Model.Id" method="POST">
-                    <p>@Html.DropDownList(x => x.PackageVersion, Model.PackageVersions)</p>
-                    <p><input type="submit" class="btn btn-primary btn-sm" value="Deploy" /></p>
-                </form>
-            </div>
+            <table class="table" cellpadding="3">
+                <col />
+                <col width="40%" />
+                <tr>
+                    <td colspan="2">
+                        @if (string.IsNullOrEmpty(Model.ConfigFileContent))
+                        {
+                            <div class="alert alert-danger">
+                                <p>Upload config file!</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success">
+                                <p>Upload config file to update the <a href="/@DeploymentModule.Path/config/@Model.Id">existing</a>.</p>
+                            </div>
+                        }
+                    </td>
+                <tr>
+                    <form enctype="multipart/form-data" method="POST" action="/@DeploymentModule.Path/config/@Model.Id">
+                        <td>
+                            <input type="file" name="configfile" title="Browse for config file..." data-filename-placement="inside">
+                        </td>
+                        <td>
+                            <input type="submit" value="Upload" id="submit" class="btn btn-primary btn-sm btn-block" />
+                        </td>
+                    </form>
+                </tr>
+                <tr>
+                    <form role="form" action="/@DeploymentModule.Path/deploy/@Model.Id" method="POST">
+                        <td>
+                            @Html.DropDownList(x => x.PackageVersion, Model.PackageVersions)
+                        </td>
+                        <td>
+                            <input type="submit" class="btn btn-primary btn-sm btn-block" value="Deploy" />
+                        </td>
+                    </form>
+                </tr>
+            </table>
         </div>
 
         <div class="panel panel-primary">

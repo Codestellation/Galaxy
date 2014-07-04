@@ -1,10 +1,10 @@
 ﻿using System.IO;
-using Codestellation.Galaxy.Domain;
 using System.ServiceProcess;
+using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class StartService: ServiceOperation
+    public class StartService: WinServiceOperation
     {
         public StartService(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)

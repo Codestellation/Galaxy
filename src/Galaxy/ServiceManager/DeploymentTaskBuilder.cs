@@ -19,7 +19,8 @@ namespace Codestellation.Galaxy.ServiceManager
                 .InstallPackageOp()
                 .InstallPackageOp(HostDeployHelper.CreateDeployment(deployment), HostDeployHelper.CreateFeed())
                 .CopyNugetsToRootOp()
-                .ProvideServiceConfigOp();
+                .ProvideServiceConfigOp()
+                .DeployUserConfig();
         }
 
         public static DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -29,7 +30,8 @@ namespace Codestellation.Galaxy.ServiceManager
                 .InstallPackageOp(HostDeployHelper.CreateDeployment(deployment), HostDeployHelper.CreateFeed())
                 .CopyNugetsToRootOp()
                 .ProvideServiceConfigOp()
-                .InstallServiceOp();
+                .InstallServiceOp()
+                .DeployUserConfig();
         }
 
         public static DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)

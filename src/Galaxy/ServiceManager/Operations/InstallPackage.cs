@@ -5,7 +5,7 @@ using System;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class InstallPackage: ServiceOperation
+    public class InstallPackage: OperationBase
     {
         public InstallPackage(string targetPath, Deployment deployment, NugetFeed feed):
             base(targetPath, deployment, feed)

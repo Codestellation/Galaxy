@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
-    public class FakeOpThrow: ServiceOperation
+    public class FakeOpThrow: OperationBase
     {
         public FakeOpThrow(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)

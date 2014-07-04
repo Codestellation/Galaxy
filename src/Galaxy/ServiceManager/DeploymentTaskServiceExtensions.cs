@@ -36,7 +36,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new ProvideServiceConfig(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new ProvideHostConfig(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -81,6 +81,14 @@ namespace Codestellation.Galaxy.ServiceManager
             deploymentTask.Add
                 (
                     new CopyNugetsToRoot(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                );
+            return deploymentTask;
+        }
+        public static DeploymentTask DeployUserConfig(this DeploymentTask deploymentTask)
+        {
+            deploymentTask.Add
+                (
+                    new DeployUserConfig(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }

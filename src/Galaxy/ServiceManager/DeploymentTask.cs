@@ -5,7 +5,7 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class DeploymentTask
     {
-        private readonly List<ServiceOperation> _operations; 
+        private readonly List<OperationBase> _operations; 
 
         private readonly string _name;
         private readonly Deployment _deployment;
@@ -22,12 +22,12 @@ namespace Codestellation.Galaxy.ServiceManager
             get { return _targetPath; }
         } 
 
-        public IReadOnlyList<ServiceOperation> Operations
+        public IReadOnlyList<OperationBase> Operations
         {
             get { return _operations; }
         }
 
-        public void Add(ServiceOperation operation)
+        public void Add(OperationBase operation)
         {
             _operations.Add(operation);
         }
@@ -44,7 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private DeploymentTask()
         {
-            _operations =new List<ServiceOperation>();
+            _operations =new List<OperationBase>();
         }
 
         public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath) : this()
@@ -55,7 +55,7 @@ namespace Codestellation.Galaxy.ServiceManager
             _targetPath = targetPath;
         }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath, IEnumerable<ServiceOperation> operations) :
+        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath, IEnumerable<OperationBase> operations) :
             this(name, deployment, feed, targetPath)
         {
             _operations.AddRange(operations);
