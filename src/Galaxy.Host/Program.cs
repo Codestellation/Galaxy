@@ -25,12 +25,13 @@ namespace Codestellation.Galaxy.Host
                             s.ConstructUsing(name => new ServiceProxy(config));
                             s.WhenStarted(tc => tc.Start());
                             s.WhenStopped(tc => tc.Stop());
+                            s.WhenShutdown(tc => tc.Stop());
                         });
 
+                    x.EnableShutdown();
                     x.RunAsLocalSystem();
 
                     x.SetDescription(config.Description);
-
                     
                     x.SetServiceName(config.ServiceName);
                     x.SetDisplayName(config.DisplayName);

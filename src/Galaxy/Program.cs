@@ -24,9 +24,11 @@ namespace Codestellation.Galaxy
                             s.ConstructUsing(name => new Service());
                             s.WhenStarted(tc => tc.Start());
                             s.WhenStopped(tc => tc.Stop());
+                            s.WhenShutdown(tc => tc.Stop());
                         });
 
                     x.RunAsLocalSystem();
+                    x.EnableShutdown();
 
                     x.SetDescription(Description);
 
