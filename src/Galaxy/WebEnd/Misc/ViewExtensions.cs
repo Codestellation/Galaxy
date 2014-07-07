@@ -34,7 +34,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         public static IHtmlString DropDownList<TModel, TProperty, TDisplayValue>(
             this HtmlHelpers<TModel> htmlHelper, 
             Expression<Func<TModel, TProperty>> property, 
-            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values,
+            string defaultInvitation = "Select...")
         {
             var currentValue = Reader.Read(htmlHelper.Model, property);
 
@@ -51,7 +52,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             if (!hasSelected)
             {
                 //TODO: Instead of hardcoded string use placeholder from display attribute
-                var placeholderOption = Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode("<Select..>"));
+                var placeholderOption = Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode(defaultInvitation));
                 options = new[] { placeholderOption }.Union(options);
             }
 
@@ -121,9 +122,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         }
         private static IHtmlString BuildVerticalFormControl(string path, string name, Tag input)
         {
-            var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
-                Tags.Label().For(path).Content(name),
-                Tags.Div().Content(input));
+            var formGroup = Tags.Div().Content(input);
 
             return new NonEncodedHtmlString(formGroup.ToHtmlString());
         }

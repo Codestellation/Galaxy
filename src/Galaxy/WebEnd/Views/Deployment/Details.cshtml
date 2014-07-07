@@ -3,6 +3,15 @@
 @using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentModel>
 @{ Layout = "Master";}
+<style>
+    .inner_table
+    {
+        width: 100%;
+        border-spacing: 5px;
+        border-collapse: separate;
+        table-layout: fixed;
+    }
+</style>
 <div class="row">
     <div class="container  col-lg-6">
         <div class="panel panel-primary">
@@ -38,45 +47,59 @@
             <div class="panel-heading">
                 Deployment
             </div>
-            <table class="table" cellpadding="3">
-                <col />
-                <col width="40%" />
-                <tr>
-                    <td colspan="2">
-                        @if (string.IsNullOrEmpty(Model.ConfigFileContent))
-                        {
-                            <div class="alert alert-danger">
-                                <p>Upload config file!</p>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-success">
-                                <p>Upload config file to update the <a href="/@DeploymentModule.Path/config/@Model.Id">existing</a>.</p>
-                            </div>
-                        }
-                    </td>
-                <tr>
+
+            <ul class="list-group">
+                <li class="list-group-item">
+                    @if (string.IsNullOrEmpty(Model.ConfigFileContent))
+                    {
+                        <div class="alert alert-danger" style="margin-bottom: 0px;">
+                            <p>Upload config file!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success" style="margin-bottom: 0px;">
+                            <p>Upload config file to update the <a href="/@DeploymentModule.Path/config/@Model.Id">existing</a>.</p>
+                        </div>
+                    }
+                </li>
+                <li class="list-group-item">
                     <form enctype="multipart/form-data" method="POST" action="/@DeploymentModule.Path/config/@Model.Id">
-                        <td>
-                            <input type="file" name="configfile" title="Browse for config file..." data-filename-placement="inside">
-                        </td>
-                        <td>
-                            <input type="submit" value="Upload" id="submit" class="btn btn-primary btn-sm btn-block" />
-                        </td>
+                        <table class="inner_table">
+                            <colgroup>
+                                <col>
+                                <col width="20%">
+                            </colgroup>
+                            <tr>
+                                <td>
+                                    <input type="file" name="configfile" title="Browse for config file...">
+                                </td>
+                                <td>
+                                    <input type="submit" value="Upload" id="submit" class="btn btn-primary btn-sm btn-block" />
+                                </td>
+                            </tr>
+                        </table>
                     </form>
-                </tr>
-                <tr>
+                </li>
+                <li class="list-group-item">
                     <form role="form" action="/@DeploymentModule.Path/deploy/@Model.Id" method="POST">
-                        <td>
-                            @Html.DropDownList(x => x.PackageVersion, Model.PackageVersions)
-                        </td>
-                        <td>
-                            <input type="submit" class="btn btn-primary btn-sm btn-block" value="Deploy" />
-                        </td>
+                        <table class="inner_table">
+                            <colgroup>
+                                <col>
+                                <col width="20%">
+                            </colgroup>
+                            <tr>
+                                <td>
+                                    @Html.DropDownList(x => x.PackageVersion, Model.PackageVersions, "Select package version...")
+                                </td>
+                                <td>
+                                    <input type="submit" class="btn btn-primary btn-sm btn-block" value="Deploy" />
+                                </td>
+                            </tr>
+                        </table>
                     </form>
-                </tr>
-            </table>
+                </li>
+            </ul>
         </div>
 
         <div class="panel panel-primary">
@@ -120,4 +143,8 @@
             </div>
         </div>
     </div>
+    <script>
+        $('input[type=file]').bootstrapFileInput();
+        $('.file-inputs').bootstrapFileInput();
+    </script>
 </div>
