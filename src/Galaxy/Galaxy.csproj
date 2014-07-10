@@ -130,7 +130,6 @@
     <Compile Include="Domain\DashBoard.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
-    <Compile Include="Domain\DeploymentList.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
@@ -141,7 +140,7 @@
     <Compile Include="ServiceManager\DeploymentTaskBuilder.cs" />
     <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
-    <Compile Include="ServiceManager\Helpers\CopyDirectoryHelper.cs" />
+    <Compile Include="ServiceManager\Helpers\CopyDirectory.cs" />
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
     <Compile Include="ServiceManager\Helpers\HostFeedHelper.cs" />
     <Compile Include="ServiceManager\Helpers\ResultsDescriberHelper.cs" />
@@ -184,7 +183,7 @@
     <Compile Include="WebEnd\TagBuilder\Attributes\HtmlAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\InputTag.cs" />
     <Compile Include="WebEnd\TagBuilder\OptionTag.cs" />
-    <Compile Include="WebEnd\TagBuilder\Reader.cs" />
+    <Compile Include="WebEnd\TagBuilder\FastPropertyReader.cs" />
     <Compile Include="WebEnd\TagBuilder\SelectTag.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\SimpleAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\Tag.cs" />

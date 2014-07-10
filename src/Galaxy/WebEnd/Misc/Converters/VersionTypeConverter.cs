@@ -1,6 +1,5 @@
 ﻿using System;
 using Nancy.ModelBinding;
-using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd.Misc.Converters
 {

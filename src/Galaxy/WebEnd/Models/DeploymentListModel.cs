@@ -20,7 +20,5 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             get { return Deployments.Length; }
         }
-
-        
     }
 }

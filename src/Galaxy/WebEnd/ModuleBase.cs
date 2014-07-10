@@ -9,8 +9,6 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public abstract class ModuleBase : NancyModule
     {
-        private TaskScheduler _scheduler;
-
         public ModuleBase()
         {
 
@@ -23,7 +21,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected Task<object> ProcessRequest(Func<object> processor, CancellationToken cancellationToken)
         {
-            this.Context.Culture = CultureInfo.InvariantCulture;
+            Context.Culture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             
@@ -32,7 +30,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         public TaskScheduler Scheduler
         {
-            get { return _scheduler ??  SingleThreadScheduler.Instance; }
+            get { return SingleThreadScheduler.Instance; }
         }
     }
 }

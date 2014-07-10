@@ -13,14 +13,9 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             _renderer = renderer;
         }
 
-        public bool HandlesStatusCode(HttpStatusCode statusCode)
-        {
-            return statusCode == HttpStatusCode.NotFound;
-        }
-
         public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {
-            return true;
+            return statusCode == HttpStatusCode.NotFound;
         }
 
         public void Handle(HttpStatusCode statusCode, NancyContext context)

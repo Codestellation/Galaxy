@@ -19,7 +19,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 string serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
 
-                string exePath = Path.Combine(serviceTargetPath, serviceHostFileName);
+                string exePath = Path.Combine(serviceTargetPath, ServiceHostFileName);
 
                 string exeParams = "uninstall";
 

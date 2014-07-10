@@ -5,7 +5,7 @@ using Topshelf;
 
 namespace Codestellation.Galaxy
 {
-    internal class Program
+    internal static class Program
     {
         private const string ServiceName = "Codestellation.Galaxy";
         private const string Description = "Hosting service";

@@ -10,7 +10,7 @@ namespace Codestellation.Galaxy.WebEnd
     public class LoginModule : ModuleBase
     {
         private readonly UserDatabase _userDatabase;
-        Collection _users;
+        private readonly Collection _users;
 
         public LoginModule(Repository repository, UserDatabase userDatabase)
             : base("login")

@@ -15,7 +15,6 @@ namespace Codestellation.Galaxy.Domain
             get { return _versionPackageCache; }
         } 
 
-
         public DashBoard()
         {
             _feeds = new Dictionary<ObjectId, NugetFeed>();

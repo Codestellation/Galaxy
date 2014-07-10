@@ -26,21 +26,24 @@ namespace Codestellation.Galaxy.WebEnd
 
         private JsonResponse CheckLogin()
         {
-            if (this.Request.Query.ContainsKey("Login"))
+            if (Request.Query.ContainsKey("Login"))
             {
-                string login = Request.Query.Login;
+                return new JsonResponse(true, new DefaultJsonSerializer());
+            }
 
-                var byName = Criterions.Field<User, string>(x => x.Login, Criterions.Equals(login));
+            string login = Request.Query.Login;
+
+            var byName = Criterions.Field<User, string>(x => x.Login, Criterions.Equals(login));
                 
-                var builder = new QueryBuilder(byName);
+            var builder = new QueryBuilder(byName);
 
-                using (var query = _users.CreateQuery<User>(builder))
-                using (var cursor = query.Execute(QueryMode.Count))
+            using (var query = _users.CreateQuery<User>(builder))
+            using (var cursor = query.Execute(QueryMode.Count))
+            {
+                if (cursor.Count > 0)
                 {
-                    if (cursor.Count > 0)
-                    {
-                        return new JsonResponse("Такой логин уже существует", new DefaultJsonSerializer());
-                    }
+                    var message = string.Format("Login '{0}' already exists", login);
+                    return new JsonResponse(message, new DefaultJsonSerializer());
                 }
             }
 
@@ -71,10 +74,10 @@ namespace Codestellation.Galaxy.WebEnd
 
             using (var tx = _users.BeginTransaction())
             {
-                _users.Save<User>(user, false);
+                _users.Save(user, false);
                 tx.Commit();
             }
-            return new RedirectResponse("/user", RedirectResponse.RedirectType.SeeOther);
+            return new RedirectResponse("/user");
         }
 
         protected override object GetEdit(dynamic parameters)
@@ -95,10 +98,10 @@ namespace Codestellation.Galaxy.WebEnd
 
             using (var tx = _users.BeginTransaction())
             {
-                _users.Save<User>(user, false);
+                _users.Save(user, false);
                 tx.Commit();
             }
-            return new RedirectResponse("/user", RedirectResponse.RedirectType.SeeOther);
+            return new RedirectResponse("/user");
         }
 
         protected override object PostDelete(dynamic parameters)
@@ -106,7 +109,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             _users.Delete(id);
 
-            return new RedirectResponse("/user", RedirectResponse.RedirectType.SeeOther);
+            return new RedirectResponse("/user");
         }
     }
 }

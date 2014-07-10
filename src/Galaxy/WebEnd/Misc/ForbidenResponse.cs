@@ -36,7 +36,5 @@ namespace Codestellation.Galaxy.WebEnd.Misc
                 return reader.ReadToEnd();
             }
         }
-
-
     }
 }

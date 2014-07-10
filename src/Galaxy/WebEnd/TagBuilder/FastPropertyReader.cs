@@ -6,18 +6,18 @@ using Codestellation.Galaxy.WebEnd.Misc;
 
 namespace Codestellation.Galaxy.WebEnd.TagBuilder
 {
-    public static class Reader
+    public static class FastPropertyReader
     {
-        private static Dictionary<MemberInfo, object> _expressionCache = new Dictionary<MemberInfo, object>();
+        private static readonly Dictionary<MemberInfo, object> ExpressionCache = new Dictionary<MemberInfo, object>();
 
-        public static TProperty Read<TModel, TProperty>(TModel model, Expression<Func<TModel, TProperty>> property)
+        public static TProperty Read<TModel, TProperty>(this TModel model, Expression<Func<TModel, TProperty>> property)
         {
             var member = property.GetMember();
             object expression;
-            if (!_expressionCache.TryGetValue(member, out expression))
+            if (!ExpressionCache.TryGetValue(member, out expression))
             {
                 expression = property.Compile();
-                _expressionCache[member] = expression;
+                ExpressionCache[member] = expression;
             }
 
             var reader = (Func<TModel, TProperty>) expression;

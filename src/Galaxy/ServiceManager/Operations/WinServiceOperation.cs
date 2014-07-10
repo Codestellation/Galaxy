@@ -32,8 +32,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         protected bool IsServiceExists(string serviceName)
         {
             ServiceController[] services = ServiceController.GetServices();
-            var service = services.FirstOrDefault(item => item.ServiceName == serviceName);
-            return service != null;
+            return services.Any(item => item.ServiceName == serviceName);
         }
     }
 }

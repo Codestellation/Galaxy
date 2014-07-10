@@ -111,9 +111,8 @@ namespace Codestellation.Galaxy.WebEnd
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
-            var allFeeds = _dashBoard.Feeds
-                .Select(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name))
-                .ToArray();
+            var allFeeds = _dashBoard.Feeds.
+                ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name));
             return allFeeds;
         }
 

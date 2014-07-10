@@ -7,8 +7,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 {
     public class RazorConfiguration : IRazorConfiguration
     {
-        private string[] _assemblyNames;
-        private string[] _namespaces;
+        private readonly string[] _assemblyNames;
+        private readonly string[] _namespaces;
 
         public RazorConfiguration()
         {

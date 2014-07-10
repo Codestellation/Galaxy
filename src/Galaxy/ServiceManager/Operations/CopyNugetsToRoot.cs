@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.Collections.Generic;
@@ -7,10 +8,10 @@ using System.Configuration;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class CopyNugetsToRoot: OperationBase
+    public class CopyNugetsToRoot : OperationBase
     {
-        const string libFolder = "lib";
-        string _hostPackageName;
+        private const string LibFolder = "lib";
+        private readonly string _hostPackageName;
 
         public CopyNugetsToRoot(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
@@ -18,64 +19,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
         }
 
-        Version GetNugetDotNetVersion(string installedNugetPath)
-        {
-            Version result = new Version();
-
-            var libFolderPath = Path.Combine(installedNugetPath, libFolder);
-            if (Directory.Exists(libFolderPath))
-            {
-                foreach(var pair in DotNetVersionHelper.dotNetNugetFolders)
-                {
-                    var libFolderDotNetVersionedPath = Path.Combine(libFolderPath, pair.Value);
-
-                    if (Directory.Exists(libFolderDotNetVersionedPath))
-                        if (result < pair.Key)
-                            result = pair.Key;
-                }
-            }
-
-            // temporary, if no lib/ folder
-            if(result.Equals(new Version()))
-                result = new Version(4, 5);
-
-            return result;
-        }
-
-        private void UnpackPackage(string packagePath, string serviceTargetPath, Version targetDotNetVersion)
-        {
-            var libFolderPath = Path.Combine(packagePath, libFolder);
-            if (Directory.Exists(libFolderPath))
-	        {
-                var libFolderDotNetVersionedPath = Path.Combine(libFolderPath, DotNetVersionHelper.dotNetNugetFolders[targetDotNetVersion]);
-                if(Directory.Exists(libFolderDotNetVersionedPath))
-                    // copy from "{package name}/lib/{dotnetversionfolder}/" to "../" dir
-         	        CopyDirectoryHelper.DirectoryCopy(libFolderDotNetVersionedPath, serviceTargetPath, true);
-                else
-                    // copy from "{package name}/lib/" to "../" dir
-         	        CopyDirectoryHelper.DirectoryCopy(libFolderPath, serviceTargetPath, true);
-            }
-            else 
-                // copy from "{package name}/" to "../" dir
-     	        CopyDirectoryHelper.DirectoryCopy(packagePath, serviceTargetPath, true);
-        }
-        private void Clean(IEnumerable<String> packageFolders)
-        {
-            foreach (var packagePath in packageFolders)
-            {
-                Directory.Delete(packagePath, true);
-            }
-        }
-
         public override void Execute()
         {
             string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
-            var packageFolders = Directory.EnumerateDirectories(serviceTargetPath);
+            var packageFolders = Directory.EnumerateDirectories(serviceTargetPath).ToArray();
 
-            Dictionary<string, Version> packageDotNetVersions = new Dictionary<string, Version>();
-            Version hostPackageDotNetVersion = new Version();
-            Version packagesDotNetVersionMax = new Version();
+            var packageDotNetVersions = new Dictionary<string, Version>();
+            var hostPackageDotNetVersion = new Version();
+            var packagesDotNetVersionMax = new Version();
 
             bool isHostPackagePresent = false;
 
@@ -91,8 +43,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 else
                 {
                     packageDotNetVersions.Add(packagePath, packageDotNetVersion);
+                    
                     if (packagesDotNetVersionMax < packageDotNetVersion)
+                    {
                         packagesDotNetVersionMax = packageDotNetVersion;
+                    }
                 }
             }
 
@@ -106,14 +61,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             foreach (var packagePath in packageFolders)
             {
                 if (packagePath.Contains(_hostPackageName))
+                {
                     // unpacking host app package should be after all other packages
-                    copyHost = new Action(() => UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion));
+                    copyHost = () => UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion);
+                }
                 else
                     UnpackPackage(packagePath, serviceTargetPath, packageDotNetVersions[packagePath]);
             }
 
             if (copyHost != null)
+            {
                 copyHost();
+            }
 
             Clean(packageFolders);
 
@@ -123,6 +82,69 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             }
         }
 
+        private Version GetNugetDotNetVersion(string installedNugetPath)
+        {
+            Version result = new Version();
+
+            var libFolderPath = Path.Combine(installedNugetPath, LibFolder);
+            if (Directory.Exists(libFolderPath))
+            {
+                foreach (var pair in DotNetVersionHelper.dotNetNugetFolders)
+                {
+                    var libFolderDotNetVersionedPath = Path.Combine(libFolderPath, pair.Value);
+
+                    if (!Directory.Exists(libFolderDotNetVersionedPath))
+                    {
+                        continue;
+                    }
+
+                    if (result < pair.Key)
+                    {
+                        result = pair.Key;
+                    }
+                }
+            }
+
+            // temporary, if no lib/ folder
+            if (result.Equals(new Version()))
+            {
+                result = new Version(4, 5);
+            }
+
+            return result;
+        }
+
+        private void UnpackPackage(string packagePath, string serviceTargetPath, Version targetDotNetVersion)
+        {
+            var libFolderPath = Path.Combine(packagePath, LibFolder);
+            if (Directory.Exists(libFolderPath))
+            {
+                var libFolderDotNetVersionedPath = Path.Combine(libFolderPath, DotNetVersionHelper.dotNetNugetFolders[targetDotNetVersion]);
+
+                if (Directory.Exists(libFolderDotNetVersionedPath))
+                {
+                    // copy from "{package name}/lib/{dotnetversionfolder}/" to "../" dir
+                    libFolderDotNetVersionedPath.CopyIncludeSubfoldersTo(serviceTargetPath);
+                }
+                else
+                {
+                    // copy from "{package name}/lib/" to "../" dir
+                    libFolderPath.CopyIncludeSubfoldersTo(serviceTargetPath);
+                }
+            }
+            else
+            {
+                // copy from "{package name}/" to "../" dir
+                packagePath.CopyIncludeSubfoldersTo(serviceTargetPath);
+            }
+        }
+
+        private void Clean(IEnumerable<String> packageFolders)
+        {
+            foreach (var packagePath in packageFolders)
+            {
+                Directory.Delete(packagePath, true);
+            }
+        }
     }
 }
-

@@ -15,7 +15,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            string packageID = _deployment.PackageName;
+            string packageId = _deployment.PackageName;
 
             string serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
 
@@ -28,7 +28,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 throw new ArgumentException(string.Format("No package version was specified for deployment {0}", _deployment.DisplayName));
             }
 
-            packageManager.InstallPackage(packageID, new SemanticVersion(_deployment.PackageVersion));
+            packageManager.InstallPackage(packageId, new SemanticVersion(_deployment.PackageVersion));
         }
     }
 }

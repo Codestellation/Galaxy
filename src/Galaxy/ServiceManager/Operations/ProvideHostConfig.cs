@@ -6,7 +6,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class ProvideHostConfig: OperationBase
     {
-        const string serviceConfigFileName = "service-config.xml";
+        private const string ServiceConfigFileName = "service-config.xml";
 
         public ProvideHostConfig(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
@@ -16,7 +16,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public override void Execute()
         {
             string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
-            string serviceConfigFileNameFull = Path.Combine(serviceTargetPath, serviceConfigFileName);
+            string serviceConfigFileNameFull = Path.Combine(serviceTargetPath, ServiceConfigFileName);
 
             var config = new ServiceConfig(Deployment);
 

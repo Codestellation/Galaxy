@@ -37,7 +37,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values,
             string defaultInvitation = "Select...")
         {
-            var currentValue = Reader.Read(htmlHelper.Model, property);
+            var currentValue = htmlHelper.Model.Read(property);
 
             var hasSelected = false;
 
@@ -65,7 +65,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             var path = property.ToMemberPath();
             var display = member.GetDisplay();
 
-            bool value = Reader.Read(htmlHelper.Model, property);
+            bool value = htmlHelper.Model.Read(property);
 
             var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
                 Tags.Div().Classes(BootstrapClass.ColSmOffset2, BootstrapClass.ColSm10).Content(
@@ -94,7 +94,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
                 name = display.Name;
             }
 
-            TProperty value = Reader.Read(htmlHelper.Model, property);
+            TProperty value = htmlHelper.Model.Read(property);
 
             input.Classes(BootstrapClass.FormControl)
                 .Id(path)

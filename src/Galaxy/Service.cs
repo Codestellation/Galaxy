@@ -10,7 +10,7 @@ namespace Codestellation.Galaxy
         private readonly NancyHost _nancyHost;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public unsafe Service()
+        public Service()
         {
             var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
             var uriString = string.Format("http://localhost:{0}", port);

@@ -1,5 +1,6 @@
 ﻿using Codestellation.Galaxy.Domain;
 using System.Collections.Generic;
+using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
