@@ -6,7 +6,7 @@ using Topshelf;
 
 namespace Codestellation.Galaxy.Host
 {
-    class Program
+    internal static class Program
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -60,7 +60,7 @@ namespace Codestellation.Galaxy.Host
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = e.ExceptionObject as Exception;
-            Log.FatalException("Unhandled exception.", exception);
+            Log.Fatal("Unhandled exception.", exception);
             LogManager.Flush(3000);
         }
     }
