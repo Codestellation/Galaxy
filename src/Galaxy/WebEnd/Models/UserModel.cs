@@ -56,7 +56,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             user.IsAdmin = IsAdmin;
             user.Login = Login;
             user.Password = Password;
-            user.DispalyName = DisplayName;
+            user.DisplayName = DisplayName;
         }
     }
 }

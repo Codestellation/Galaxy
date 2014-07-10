@@ -1,52 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Codestellation.Galaxy.Domain;
 using Nejdb;
 using NLog;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
-    public class Collections : IDisposable
+    public class Repository : IDisposable
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private Library _library;
         private Database _database;
 
-        public Collection Settings { get; private set; }
-        public Collection Users { get; private set; }
-        public Collection Feeds { get; private set; }
-        public Collection Deployments { get; private set; }
+        private Dictionary<Type, Collection> _collections;
 
         public void Start()
         {
             _library = Library.Create();
             _database = _library.CreateDatabase();
 
+            _collections = new Dictionary<Type, Collection>();
+
             var dbPath = GetDatabasePath();
             
             _database.Open(dbPath, Database.DefaultOpenMode | OpenMode.SyncTransactionToStorage);
-            Settings = _database.CreateCollection("settings", new CollectionOptions(false, false, 32,32));
-            Users = _database.CreateCollection("users", new CollectionOptions(false, false, 32, 32));
-            Feeds = _database.CreateCollection("feeds", new CollectionOptions(false, false, 32, 32));
-            Deployments = _database.CreateCollection("deployments", new CollectionOptions(false, false, 32, 32));
+            CreateCollection("users", typeof(User));
+            CreateCollection("feeds", typeof(NugetFeed));
+            CreateCollection("deployments", typeof(Deployment));
+        }
+
+        private void CreateCollection(string collectionName, Type entityType)
+        {
+            var collection = _database.CreateCollection(collectionName, new CollectionOptions(false, false, 32, 32));
+            _collections.Add(entityType, collection);
+        }
+
+        public Collection GetCollection<T>()
+        {
+            return _collections[typeof (T)];
         }
 
         public void Dispose()
         {
-            Dispose(Settings);
-            Dispose(Users);
-            Dispose(Deployments);
+            foreach (var collection in _collections.Values)
+            {
+                collection.Dispose();
+            }            
             
             _database.Close();
-            Dispose(_database);
-            Dispose(_library);
-        }
-
-        private void Dispose(IDisposable disposable)
-        {
-            if (disposable != null)
-            {
-                disposable.Dispose();
-            }
+            _database.Dispose();
+            _library.Dispose();
         }
 
         private string GetDatabasePath()

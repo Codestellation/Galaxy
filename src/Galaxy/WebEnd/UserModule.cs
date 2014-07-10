@@ -14,17 +14,17 @@ namespace Codestellation.Galaxy.WebEnd
     {
         private readonly Collection _users;
 
-        public UserModule(Collections collections)
+        public UserModule(Repository repository)
             : base("user")
         {
             this.RequiresClaims(new[] { "Admin" });
             
-            _users = collections.Users;
+            _users = repository.GetCollection<User>();
 
-            Get["/check-login", true] = (parameters, token) => ProcessRequest(() => CheckLogin(parameters), token);
+            Get["/check-login", true] = (parameters, token) => ProcessRequest(CheckLogin, token);
         }
 
-        private JsonResponse CheckLogin(dynamic parameters)
+        private JsonResponse CheckLogin()
         {
             if (this.Request.Query.ContainsKey("Login"))
             {

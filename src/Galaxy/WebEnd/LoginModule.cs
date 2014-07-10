@@ -12,34 +12,35 @@ namespace Codestellation.Galaxy.WebEnd
         private readonly UserDatabase _userDatabase;
         Collection _users;
 
-        public LoginModule(Collections collections, UserDatabase userDatabase)
+        public LoginModule(Repository repository, UserDatabase userDatabase)
             : base("login")
         {
             _userDatabase = userDatabase;
-            _users = collections.Users;
+            _users = repository.GetCollection<User>();
 
             Get["/"] = parameters => View["Login"];
 
-            Get["/login"] = parameters => ProcessLogin(parameters);
+            Get["/login"] = parameters => ProcessLogin();
 
             Get["/logout"] = parameters => this.LogoutAndRedirect("~/login");
 
-            Post["/"] = parameters => ProcessLogin(parameters);
+            Post["/"] = parameters => ProcessLogin();
         }
 
-        private object ProcessLogin(dynamic parameters)
+        private object ProcessLogin()
         {
-            User user = GetUser((string)Request.Form.Login, (string)Request.Form.Password);
+            var user = GetUser((string)Request.Form.Login, (string)Request.Form.Password);
+
             if (user == null)
             {
                 return Context.GetRedirect("~/login?error=true&username=" + (string)Request.Form.Login);
             }
 
-            var authUser = new UserIdentity(user);
+            var identity = new UserIdentity(user);
 
-            _userDatabase.PutToSession(Context, authUser);
+            _userDatabase.PutToSession(Context, identity);
 
-            return this.LoginAndRedirect(authUser.Guid, authUser.Expiry);
+            return this.LoginAndRedirect(identity.Guid, identity.Expiry);
         }
 
         private User GetUser(string login, string password)

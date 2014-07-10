@@ -135,7 +135,7 @@
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
-    <Compile Include="Infrastructure\Collections.cs" />
+    <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\VersionPackageCache.cs" />
     <Compile Include="ServiceManager\DeploymentTaskBuilder.cs" />

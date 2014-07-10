@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.Infrastructure
         
         public UserIdentity(User user)
         {
-            UserName = user.DispalyName;
+            UserName = user.DisplayName;
 
             Claims = user.IsAdmin ? AdminClaims : UserClaims;
 

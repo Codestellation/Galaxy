@@ -23,11 +23,11 @@ namespace Codestellation.Galaxy.WebEnd
         private readonly Collection _deployments;
         public const string Path = "deployment";
 
-        public DeploymentModule(Collections collections, DashBoard dashBoard)
+        public DeploymentModule(Repository repository, DashBoard dashBoard)
             : base(Path)
         {
             _dashBoard = dashBoard;
-            _deployments = collections.Deployments;
+            _deployments = repository.GetCollection<Deployment>();
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
@@ -103,7 +103,6 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var deployment = _dashBoard.GetDeployment(id);
-            var feed = _dashBoard.GetFeed(deployment.FeedId);
 
             var versions = _dashBoard.VersionCache.GetPackageVersions(deployment.PackageName);
 
@@ -219,8 +218,8 @@ namespace Codestellation.Galaxy.WebEnd
 
         private string ReceiveFile()
         {
-            var file = this.Request.Files.FirstOrDefault();
-            StreamReader reader = new StreamReader(file.Value);
+            var file = Request.Files.FirstOrDefault();
+            var reader = new StreamReader(file.Value);
             var content = reader.ReadToEnd();
             return content;
         }

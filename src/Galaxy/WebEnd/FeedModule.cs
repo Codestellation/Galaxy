@@ -14,10 +14,10 @@ namespace Codestellation.Galaxy.WebEnd
         private readonly Collection _feeds;
         public const string Path = "feed";
 
-        public FeedModule(DashBoard dashBoard, Collections collections) : base(Path)
+        public FeedModule(DashBoard dashBoard, Repository repository) : base(Path)
         {
             _dashBoard = dashBoard;
-            _feeds = collections.Feeds;
+            _feeds = repository.GetCollection<NugetFeed>();
         }
 
         protected override CrudOperations SupportedOperations

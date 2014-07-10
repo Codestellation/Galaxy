@@ -36,11 +36,11 @@ namespace Codestellation.Galaxy
             base.ConfigureConventions(nancyConventions);
         }
 
-        protected override void ConfigureApplicationContainer(Nancy.TinyIoc.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
             
-            container.Register<Collections>().AsSingleton();
+            container.Register<Repository>().AsSingleton();
             container.Register<IRazorConfiguration,RazorConfiguration>().AsSingleton();
             container.Register<IStatusCodeHandler,ForbiddenErrorHandler>().AsSingleton();
             container.Register<IUserMapper, UserDatabase>().AsSingleton();
@@ -53,12 +53,12 @@ namespace Codestellation.Galaxy
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            var formsAuthConfiguration = new FormsAuthenticationConfiguration() { RedirectUrl = "~/login", UserMapper = container.Resolve<IUserMapper>()};
+            var formsAuthConfiguration = new FormsAuthenticationConfiguration { RedirectUrl = "~/login", UserMapper = container.Resolve<IUserMapper>()};
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
 
             CookieBasedSessions.Enable(pipelines);
 
-            var collections = container.Resolve<Collections>();
+            var collections = container.Resolve<Repository>();
             collections.Start();
             
             CreateDefaultUser(collections);
@@ -68,11 +68,11 @@ namespace Codestellation.Galaxy
             base.ApplicationStartup(container, pipelines);
         }
 
-        private void FillDashBoard(TinyIoCContainer container,  Collections collections)
+        private void FillDashBoard(TinyIoCContainer container,  Repository repository)
         {
             var dashBoard = container.Resolve<DashBoard>();
 
-            using(var query = collections.Feeds.CreateQuery<NugetFeed>())
+            using(var query = repository.GetCollection<NugetFeed>().CreateQuery<NugetFeed>())
             using(var cursor = query.Execute())
             {
                 foreach (var feed in cursor)
@@ -81,7 +81,7 @@ namespace Codestellation.Galaxy
                 }
             }
             
-            using (var query = collections.Deployments.CreateQuery<Deployment>())
+            using (var query = repository.GetCollection<Deployment>().CreateQuery<Deployment>())
             using (var cursor = query.Execute())
             {
                 foreach (var deployment in cursor)
@@ -102,9 +102,9 @@ namespace Codestellation.Galaxy
             x.ViewLocationProvider = typeof(ResourceViewLocationProvider);
         }
 
-        private void CreateDefaultUser(Collections collections)
+        private void CreateDefaultUser(Repository repository)
         {
-            var users = collections.Users;
+            var users = repository.GetCollection<User>();
 
             using (var query = users.CreateQuery<User>())
             using (var cursor = query.Execute(QueryMode.Count))
@@ -119,9 +119,9 @@ namespace Codestellation.Galaxy
                     IsAdmin = true,
                     Login = "admin",
                     Password = "admin",
-                    DispalyName = "Temp Admin"
+                    DisplayName = "Temp Admin"
                 };
-                users.Save<User>(user, false);
+                users.Save(user, false);
                 tx.Commit();
             }
         }
