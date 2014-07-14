@@ -1,29 +1,27 @@
-﻿using System;
+﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Operations;
+using Codestellation.Galaxy.Tests.Helpers;
+using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Tests.Helpers;
-using Codestellation.Galaxy.ServiceManager.Operations;
-using NUnit.Framework;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 {
     [TestFixture]
     public class InstallPackageTests
     {
-        string output;
-        string targetPath;
+        private string output;
+        private string targetPath;
 
         [SetUp]
         public void Init()
         {
-            
             output = Path.Combine(Environment.CurrentDirectory, "testnuget");
 
-            ResourcesHelper.ExtractEmbeddedAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
+            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
 
             targetPath = Path.Combine(output, "extracted");
-
         }
 
         [Test]
@@ -31,11 +29,11 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         {
             InstallPackage op = new InstallPackage(
                 targetPath,
-                new Deployment() 
-                { 
+                new Deployment()
+                {
                     DisplayName = "testdeployment",
                     PackageName = "TestNugetPackage",
-                    PackageVersion = new Version(1,0)
+                    PackageVersion = new Version(1, 0)
                 },
                 new NugetFeed()
                 {
@@ -68,9 +66,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     Uri = output
                 });
 
-
-
-            Assert.That(() => op.Execute(),Throws.TypeOf<ArgumentException>() );
+            Assert.That(() => op.Execute(), Throws.TypeOf<ArgumentException>());
         }
 
         [TearDown]

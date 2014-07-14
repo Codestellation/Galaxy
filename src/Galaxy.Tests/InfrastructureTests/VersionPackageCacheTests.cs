@@ -10,17 +10,17 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
     [TestFixture]
     public class VersionPackageCacheTests
     {
-        const string testPackageName = "TestNugetPackage";
+        private const string testPackageName = "TestNugetPackage";
 
-        string output;
+        private string output;
 
         [SetUp]
         public void Init()
         {
             output = Path.Combine(Environment.CurrentDirectory, "testnuget");
 
-            ResourcesHelper.ExtractEmbeddedAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
-            ResourcesHelper.ExtractEmbeddedAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.1.0", "TestNugetPackage.1.1.0.nupkg");
+            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
+            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.1.0", "TestNugetPackage.1.1.0.nupkg");
         }
 
         [Test]
@@ -31,8 +31,8 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
             VersionPackageCache versionPackageCache = new VersionPackageCache();
             versionPackageCache.OnCacheUpdated += new EventHandler((sender, e) => refreshCompleted.Set());
 
-            versionPackageCache.AddPackage(testPackageName, new Domain.NugetFeed() 
-            { 
+            versionPackageCache.AddPackage(testPackageName, new Domain.NugetFeed()
+            {
                 Name = "test_feed",
                 Uri = output
             });
