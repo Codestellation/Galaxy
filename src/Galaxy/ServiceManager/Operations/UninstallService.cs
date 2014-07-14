@@ -1,21 +1,19 @@
-﻿using System;
+﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.IO;
-using Codestellation.Galaxy.Domain;
-
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class UninstallService: WinServiceOperation
+    public class UninstallService : WinServiceOperation
     {
         public UninstallService(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
         {
-            
         }
 
         public override void Execute()
         {
-            if(IsServiceExists(_deployment.ServiceName))
+            if (IsServiceExists(_deployment.ServiceName))
             {
                 string serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
 
@@ -23,11 +21,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
                 string exeParams = "uninstall";
 
-                int resultCode = 0;
-                if ((resultCode = ExecuteWithParams(exePath, exeParams)) != 0)
-                {
-                    throw new InvalidOperationException(string.Format("execution of {0} with params {1} returned {2}", exePath, exeParams, resultCode));
-                }
+                ProcessStarter.ExecuteWithParams(exePath, exeParams);
             }
         }
     }

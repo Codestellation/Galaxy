@@ -92,5 +92,14 @@ namespace Codestellation.Galaxy.ServiceManager
                 );
             return deploymentTask;
         }
+
+        public static DeploymentTask ConfigurePlatform(this DeploymentTask deploymentTask)
+        {
+            deploymentTask.Add
+                (
+                    new ConfigurePlatform(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                );
+            return deploymentTask;
+        }
     }
 }

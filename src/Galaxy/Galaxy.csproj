@@ -143,9 +143,12 @@
     <Compile Include="ServiceManager\Helpers\CopyDirectory.cs" />
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
     <Compile Include="ServiceManager\Helpers\HostFeedHelper.cs" />
+    <Compile Include="ServiceManager\Helpers\PlatformDetector.cs" />
+    <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
     <Compile Include="ServiceManager\Helpers\ResultsDescriberHelper.cs" />
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
+    <Compile Include="ServiceManager\Operations\ConfigurePlatform.cs" />
     <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
     <Compile Include="ServiceManager\Operations\DeployUserConfig.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />

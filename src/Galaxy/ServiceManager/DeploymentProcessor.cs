@@ -30,8 +30,8 @@ namespace Codestellation.Galaxy.ServiceManager
 
                 try
                 {
-	                operation.Execute();
-	                results[index] = new OperationResult(operationName, ResultCode.Succeed);
+                    operation.Execute();
+                    results[index] = new OperationResult(operationName, ResultCode.Succeed);
                 }
                 catch (Exception ex)
                 {

@@ -1,33 +1,19 @@
-﻿using System.Linq;
+﻿using Codestellation.Galaxy.Domain;
+using System.IO;
+using System.Linq;
 using System.ServiceProcess;
-using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public abstract class WinServiceOperation: OperationBase
+    public abstract class WinServiceOperation : OperationBase
     {
+        protected readonly string _serviceTargetPath;
+
         public WinServiceOperation(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
         {
-
+            _serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
         }
-
-
-        protected int ExecuteWithParams(string exePath, string exeParams)
-        {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = exePath;
-            startInfo.Arguments = exeParams;
-            startInfo.Verb = "runas";
-            process.StartInfo = startInfo;
-            process.Start();
-            process.WaitForExit();
-
-            return process.ExitCode;
-        }
-
 
         protected bool IsServiceExists(string serviceName)
         {

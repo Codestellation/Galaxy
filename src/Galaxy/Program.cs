@@ -47,7 +47,7 @@ namespace Codestellation.Galaxy
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = e.ExceptionObject as Exception;
-            Log.FatalException("Unhandled exception.", exception);
+            Log.Fatal("Unhandled exception.", exception);
             LogManager.Flush(3000);
         }
     }

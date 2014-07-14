@@ -1,10 +1,10 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -17,7 +17,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             base(targetPath, deployment, feed)
         {
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
+
+            if (_hostPackageName == null)
+                _hostPackageName = "Codestellation.Galaxy.Host";
         }
+
 
         public override void Execute()
         {
@@ -81,7 +85,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 throw new InvalidOperationException("Host package wasn't found");
             }
         }
-
         private Version GetNugetDotNetVersion(string installedNugetPath)
         {
             Version result = new Version();
@@ -113,7 +116,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             return result;
         }
-
         private void UnpackPackage(string packagePath, string serviceTargetPath, Version targetDotNetVersion)
         {
             var libFolderPath = Path.Combine(packagePath, LibFolder);

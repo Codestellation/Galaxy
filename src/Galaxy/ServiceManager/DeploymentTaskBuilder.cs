@@ -20,6 +20,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .InstallPackageOp(HostDeployHelper.CreateDeployment(deployment), HostDeployHelper.CreateFeed())
                 .CopyNugetsToRootOp()
                 .ProvideServiceConfigOp()
+                .ConfigurePlatform()
                 .DeployUserConfig();
         }
 
@@ -31,6 +32,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .CopyNugetsToRootOp()
                 .ProvideServiceConfigOp()
                 .InstallServiceOp()
+                .ConfigurePlatform()
                 .DeployUserConfig();
         }
 
