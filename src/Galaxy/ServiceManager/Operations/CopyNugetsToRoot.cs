@@ -16,10 +16,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public CopyNugetsToRoot(string targetPath, Deployment deployment, NugetFeed feed) :
             base(targetPath, deployment, feed)
         {
-            _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
-
-            if (_hostPackageName == null)
-                _hostPackageName = "Codestellation.Galaxy.Host";
+            _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"] ?? "Codestellation.Galaxy.Host";
         }
 
 
@@ -70,7 +67,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                     copyHost = () => UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion);
                 }
                 else
+                {
                     UnpackPackage(packagePath, serviceTargetPath, packageDotNetVersions[packagePath]);
+                }
             }
 
             if (copyHost != null)
@@ -118,27 +117,26 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         }
         private void UnpackPackage(string packagePath, string serviceTargetPath, Version targetDotNetVersion)
         {
+            var binariesPath = DetectBinariesPath(packagePath, targetDotNetVersion);
+            binariesPath.CopyIncludeSubfoldersTo(serviceTargetPath);
+        }
+
+        private string DetectBinariesPath(string packagePath, Version targetDotNetVersion)
+        {
             var libFolderPath = Path.Combine(packagePath, LibFolder);
+            var libFolderDotNetVersionedPath = Path.Combine(libFolderPath, DotNetVersionHelper.dotNetNugetFolders[targetDotNetVersion]);
+
+            if (Directory.Exists(libFolderDotNetVersionedPath))
+            {
+                return libFolderDotNetVersionedPath;
+            }
+
             if (Directory.Exists(libFolderPath))
             {
-                var libFolderDotNetVersionedPath = Path.Combine(libFolderPath, DotNetVersionHelper.dotNetNugetFolders[targetDotNetVersion]);
+                return libFolderPath;
+            }
 
-                if (Directory.Exists(libFolderDotNetVersionedPath))
-                {
-                    // copy from "{package name}/lib/{dotnetversionfolder}/" to "../" dir
-                    libFolderDotNetVersionedPath.CopyIncludeSubfoldersTo(serviceTargetPath);
-                }
-                else
-                {
-                    // copy from "{package name}/lib/" to "../" dir
-                    libFolderPath.CopyIncludeSubfoldersTo(serviceTargetPath);
-                }
-            }
-            else
-            {
-                // copy from "{package name}/" to "../" dir
-                packagePath.CopyIncludeSubfoldersTo(serviceTargetPath);
-            }
+            return packagePath;
         }
 
         private void Clean(IEnumerable<String> packageFolders)
