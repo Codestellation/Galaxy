@@ -120,7 +120,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, DeploymentTaskBuilder.InstallServiceTask);         
+            ExecuteServiceControlAction(id, Build.InstallServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -129,7 +129,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, DeploymentTaskBuilder.StartServiceTask);         
+            ExecuteServiceControlAction(id, Build.StartServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -138,7 +138,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, DeploymentTaskBuilder.StopServiceTask);         
+            ExecuteServiceControlAction(id, Build.StopServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -147,7 +147,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, DeploymentTaskBuilder.UninstallServiceTask);         
+            ExecuteServiceControlAction(id, Build.UninstallServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -190,7 +190,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             SaveDeployment(deployment);
 
-            ExecuteServiceControlAction(id, DeploymentTaskBuilder.DeployServiceTask);         
+            ExecuteServiceControlAction(id, Build.DeployServiceTask);         
 
             return RedirectToDetails(id);
         }

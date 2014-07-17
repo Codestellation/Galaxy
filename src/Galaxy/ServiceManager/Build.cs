@@ -4,11 +4,11 @@ using Codestellation.Galaxy.ServiceManager.Helpers;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
-    public class DeploymentTaskBuilder
+    public class Build
     {
         static string _targetPath;
 
-        static DeploymentTaskBuilder()
+        static Build()
         {
             _targetPath = ConfigurationManager.AppSettings["appsdestination"];
         }
@@ -16,10 +16,10 @@ namespace Codestellation.Galaxy.ServiceManager
         public static DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("DeployService", deployment, deploymentFeed, _targetPath)
-                .InstallPackageOp()
-                .InstallPackageOp(HostDeployHelper.CreateDeployment(deployment), HostDeployHelper.CreateFeed())
-                .CopyNugetsToRootOp()
-                .ProvideServiceConfigOp()
+                .InstallPackage()
+                .InstallPackage(HostDeployHelper.CreateDeployment(deployment), HostDeployHelper.CreateFeed())
+                .CopyNugetsToRoot()
+                .ProvideServiceConfig()
                 .ConfigurePlatform()
                 .DeployUserConfig();
         }
@@ -27,27 +27,27 @@ namespace Codestellation.Galaxy.ServiceManager
         public static DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("InstallService", deployment, deploymentFeed, _targetPath)
-                .ProvideServiceConfigOp()
-                .InstallServiceOp()
+                .ProvideServiceConfig()
+                .InstallService()
                 .DeployUserConfig();
         }
 
         public static DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("UninstallService", deployment, deploymentFeed, _targetPath)
-                .StopServiceOp()
-                .UninstallServiceOp()
-                .UninstallPackageOp();
+                .StopService()
+                .UninstallService()
+                .UninstallPackage();
         }
         public static DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("StartService", deployment, deploymentFeed, _targetPath)
-                .StartServiceOp();
+                .StartService();
         }
         public static DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("StopService", deployment, deploymentFeed, _targetPath)
-                .StopServiceOp();
+                .StopService();
         }
     }
 }

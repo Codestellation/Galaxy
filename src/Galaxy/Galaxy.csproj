@@ -137,7 +137,7 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\VersionPackageCache.cs" />
-    <Compile Include="ServiceManager\DeploymentTaskBuilder.cs" />
+    <Compile Include="ServiceManager\Build.cs" />
     <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectory.cs" />
