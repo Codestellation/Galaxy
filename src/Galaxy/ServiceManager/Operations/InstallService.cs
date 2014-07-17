@@ -17,8 +17,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             string exePath = Path.Combine(serviceTargetPath, ServiceHostFileName);
 
-            string exeParams = string.Format("install -servicename \"{0}\"",
-                    Deployment.ServiceName);
+            string exeParams = string.Format("install");
 
             ProcessStarter.ExecuteWithParams(exePath, exeParams);
         }
