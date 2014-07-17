@@ -27,12 +27,8 @@ namespace Codestellation.Galaxy.ServiceManager
         public static DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return new DeploymentTask("InstallService", deployment, deploymentFeed, _targetPath)
-                .InstallPackageOp()
-                .InstallPackageOp(HostDeployHelper.CreateDeployment(deployment), HostDeployHelper.CreateFeed())
-                .CopyNugetsToRootOp()
                 .ProvideServiceConfigOp()
                 .InstallServiceOp()
-                .ConfigurePlatform()
                 .DeployUserConfig();
         }
 
