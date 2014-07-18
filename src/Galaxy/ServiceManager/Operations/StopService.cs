@@ -15,7 +15,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             if(IsServiceExists(Deployment.ServiceName))
             {
-                using (ServiceController sc = new ServiceController(Deployment.ServiceName))
+                using (ServiceController sc = new ServiceController(Deployment.GetServiceName()))
                 {
                     if(sc.Status != ServiceControllerStatus.Stopped)
                     {

@@ -13,16 +13,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            if (IsServiceExists(_deployment.ServiceName))
+            if (!IsServiceExists(_deployment.GetServiceName()))
             {
-                string serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
-
-                string exePath = Path.Combine(serviceTargetPath, ServiceHostFileName);
-
-                string exeParams = "uninstall";
-
-                ProcessStarter.ExecuteWithParams(exePath, exeParams);
+                return;
             }
+
+            var serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
+
+            var exePath = Path.Combine(serviceTargetPath, ServiceHostFileName);
+
+            var exeParams = "uninstall";
+
+            ProcessStarter.ExecuteWithParams(exePath, exeParams);
         }
     }
 }

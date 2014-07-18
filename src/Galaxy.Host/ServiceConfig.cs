@@ -10,6 +10,8 @@ namespace Codestellation.Galaxy.Host
 
         public string Description { get; set; }
 
+        public string InstanceName { get; set; }
+
         public string StartMethod
         {
             get { return "Start"; }

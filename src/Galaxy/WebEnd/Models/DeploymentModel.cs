@@ -15,6 +15,10 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string ServiceName { get; set; }
         [Display(Name = "Display name", Prompt = "Display name")]
         public string DisplayName { get; set; }
+
+        [Display(Name = "Instance name", Prompt = "Instance name")]
+        public string InstanceName { get; set; }
+
         public string Description { get; set; }
         [Display(Name = "Feed name", Prompt = "Feed name")]
         public ObjectId FeedId { get; set; }
@@ -43,14 +47,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
             get { return _allFeeds.Single(x => x.Key == FeedId).Value; }
         }
 
-        public DeploymentModel()
-        {
-            IsNew = true;
-            Id = new ObjectId();
-            _allFeeds = null;
-            _packageVersions = null;
-        }
-
         public DeploymentModel(IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
             IsNew = true;
@@ -59,25 +55,27 @@ namespace Codestellation.Galaxy.WebEnd.Models
             _packageVersions = null;
         }
 
-        public DeploymentModel(Deployment deployment)
+        private DeploymentModel(Deployment deployment)
         {
             Id = deployment.Id;
 
+            AssemblyQualifiedType = deployment.AssemblyQualifiedType;
             DisplayName = deployment.DisplayName;
             ServiceName = deployment.ServiceName;
-            AssemblyQualifiedType = deployment.AssemblyQualifiedType;
+            InstanceName = deployment.InstanceName;
             Description = deployment.Description;
+
             FeedId = deployment.FeedId;
             Status = deployment.Status;
             PackageVersion = deployment.PackageVersion;
             PackageName = deployment.PackageName;
+            
             ConfigFileContent = deployment.ConfigFileContent;
 
             IsNew = false;
         }
 
-        public DeploymentModel(Deployment deployment,
-            IEnumerable<KeyValuePair<ObjectId, string>> allFeeds):
+        public DeploymentModel(Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds):
             this(deployment)
         {
             _allFeeds = allFeeds;
@@ -95,9 +93,10 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public void Update(Deployment deployment)
         {
+            deployment.AssemblyQualifiedType = AssemblyQualifiedType;
             deployment.DisplayName = DisplayName;
             deployment.ServiceName = ServiceName;
-            deployment.AssemblyQualifiedType = AssemblyQualifiedType;
+            deployment.InstanceName = InstanceName;
             deployment.Description = Description;
             deployment.FeedId = FeedId;
             deployment.PackageName = PackageName;

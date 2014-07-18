@@ -13,7 +13,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            using (ServiceController sc = new ServiceController(Deployment.ServiceName))
+            using (ServiceController sc = new ServiceController(Deployment.GetServiceName()))
             {
                 sc.Start();
                 sc.WaitForStatus(ServiceControllerStatus.StartPending);

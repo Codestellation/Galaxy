@@ -13,6 +13,8 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
         public string DisplayName { get; set; }
         [XmlElement]
         public string Description { get; set; }
+        [XmlElement]
+        public string InstanceName { get; set; }
 
         /// <summary>
         /// ctor for serializer
@@ -28,6 +30,7 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             Description = deployment.Description;
             DisplayName = deployment.DisplayName;
             ServiceName = deployment.ServiceName;
+            InstanceName = deployment.InstanceName;
         }
 
         public void Serialize(string fileName)

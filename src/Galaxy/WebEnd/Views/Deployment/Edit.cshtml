@@ -15,6 +15,7 @@
     <form class="form-horizontal" role="form" method="POST">
         @Html.LabeledTextBox(x => x.DisplayName)
         @Html.LabeledTextBox(x => x.ServiceName)
+        @Html.LabeledTextBox(x => x.InstanceName)
         @Html.LabeledTextBox(x => x.Description)
         @Html.DropDownList(x => x.FeedId, Model.AllFeeds)
         @Html.LabeledTextBox(x => x.PackageName)

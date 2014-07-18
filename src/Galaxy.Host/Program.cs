@@ -36,11 +36,10 @@ namespace Codestellation.Galaxy.Host
                     x.SetServiceName(config.ServiceName);
                     x.SetDisplayName(config.DisplayName);
 
-                    string instanceName = string.Empty;
 
-                    if (!string.IsNullOrEmpty(instanceName))
+                    if (!string.IsNullOrEmpty(config.InstanceName))
                     {
-                        x.SetInstanceName(instanceName);
+                        x.SetInstanceName(config.InstanceName);
                     }
                 });
         }
