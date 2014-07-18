@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
@@ -16,26 +15,48 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         {
             Tag input = Tags.Input.Text();
 
-            return BuildInput(htmlHelper, property, input);
+            return BuildFormControlInput(htmlHelper, property, input);
         }
 
         public static IHtmlString LabeledNumberBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
             Tag input = Tags.Input.Number();
 
-            return BuildInput(htmlHelper, property, input);
+            return BuildFormControlInput(htmlHelper, property, input);
         }
 
         public static IHtmlString LabeledPasswordBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
-            return BuildInput(htmlHelper, property, Tags.Input.Password());
+            return BuildFormControlInput(htmlHelper, property, Tags.Input.Password());
         }
 
-        public static IHtmlString DropDownList<TModel, TProperty, TDisplayValue>(
+        public static IHtmlString LabelledDropDown<TModel, TProperty, TDisplayValue>(
             this HtmlHelpers<TModel> htmlHelper, 
             Expression<Func<TModel, TProperty>> property, 
             IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values,
             string defaultInvitation = "Select...")
+        {
+            var selectTag = BuildSelectTag(htmlHelper, property, values, defaultInvitation);
+
+            return BuildFormControlInput(htmlHelper, property, selectTag);
+        }
+
+        public static IHtmlString NoLabelDropDown<TModel, TProperty, TDisplayValue>(
+            this HtmlHelpers<TModel> htmlHelper,
+            Expression<Func<TModel, TProperty>> property,
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values,
+            string defaultInvitation = "Select...")
+        {
+
+            var input = BuildSelectTag(htmlHelper, property, values, defaultInvitation);
+            input.Classes(BootstrapClass.FormControl);
+            var div = Tags.Div().Content(input);
+
+            return new NonEncodedHtmlString(div.ToHtmlString());
+        }
+
+        private static Tag BuildSelectTag<TModel, TProperty, TDisplayValue>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property,
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values, string defaultInvitation)
         {
             var currentValue = htmlHelper.Model.Read(property);
 
@@ -43,20 +64,23 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 
             //TODO: Use id of feed instead of values
             var options = values.Select(item =>
-                {
-                    bool isSelected = item.Key.Equals(currentValue);
-                    if (isSelected) hasSelected = true;
-                    return Tags.Input.Option().Selected(isSelected).Content(item.Value).Value(item.Key);
-                });
+            {
+                bool isSelected = item.Key.Equals(currentValue);
+                if (isSelected) hasSelected = true;
+                return Tags.Input.Option().Selected(isSelected).Content(item.Value).Value(item.Key);
+            });
 
             if (!hasSelected)
             {
                 //TODO: Instead of hardcoded string use placeholder from display attribute
-                var placeholderOption = Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode(defaultInvitation));
-                options = new[] { placeholderOption }.Union(options);
+                var placeholderOption =
+                    Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode(defaultInvitation));
+                options = new[] {placeholderOption}.Union(options);
             }
 
-            return BuildInput(htmlHelper, property, Tags.Input.Select().Content(options.ToArray()));
+            var finalOption = options.ToArray();
+            var selectTag = Tags.Input.Select().Content(finalOption);
+            return selectTag;
         }
 
         public static IHtmlString LabeledCheckBox<TModel>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, bool>> property)
@@ -79,37 +103,23 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return formGroup;
         }
 
-        private static IHtmlString BuildInput<TModel, TProperty>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, Tag input)
+        private static IHtmlString BuildFormControlInput<TModel, TProperty>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, Tag input)
         {
-            var member = property.GetMember();
-            var path = property.ToMemberPath();
-
-            DisplayAttribute display;
-            string placeholder = string.Empty;
-            string name = member.Name;
-
-            if (member.TryGetDisplay(out display))
-            {
-                placeholder = display.Prompt;
-                name = display.Name;
-            }
-
+            var inputProperties = InputProperties.Get(property);
+            
             TProperty value = htmlHelper.Model.Read(property);
 
             input.Classes(BootstrapClass.FormControl)
-                .Id(path)
-                .Name(path)
+                .Id(inputProperties.Path)
+                .Name(inputProperties.Path)
                 .Value(value);
 
-            if (!string.IsNullOrWhiteSpace(placeholder))
+            if (!string.IsNullOrWhiteSpace(inputProperties.Placeholder))
             {
-                input.Placeholder(placeholder);
+                input.Placeholder(inputProperties.Placeholder);
             }
 
-            if(input is SelectTag)
-                return BuildVerticalFormControl(path, name, input);
-            else
-                return BuildFormControl(path, name, input);
+            return BuildFormControl(inputProperties.Path, inputProperties.Name, input);
         }
 
         private static IHtmlString BuildFormControl(string path, string name, Tag input)
@@ -120,11 +130,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 
             return new NonEncodedHtmlString(formGroup.ToHtmlString());
         }
-        private static IHtmlString BuildVerticalFormControl(string path, string name, Tag input)
-        {
-            var formGroup = Tags.Div().Content(input);
 
-            return new NonEncodedHtmlString(formGroup.ToHtmlString());
-        }
+        
     }
 }

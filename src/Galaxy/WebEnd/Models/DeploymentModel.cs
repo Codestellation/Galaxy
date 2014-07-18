@@ -47,6 +47,15 @@ namespace Codestellation.Galaxy.WebEnd.Models
             get { return _allFeeds.Single(x => x.Key == FeedId).Value; }
         }
 
+        //used by nancy model binder
+        public DeploymentModel()
+        {
+            IsNew = true;
+            Id = new ObjectId();
+            _allFeeds = null;
+            _packageVersions = null;
+        }
+
         public DeploymentModel(IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
             IsNew = true;
