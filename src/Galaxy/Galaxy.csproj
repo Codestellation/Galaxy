@@ -143,6 +143,7 @@
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
+    <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />
     <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectory.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="WebEnd\Misc\RazorConfiguration.cs" />
     <Compile Include="WebEnd\Misc\ReflectionExtensions.cs" />
+    <Compile Include="WebEnd\TagBuilder\TextAreaTag.cs" />
     <Compile Include="WebEnd\UserModule.cs" />
     <Compile Include="WebEnd\Misc\ViewExtensions.cs" />
     <Compile Include="WebEnd\OptionsModule.cs" />

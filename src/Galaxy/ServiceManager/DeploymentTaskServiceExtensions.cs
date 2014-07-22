@@ -1,14 +1,15 @@
-﻿using Codestellation.Galaxy.ServiceManager.Operations;
+﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
     public static class DeploymentTaskServiceExtensions
     {
-        public static DeploymentTask InstallPackage(this DeploymentTask deploymentTask, string deployPath, InstallPackageOrder[] orders)
+        public static DeploymentTask InstallPackage(this DeploymentTask deploymentTask, string deployPath, InstallPackageOrder[] orders, FileList keepOnUpdate)
         {
             deploymentTask.Add
                 (
-                    new InstallPackage(deployPath, orders)
+                    new InstallPackage(deployPath, orders, keepOnUpdate)
                 );
             return deploymentTask;
         }

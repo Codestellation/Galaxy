@@ -125,7 +125,7 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
             return SetAttribute(HtmlAttribute.CreatePlaceholder(placeholder));
         }
 
-        public Tag Value<TValue>(TValue value)
+        public virtual Tag Value<TValue>(TValue value)
         {
             return SetAttribute(HtmlAttribute.CreateValue(value));
         }

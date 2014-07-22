@@ -4,14 +4,14 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentModel>
 @{ Layout = "Master";}
 <style>
-    .inner_table
-    {
+    .inner_table {
         width: 100%;
         border-spacing: 5px;
         border-collapse: separate;
         table-layout: fixed;
     }
 </style>
+
 <div class="row">
     <div class="container  col-lg-6">
         <div class="panel panel-primary">
@@ -21,19 +21,24 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Service Name</td><td>@Model.ServiceName</td>
+                        <td>Service Name</td>
+                        <td>@Model.ServiceName</td>
                     </tr>
                     <tr>
-                        <td>Description</td><td>@Model.Description </td>
+                        <td>Description</td>
+                        <td>@Model.Description </td>
                     </tr>
                     <tr>
-                        <td>Feed</td><td>@Model.FeedName</td>
+                        <td>Feed</td>
+                        <td>@Model.FeedName</td>
                     </tr>
                     <tr>
-                        <td>Service Type</td><td>@Model.AssemblyQualifiedType</td>
+                        <td>Service Type</td>
+                        <td>@Model.AssemblyQualifiedType</td>
                     </tr>
                     <tr>
-                        <td>Status</td><td>@Model.Status</td>
+                        <td>Status</td>
+                        <td>@Model.Status</td>
                     </tr>
                 </tbody>
             </table>
@@ -82,22 +87,26 @@
                     </form>
                 </li>
                 <li class="list-group-item">
-                    <form role="form" action="/@DeploymentModule.Path/deploy/@Model.Id" method="POST">
-                        <table class="inner_table">
-                            <colgroup>
-                                <col>
-                                <col width="20%">
-                            </colgroup>
-                            <tr>
-                                <td>
-                                    @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
-                                </td>
-                                <td>
-                                    <input type="submit" class="btn btn-primary btn-sm btn-block" value="Deploy" />
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+
+                    <table class="inner_table">
+                        <colgroup>
+                            <col width="60%"/>
+                            <col/>
+                            <col/>
+                        </colgroup>
+                        <tr>
+                            <td>
+                                @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
+                            </td>
+                            <td>
+                                <button id="btn-deploy" type="button" class="btn btn-primary btn-sm btn-block">Deploy</button>
+                            </td>
+                            <td>
+                                <button id="btn-update" type="button" class="btn btn-primary btn-sm btn-block">Update</button>
+                            </td>
+                        </tr>
+                    </table>
+
                 </li>
             </ul>
         </div>
@@ -143,8 +152,29 @@
             </div>
         </div>
     </div>
-    <script>
+</div>
+
+<script>
+    $(document).ready(function () {
         $('input[type=file]').bootstrapFileInput();
         $('.file-inputs').bootstrapFileInput();
-    </script>
-</div>
+
+        var version = $('select[name=PackageVersion]');
+
+        $('#btn-update')
+            .click(function () {
+                $.ajax({
+                    url: '/@DeploymentModule.Path/update/@Model.Id/' + version.val(),
+                    type: 'POST'
+                });
+            });
+
+        $('#btn-deploy')
+            .click(function () {
+                $.ajax({
+                    url: '/@DeploymentModule.Path/deploy/@Model.Id/' + version.val(),
+                    type: 'POST'
+                });
+            });
+    });
+</script>

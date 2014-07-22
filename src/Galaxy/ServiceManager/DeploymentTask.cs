@@ -30,9 +30,10 @@ namespace Codestellation.Galaxy.ServiceManager
             get { return _operations; }
         }
 
-        public void Add(IOperation operation)
+        public DeploymentTask Add(IOperation operation)
         {
             _operations.Add(operation);
+            return this;
         }
 
         public Deployment Deployment

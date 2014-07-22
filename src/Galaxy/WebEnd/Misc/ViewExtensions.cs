@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Codestellation.Galaxy.WebEnd.TagBuilder;
 using Nancy.Helpers;
@@ -55,9 +54,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 
             var input = BuildSelectTag(htmlHelper, property, values);
             input.Classes(BootstrapClass.FormControl);
-            var div = Tags.Div().Content(input);
 
-            return new NonEncodedHtmlString(div.ToHtmlString());
+            return new NonEncodedHtmlString(input.ToHtmlString());
         }
 
         private static Tag BuildSelectTag<TModel, TProperty, TDisplayValue>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property,
@@ -87,7 +85,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             }
 
             var finalOption = options.ToArray();
-            var selectTag = Tags.Input.Select().Content(finalOption);
+            var selectTag = Tags.Input.Select().Content(finalOption).Name(inputProperties.Path);
             return selectTag;
         }
 

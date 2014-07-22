@@ -36,7 +36,7 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
                 return new OptionTag();
             }
         }
-        
+
         public static Tag Div()
         {
             return new Tag("div");
@@ -47,9 +47,9 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
             return new Tag("label");
         }
 
-        public static Tag TextArea()
+        public static TextAreaTag TextArea()
         {
-            return new Tag("textarea");
+            return new TextAreaTag();
         }
     }
 }

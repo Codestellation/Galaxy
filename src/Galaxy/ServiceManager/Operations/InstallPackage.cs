@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using NuGet;
 
@@ -10,12 +11,19 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         private readonly string _destination;
         private readonly InstallPackageOrder[] _orders;
+        private readonly FileList _skipList;
         private TextWriter _buildLog;
 
-        public InstallPackage(string destination, InstallPackageOrder[] orders)
+        public InstallPackage(string destination, InstallPackageOrder[] orders, FileList skipList)
         {
             _destination = destination;
             _orders = orders;
+            _skipList = skipList;
+        }
+
+        public InstallPackage(string destination, InstallPackageOrder[] orders) : this(destination, orders, FileList.Empty)
+        {
+            
         }
 
         public void Execute(TextWriter buildLog)
@@ -69,7 +77,19 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             var destination = Path.Combine(_destination, file.EffectivePath);
             try
             {
-                _buildLog.Write("Copy '{0}' to '{1}' ", origin, destination);
+                _buildLog.Write("Copy '{0}' to '{1}'. ", origin, destination);
+
+                if (_skipList.IsMatched(destination))
+                {
+                    _buildLog.WriteLine("Skipped.");
+                    return;
+                }
+
+                if (File.Exists(destination))
+                {
+                    File.Delete(destination);
+                }
+                
                 File.Move(origin, destination);
                 _buildLog.WriteLine("Ok");
             }

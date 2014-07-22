@@ -37,7 +37,8 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
             Post["/stop/{id}", true] = (parameters, token) => ProcessRequest(() => PostStop(parameters), token);
             Post["/uninstall/{id}", true] = (parameters, token) => ProcessRequest(() => PostUninstall(parameters), token);
-            Post["/deploy/{id}", true] = (parameters, token) => ProcessRequest(() => PostDeploy(parameters), token);
+            Post["/deploy/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostDeploy(parameters), token);
+            Post["/update/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostUpdate(parameters), token);
             Post["/config/{id}", true] = (parameters, token) => ProcessRequest(() => PostConfig(parameters), token);
             Get["/config/{id}", true] = (parameters, token) => ProcessRequest(() => GetConfig(parameters), token);
         }
@@ -187,14 +188,29 @@ namespace Codestellation.Galaxy.WebEnd
         private object PostDeploy(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var deploymentModel = this.Bind<DeploymentModel>();
-
+            var version = new Version(parameters.version);
+            
             var deployment = _dashBoard.GetDeployment(id);
-            deployment.PackageVersion = deploymentModel.PackageVersion;
+            deployment.PackageVersion = version;
 
             SaveDeployment(deployment);
 
             ExecuteServiceControlAction(id, _taskBuilder.DeployServiceTask);         
+
+            return RedirectToDetails(id);
+        }
+
+        private object PostUpdate(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var version = new Version(parameters.version);
+
+            var deployment = _dashBoard.GetDeployment(id);
+            deployment.PackageVersion = version;
+
+            SaveDeployment(deployment);
+
+            ExecuteServiceControlAction(id, _taskBuilder.UpdateServiceTask);
 
             return RedirectToDetails(id);
         }
