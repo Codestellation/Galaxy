@@ -17,9 +17,11 @@
         @Html.LabeledTextBox(x => x.ServiceName)
         @Html.LabeledTextBox(x => x.InstanceName)
         @Html.LabeledTextBox(x => x.Description)
-        @Html.LabelledDropDown(x => x.FeedId, Model.AllFeeds)
+        @Html.LabeledDropDown(x => x.FeedId, Model.AllFeeds)
         @Html.LabeledTextBox(x => x.PackageName)
         @Html.LabeledTextBox(x => x.AssemblyQualifiedType)
+        @Html.LabeledTextArea(x => x.KeepOnUpdate)
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="submit" class="btn btn-success" value="Submit" />

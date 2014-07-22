@@ -18,6 +18,13 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return BuildFormControlInput(htmlHelper, property, input);
         }
 
+        public static IHtmlString LabeledTextArea<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
+        {
+            Tag input = Tags.TextArea();
+
+            return BuildFormControlInput(htmlHelper, property, input);
+        }
+
         public static IHtmlString LabeledNumberBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
             Tag input = Tags.Input.Number();
@@ -30,13 +37,12 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return BuildFormControlInput(htmlHelper, property, Tags.Input.Password());
         }
 
-        public static IHtmlString LabelledDropDown<TModel, TProperty, TDisplayValue>(
+        public static IHtmlString LabeledDropDown<TModel, TProperty, TDisplayValue>(
             this HtmlHelpers<TModel> htmlHelper, 
             Expression<Func<TModel, TProperty>> property, 
-            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values,
-            string defaultInvitation = "Select...")
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
-            var selectTag = BuildSelectTag(htmlHelper, property, values, defaultInvitation);
+            var selectTag = BuildSelectTag(htmlHelper, property, values);
 
             return BuildFormControlInput(htmlHelper, property, selectTag);
         }
@@ -44,11 +50,10 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         public static IHtmlString NoLabelDropDown<TModel, TProperty, TDisplayValue>(
             this HtmlHelpers<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> property,
-            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values,
-            string defaultInvitation = "Select...")
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
 
-            var input = BuildSelectTag(htmlHelper, property, values, defaultInvitation);
+            var input = BuildSelectTag(htmlHelper, property, values);
             input.Classes(BootstrapClass.FormControl);
             var div = Tags.Div().Content(input);
 
@@ -56,9 +61,12 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         }
 
         private static Tag BuildSelectTag<TModel, TProperty, TDisplayValue>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property,
-            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values, string defaultInvitation)
+            IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
+            
             var currentValue = htmlHelper.Model.Read(property);
+            var inputProperties = InputProperties.Get(property);
+
 
             var hasSelected = false;
 
@@ -74,7 +82,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             {
                 //TODO: Instead of hardcoded string use placeholder from display attribute
                 var placeholderOption =
-                    Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode(defaultInvitation));
+                    Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode(inputProperties.Placeholder));
                 options = new[] {placeholderOption}.Union(options);
             }
 
