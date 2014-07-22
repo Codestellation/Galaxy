@@ -11,16 +11,16 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly string _name;
         private readonly Deployment _deployment;
         private readonly NugetFeed _feed;
-        private readonly string _targetPath;
+        private readonly string _basePath;
 
         public NugetFeed Feed
         {
             get { return _feed; }
         }
 
-        public string TargetPath
+        public string BasePath
         {
-            get { return _targetPath; }
+            get { return _basePath; }
         } 
 
         public IReadOnlyList<OperationBase> Operations
@@ -48,16 +48,16 @@ namespace Codestellation.Galaxy.ServiceManager
             _operations =new List<OperationBase>();
         }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath) : this()
+        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string basePath) : this()
         {
             _name = name;
             _deployment = deployment;
             _feed = feed;
-            _targetPath = targetPath;
+            _basePath = basePath;
         }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string targetPath, IEnumerable<OperationBase> operations) :
-            this(name, deployment, feed, targetPath)
+        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string basePath, IEnumerable<OperationBase> operations) :
+            this(name, deployment, feed, basePath)
         {
             _operations.AddRange(operations);
         }

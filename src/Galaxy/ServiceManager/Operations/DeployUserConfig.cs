@@ -1,14 +1,13 @@
 ﻿using System;
 using Codestellation.Galaxy.Domain;
-using System.IO;
 using System.Xml;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class DeployUserConfig : OperationBase
     {
-        public DeployUserConfig(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public DeployUserConfig(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
 
         }
@@ -20,12 +19,10 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 throw new InvalidOperationException("Can't deploy missing config.");
             }
 
-            string serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
-
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(_deployment.ConfigFileContent);
 
-            var configFileName = string.Format("{0}\\{1}.config", serviceTargetPath, ServiceHostFileName);
+            var configFileName = string.Format("{0}\\{1}.config", ServiceFolder, ServiceHostFileName);
             doc.Save(configFileName);
         }
     }

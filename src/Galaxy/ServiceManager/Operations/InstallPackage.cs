@@ -1,5 +1,4 @@
 ﻿using NuGet;
-using System.IO;
 using Codestellation.Galaxy.Domain;
 using System;
 
@@ -7,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class InstallPackage: OperationBase
     {
-        public InstallPackage(string targetPath, Deployment deployment, NugetFeed feed):
-            base(targetPath, deployment, feed)
+        public InstallPackage(string basePath, Deployment deployment, NugetFeed feed):
+            base(basePath, deployment, feed)
         {
 
         }
@@ -17,11 +16,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             string packageId = _deployment.PackageName;
 
-            string serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
-
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(_feed.Uri);
 
-            PackageManager packageManager = new PackageManager(repo, serviceTargetPath);
+            PackageManager packageManager = new PackageManager(repo, ServiceFolder);
 
             if (_deployment.PackageVersion == null)
             {

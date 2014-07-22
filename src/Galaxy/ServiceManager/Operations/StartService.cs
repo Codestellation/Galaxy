@@ -5,8 +5,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StartService: WinServiceOperation
     {
-        public StartService(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public StartService(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
 
         }

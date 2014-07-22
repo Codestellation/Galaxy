@@ -5,26 +5,44 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
     public class TestTaskBuilder
     {
-        public static DeploymentTask SequenceTaskSuccess(Deployment deployment, NugetFeed deploymentFeed)
+        public static DeploymentTask SequenceTaskSuccess()
         {
-            var task = new DeploymentTask("TaskSuccess", deployment, deploymentFeed, "");
-            task.Add(new FakeOpSuccess("", deployment, deploymentFeed));
-            return task;
-        }
-        public static DeploymentTask SequenceTaskFail(Deployment deployment, NugetFeed deploymentFeed)
-        {
-            var task = new DeploymentTask("TaskFail", deployment, deploymentFeed, "");
-            task.Add(new FakeOpFail("", deployment, deploymentFeed));
+            var deployment = GetDeployment();
+            var feed = GetFeed();
+            var task = new DeploymentTask("TaskSuccess", deployment, feed, "");
+            task.Add(new FakeOpSuccess("", deployment, feed));
             return task;
         }
 
-        public static DeploymentTask SequenceTaskFailInTheMiddle(Deployment deployment, NugetFeed deploymentFeed)
+        public static DeploymentTask SequenceTaskFail()
         {
-            var task = new DeploymentTask("TaskFailInTheMiddle", deployment, deploymentFeed, "");
-            task.Add(new FakeOpSuccess("", deployment, deploymentFeed));
-            task.Add(new FakeOpFail("", deployment, deploymentFeed));
-            task.Add(new FakeOpSuccess("", deployment, deploymentFeed));
+            var deployment = GetDeployment();
+            var feed = GetFeed();
+            var task = new DeploymentTask("TaskFail", deployment, feed, "");
+            task.Add(new FakeOpFail("", deployment, feed));
             return task;
+        }
+
+        public static DeploymentTask SequenceTaskFailInTheMiddle()
+        {
+            var deployment = GetDeployment();
+            var feed = GetFeed();
+
+            var task = new DeploymentTask("TaskFailInTheMiddle", deployment, feed, "");
+            task.Add(new FakeOpSuccess("", deployment, feed));
+            task.Add(new FakeOpFail("", deployment, feed));
+            task.Add(new FakeOpSuccess("", deployment, feed));
+            return task;
+        }
+
+        private static Deployment GetDeployment()
+        {
+            return new Deployment { DisplayName = "FooService" };
+        }
+
+        private static NugetFeed GetFeed()
+        {
+            return new NugetFeed();
         }
     }
 }

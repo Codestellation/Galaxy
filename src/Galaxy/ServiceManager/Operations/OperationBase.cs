@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.IO;
+using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -8,13 +9,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         protected readonly Deployment _deployment;
         protected readonly NugetFeed _feed;
-        protected readonly string _targetPath;
+        protected readonly string BasePath;
+        protected readonly string ServiceFolder;
 
-        public OperationBase(string targetPath, Deployment deployment, NugetFeed feed)
+        public OperationBase(string basePath, Deployment deployment, NugetFeed feed)
         {
-            _targetPath = targetPath;
+            BasePath = basePath;
             _deployment = deployment;
             _feed = feed;
+            ServiceFolder = Path.Combine(BasePath, Deployment.DisplayName);
         }
 
         public NugetFeed Feed

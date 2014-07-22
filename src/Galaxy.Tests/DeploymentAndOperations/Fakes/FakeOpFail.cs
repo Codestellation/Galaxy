@@ -11,8 +11,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
     public class FakeOpFail: OperationBase
     {
-        public FakeOpFail(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public FakeOpFail(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
         }
 

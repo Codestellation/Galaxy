@@ -24,10 +24,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
         [Test]
         public void DeploymentProcessor_sequence_success()
         {
-            var successSequenceTask = TestTaskBuilder.SequenceTaskSuccess(
-                    new Deployment(),
-                    new NugetFeed()
-                );
+            var successSequenceTask = TestTaskBuilder.SequenceTaskSuccess();
 
             var result = ExecuteServiceControl(successSequenceTask);
             Assert.AreEqual(ResultCode.Succeed, result.ResultCode);
@@ -36,10 +33,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
         [Test]
         public void DeploymentProcessor_sequence_success_task_details()
         {
-            var sequence = TestTaskBuilder.SequenceTaskSuccess(
-                    new Deployment(),
-                    new NugetFeed()
-                );
+            var sequence = TestTaskBuilder.SequenceTaskSuccess();
 
             var result = ExecuteServiceControl(sequence);
 
@@ -49,10 +43,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
         [Test]
         public void DeploymentProcessor_sequence_fail()
         {
-            var sequence = TestTaskBuilder.SequenceTaskFail(
-                    new Deployment(),
-                    new NugetFeed()
-                );
+            var sequence = TestTaskBuilder.SequenceTaskFail();
 
             var result = ExecuteServiceControl(sequence);
             Assert.AreEqual(ResultCode.Failed, result.ResultCode);
@@ -61,10 +52,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
         [Test]
         public void DeploymentProcessor_sequence_fail_task_details()
         {
-            var sequence = TestTaskBuilder.SequenceTaskFail(
-                    new Deployment(),
-                    new NugetFeed()
-                );
+            var sequence = TestTaskBuilder.SequenceTaskFail();
 
             var result = ExecuteServiceControl(sequence);
 
@@ -74,10 +62,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
         [Test]
         public void DeploymentProcessor_sequence_fail_task_step_details()
         {
-            var sequence = TestTaskBuilder.SequenceTaskFailInTheMiddle(
-                    new Deployment(),
-                    new NugetFeed()
-                );
+            var sequence = TestTaskBuilder.SequenceTaskFailInTheMiddle();
 
             var result = ExecuteServiceControl(sequence);
 

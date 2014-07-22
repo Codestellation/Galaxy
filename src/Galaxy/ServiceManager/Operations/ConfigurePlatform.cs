@@ -8,15 +8,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class ConfigurePlatform : WinServiceOperation
     {
-        public ConfigurePlatform(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public ConfigurePlatform(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
         }
 
         public override void Execute()
         {
             var serviceLib = GetServiceLibName();
-            var libPath = Path.Combine(_serviceTargetPath, serviceLib);
+            var libPath = Path.Combine(ServiceFolder, serviceLib);
 
             if (!File.Exists(libPath))
             {
@@ -25,7 +25,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             var platform = PlatformDetector.GetPlatform(libPath);
 
-            PlatformDetector.ApplyPlatformToHost(platform, Path.Combine(_serviceTargetPath, ServiceHostFileName));
+            PlatformDetector.ApplyPlatformToHost(platform, Path.Combine(ServiceFolder, ServiceHostFileName));
         }
 
         private string GetServiceLibName()

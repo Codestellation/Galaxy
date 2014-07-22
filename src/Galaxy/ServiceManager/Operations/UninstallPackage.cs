@@ -6,21 +6,21 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallPackage: OperationBase
     {
-        public UninstallPackage(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public UninstallPackage(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
 
         }
+
         public override void Execute()
         {
-            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
 
-            if (!Directory.Exists(serviceTargetPath))
+            if (!Directory.Exists(ServiceFolder))
             {
                 throw new InvalidOperationException("uninstall unavaliable: run install first");
             }
 
-            Directory.Delete(serviceTargetPath, true);
+            Directory.Delete(ServiceFolder, true);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager
@@ -9,7 +10,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new InstallPackage(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new InstallPackage(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -18,16 +19,20 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new InstallPackage(deploymentTask.TargetPath, deployment, feed)
+                    new InstallPackage(deploymentTask.BasePath, deployment, feed)
                 );
             return deploymentTask;
+        }
+        public static DeploymentTask InstallHostPackage(this DeploymentTask deploymentTask)
+        {
+            return deploymentTask.InstallPackage(HostDeployHelper.CreateDeployment(deploymentTask.Deployment), HostDeployHelper.CreateFeed());
         }
 
         public static DeploymentTask InstallService(this DeploymentTask deploymentTask)
         {
             deploymentTask.Add
                 (
-                    new InstallService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new InstallService(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -36,7 +41,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new ProvideHostConfig(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new ProvideHostConfig(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -45,7 +50,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new StartService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new StartService(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -54,7 +59,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new StopService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new StopService(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -63,7 +68,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new UninstallPackage(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new UninstallPackage(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -72,7 +77,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new UninstallService(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new UninstallService(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -80,7 +85,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new CopyNugetsToRoot(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new CopyNugetsToRoot(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -88,7 +93,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new DeployUserConfig(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new DeployUserConfig(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }
@@ -97,7 +102,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             deploymentTask.Add
                 (
-                    new ConfigurePlatform(deploymentTask.TargetPath, deploymentTask.Deployment, deploymentTask.Feed)
+                    new ConfigurePlatform(deploymentTask.BasePath, deploymentTask.Deployment, deploymentTask.Feed)
                 );
             return deploymentTask;
         }

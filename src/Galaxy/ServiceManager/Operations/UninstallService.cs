@@ -6,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallService : WinServiceOperation
     {
-        public UninstallService(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public UninstallService(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
         }
 
@@ -18,9 +18,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 return;
             }
 
-            var serviceTargetPath = Path.Combine(_targetPath, _deployment.DisplayName);
-
-            var exePath = Path.Combine(serviceTargetPath, ServiceHostFileName);
+            var exePath = Path.Combine(ServiceFolder, ServiceHostFileName);
 
             var exeParams = "uninstall";
 

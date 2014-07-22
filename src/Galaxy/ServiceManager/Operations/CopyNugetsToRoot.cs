@@ -13,8 +13,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private const string LibFolder = "lib";
         private readonly string _hostPackageName;
 
-        public CopyNugetsToRoot(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public CopyNugetsToRoot(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"] ?? "Codestellation.Galaxy.Host";
         }
@@ -22,9 +22,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
-
-            var packageFolders = Directory.EnumerateDirectories(serviceTargetPath).ToArray();
+            var packageFolders = Directory.EnumerateDirectories(ServiceFolder).ToArray();
 
             var packageDotNetVersions = new Dictionary<string, Version>();
             var hostPackageDotNetVersion = new Version();
@@ -64,11 +62,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 if (packagePath.Contains(_hostPackageName))
                 {
                     // unpacking host app package should be after all other packages
-                    copyHost = () => UnpackPackage(packagePath, serviceTargetPath, hostPackageDotNetVersion);
+                    copyHost = () => UnpackPackage(packagePath, ServiceFolder, hostPackageDotNetVersion);
                 }
                 else
                 {
-                    UnpackPackage(packagePath, serviceTargetPath, packageDotNetVersions[packagePath]);
+                    UnpackPackage(packagePath, ServiceFolder, packageDotNetVersions[packagePath]);
                 }
             }
 

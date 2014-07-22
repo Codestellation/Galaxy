@@ -8,15 +8,14 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         private const string ServiceConfigFileName = "service-config.xml";
 
-        public ProvideHostConfig(string targetPath, Deployment deployment, NugetFeed feed) :
-            base(targetPath, deployment, feed)
+        public ProvideHostConfig(string basePath, Deployment deployment, NugetFeed feed) :
+            base(basePath, deployment, feed)
         {
 
         }
         public override void Execute()
         {
-            string serviceTargetPath = Path.Combine(_targetPath, Deployment.DisplayName);
-            string serviceConfigFileNameFull = Path.Combine(serviceTargetPath, ServiceConfigFileName);
+            string serviceConfigFileNameFull = Path.Combine(ServiceFolder, ServiceConfigFileName);
 
             var config = new ServiceConfig(Deployment);
 
