@@ -31,6 +31,9 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string ConfigFileContent { get; set; }
         public string Status { get; set; }
 
+        [Display(Name = "Keep on update", Prompt = "files, folders, allowed file masks")]
+        public string KeepOnUpdate { get; set; }
+
         private readonly IEnumerable<KeyValuePair<Version, string>> _packageVersions;
         public IEnumerable<KeyValuePair<Version, string>> PackageVersions 
         {
@@ -81,6 +84,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             PackageName = deployment.PackageName;
             
             ConfigFileContent = deployment.ConfigFileContent;
+            KeepOnUpdate = deployment.KeepOnUpdate.ToString();
 
             IsNew = false;
         }
@@ -110,6 +114,23 @@ namespace Codestellation.Galaxy.WebEnd.Models
             deployment.Description = Description;
             deployment.FeedId = FeedId;
             deployment.PackageName = PackageName;
+
+            deployment.KeepOnUpdate = ParseKeepOnUpdate();
+        }
+
+        private FileList ParseKeepOnUpdate()
+        {
+            if (string.IsNullOrWhiteSpace(KeepOnUpdate))
+            {
+                return new FileList(new string[0]);
+            }
+
+            var patterns = KeepOnUpdate
+                .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToArray();
+
+            return new FileList(patterns);
         }
 
         public Deployment ToDeployment()

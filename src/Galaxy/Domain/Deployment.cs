@@ -20,6 +20,8 @@ namespace Codestellation.Galaxy.Domain
 
         public string ConfigFileContent { get; set; }
 
+        public FileList KeepOnUpdate { get; set; }
+
         public string GetServiceName()
         {
             if (string.IsNullOrWhiteSpace(InstanceName))

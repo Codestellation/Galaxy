@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\DashBoard.cs" />
+    <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\User.cs" />
