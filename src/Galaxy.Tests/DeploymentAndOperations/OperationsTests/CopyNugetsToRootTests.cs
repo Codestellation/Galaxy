@@ -34,14 +34,14 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             testDeployment = new Deployment()
             {
                 DisplayName = "testdeployment",
-                PackageName = "TestNugetPackage",
+                PackageId = "TestNugetPackage",
                 PackageVersion = new Version(1, 0)
             };
 
             var hostDeployment = new Deployment()
             {
                 DisplayName = "testdeployment",
-                PackageName = "Codestellation.Galaxy.Host",
+                PackageId = "Codestellation.Galaxy.Host",
                 PackageVersion = new Version(1, 0)
             };
 

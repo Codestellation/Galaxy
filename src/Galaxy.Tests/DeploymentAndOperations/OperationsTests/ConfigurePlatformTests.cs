@@ -28,7 +28,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var hostDeployment = new Deployment()
             {
                 DisplayName = TestDeployment,
-                PackageName = "Codestellation.Galaxy.Host",
+                PackageId = "Codestellation.Galaxy.Host",
                 PackageVersion = new Version(1, 0)
             };
 
@@ -61,7 +61,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 new Deployment()
                 {
                     DisplayName = TestDeployment,
-                    PackageName = "TestNugetPackage",
+                    PackageId = "TestNugetPackage",
                     PackageVersion = new Version(1, 0),
                     AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_anycpu"
                 },
@@ -83,7 +83,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 new Deployment()
                 {
                     DisplayName = TestDeployment,
-                    PackageName = "TestNugetPackage",
+                    PackageId = "TestNugetPackage",
                     PackageVersion = new Version(1, 0),
                     AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x86"
                 },
@@ -106,7 +106,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 new Deployment()
                 {
                     DisplayName = TestDeployment,
-                    PackageName = "TestNugetPackage",
+                    PackageId = "TestNugetPackage",
                     PackageVersion = new Version(1, 0),
                     AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x64"
                 },

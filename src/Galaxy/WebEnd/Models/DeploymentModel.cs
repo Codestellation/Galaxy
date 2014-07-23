@@ -20,12 +20,12 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string InstanceName { get; set; }
 
         public string Description { get; set; }
-        [Display(Name = "Feed name", Prompt = "<Select feed>")]
+        [Display(Name = "Feed", Prompt = "<Select feed>")]
         public ObjectId FeedId { get; set; }
         [Display(Name = "Assembly-qualified type name", Prompt = "Assembly-qualified type name")]
         public string AssemblyQualifiedType { get; set; }
-        [Display(Name = "Package name", Prompt = "Package name")]
-        public string PackageName { get; set; }
+        [Display(Name = "Package", Prompt = "Package Id")]
+        public string PackageId { get; set; }
         [Display(Prompt = "<Select version>")]
         public Version PackageVersion { get; set; }
         public string ConfigFileContent { get; set; }
@@ -81,7 +81,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             FeedId = deployment.FeedId;
             Status = deployment.Status;
             PackageVersion = deployment.PackageVersion;
-            PackageName = deployment.PackageName;
+            PackageId = deployment.PackageId;
             
             ConfigFileContent = deployment.ConfigFileContent;
             KeepOnUpdate = deployment.KeepOnUpdate.ToString();
@@ -113,7 +113,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             deployment.InstanceName = InstanceName;
             deployment.Description = Description;
             deployment.FeedId = FeedId;
-            deployment.PackageName = PackageName;
+            deployment.PackageId = PackageId;
 
             deployment.KeepOnUpdate = ParseKeepOnUpdate();
         }

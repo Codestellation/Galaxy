@@ -7,11 +7,11 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
     {
         public static Deployment CreateDeployment(Deployment deployment)
         {
-            var hostPackageName = ConfigurationManager.AppSettings["hostPackageName"];
-            return new Deployment()
+            var hostPackageId = ConfigurationManager.AppSettings["hostPackageName"];
+            return new Deployment
             {
                 DisplayName = deployment.DisplayName,
-                PackageName = hostPackageName,
+                PackageId = hostPackageId,
                 PackageVersion = new System.Version(1,0)
             };
         }

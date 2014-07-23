@@ -106,7 +106,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var deployment = _dashBoard.GetDeployment(id);
 
-            var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageName);
+            var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageId);
 
             return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
         }

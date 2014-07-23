@@ -32,7 +32,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 new Deployment()
                 {
                     DisplayName = "testdeployment",
-                    PackageName = "TestNugetPackage",
+                    PackageId = "TestNugetPackage",
                     PackageVersion = new Version(1, 0)
                 },
                 new NugetFeed()
@@ -58,7 +58,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 new Deployment()
                 {
                     DisplayName = "testdeployment",
-                    PackageName = "TestNugetPackage"
+                    PackageId = "TestNugetPackage"
                 },
                 new NugetFeed()
                 {

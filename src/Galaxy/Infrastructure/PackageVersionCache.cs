@@ -67,6 +67,11 @@ namespace Codestellation.Galaxy.Infrastructure
 
         public IEnumerable<Version> GetPackageVersions(ObjectId feedId, string packageId)
         {
+            if (string.IsNullOrWhiteSpace(packageId))
+            {
+                return new Version[0];
+            }
+
             //this method is thread safe because it use concurrent dictionary. 
             var feed = _dashBoard.GetFeed(feedId);
             var tuple = new FeedPackageTuple(feed, packageId);
@@ -131,7 +136,8 @@ namespace Codestellation.Galaxy.Infrastructure
             //this method should run via single thread scheduler because it uses non-thread safe structures of dashboard.
             var results = _dashBoard
                 .Deployments
-                .Select(x => new FeedPackageTuple(_dashBoard.GetFeed(x.FeedId), x.PackageName))
+                .Where(x => !string.IsNullOrWhiteSpace(_dashBoard.GetFeed(x.FeedId).Uri) && !string.IsNullOrWhiteSpace(x.PackageId))
+                .Select(x => new FeedPackageTuple(_dashBoard.GetFeed(x.FeedId), x.PackageId))
                 .Distinct()
                 .ToArray();
 

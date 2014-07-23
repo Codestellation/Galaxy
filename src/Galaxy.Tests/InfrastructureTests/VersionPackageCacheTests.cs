@@ -11,7 +11,7 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
     [TestFixture]
     public class VersionPackageCacheTests
     {
-        private const string TestPackageName = "TestNugetPackage";
+        private const string TestPackageId = "TestNugetPackage";
 
         private string _nugetFeedFolder;
 
@@ -39,7 +39,7 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
             var nugetFeed = new NugetFeed(){Uri = _nugetFeedFolder};
 
             dashBoard.AddFeed(nugetFeed);
-            dashBoard.AddDeployment(new Deployment{FeedId = nugetFeed.Id, PackageName = TestPackageName});
+            dashBoard.AddDeployment(new Deployment{FeedId = nugetFeed.Id, PackageId = TestPackageId});
             var versionCache = new PackageVersionCache(dashBoard);
 
             
@@ -49,7 +49,7 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
             Assert.That(refreshCompleted.Wait(TimeSpan.FromSeconds(20)), Is.True, "Cache update timeout");
 
             //then
-            var packageVersions = versionCache.GetPackageVersions(nugetFeed.Id, TestPackageName);
+            var packageVersions = versionCache.GetPackageVersions(nugetFeed.Id, TestPackageId);
             var sampleVesrions = new[] { new Version(1,1,0,0), new Version(1,0,0,0) };
             Assert.That(packageVersions, Is.EquivalentTo(sampleVesrions));
         }

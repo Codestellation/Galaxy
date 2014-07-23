@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute()
         {
-            string packageId = _deployment.PackageName;
+            string packageId = _deployment.PackageId;
 
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(_feed.Uri);
 
