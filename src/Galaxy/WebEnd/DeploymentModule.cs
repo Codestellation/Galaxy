@@ -20,13 +20,15 @@ namespace Codestellation.Galaxy.WebEnd
     public class DeploymentModule : CrudModule
     {
         private readonly DashBoard _dashBoard;
+        private readonly PackageVersionCache _versionCache;
         private readonly Collection _deployments;
         public const string Path = "deployment";
 
-        public DeploymentModule(Repository repository, DashBoard dashBoard)
+        public DeploymentModule(Repository repository, DashBoard dashBoard, PackageVersionCache versionCache)
             : base(Path)
         {
             _dashBoard = dashBoard;
+            _versionCache = versionCache;
             _deployments = repository.GetCollection<Deployment>();
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
@@ -104,7 +106,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var deployment = _dashBoard.GetDeployment(id);
 
-            var versions = _dashBoard.VersionCache.GetPackageVersions(deployment.PackageName);
+            var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageName);
 
             return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
         }

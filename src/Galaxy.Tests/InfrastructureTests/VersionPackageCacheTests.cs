@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Infrastructure;
+﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.Tests.Helpers;
 using NUnit.Framework;
 using System;
@@ -10,50 +11,53 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
     [TestFixture]
     public class VersionPackageCacheTests
     {
-        private const string testPackageName = "TestNugetPackage";
+        private const string TestPackageName = "TestNugetPackage";
 
-        private string output;
+        private string _nugetFeedFolder;
 
         [SetUp]
         public void Init()
         {
-            output = Path.Combine(Environment.CurrentDirectory, "testnuget");
+            _nugetFeedFolder = Path.Combine(Environment.CurrentDirectory, "testnuget");
 
-            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
-            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.1.0", "TestNugetPackage.1.1.0.nupkg");
+            if (Directory.Exists(_nugetFeedFolder))
+            {
+                Directory.Delete(_nugetFeedFolder, true);
+            }
+
+            EmbeddedResource.ExtractAndRename(_nugetFeedFolder, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
+            EmbeddedResource.ExtractAndRename(_nugetFeedFolder, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.1.0", "TestNugetPackage.1.1.0.nupkg");
         }
 
         [Test]
         public void VersionPackageCache_retrieve_package_versions_success()
         {
-            ManualResetEventSlim refreshCompleted = new ManualResetEventSlim(false);
+            //given
+            var refreshCompleted = new ManualResetEventSlim(false);
 
-            VersionPackageCache versionPackageCache = new VersionPackageCache();
-            versionPackageCache.OnCacheUpdated += new EventHandler((sender, e) => refreshCompleted.Set());
+            var  dashBoard = new DashBoard();
+            var nugetFeed = new NugetFeed(){Uri = _nugetFeedFolder};
 
-            versionPackageCache.AddPackage(testPackageName, new Domain.NugetFeed()
-            {
-                Name = "test_feed",
-                Uri = output
-            });
+            dashBoard.AddFeed(nugetFeed);
+            dashBoard.AddDeployment(new Deployment{FeedId = nugetFeed.Id, PackageName = TestPackageName});
+            var versionCache = new PackageVersionCache(dashBoard);
 
-            refreshCompleted.Wait();
+            
+            //when
+            versionCache.Start();
+            versionCache.Refreshed += refreshCompleted.Set;
+            Assert.That(refreshCompleted.Wait(TimeSpan.FromSeconds(20)), Is.True, "Cache update timeout");
 
-            var packageVersions = versionPackageCache.GetPackageVersions(testPackageName);
-
-            Version[] sampleVesrions = new Version[]
-            {
-                new Version(1,1,0,0),
-                new Version(1,0,0,0)
-            };
-
+            //then
+            var packageVersions = versionCache.GetPackageVersions(nugetFeed.Id, TestPackageName);
+            var sampleVesrions = new[] { new Version(1,1,0,0), new Version(1,0,0,0) };
             Assert.That(packageVersions, Is.EquivalentTo(sampleVesrions));
         }
 
         [TearDown]
         public void Cleanup()
         {
-            Directory.Delete(output, true);
+            Directory.Delete(_nugetFeedFolder, true);
         }
     }
 }

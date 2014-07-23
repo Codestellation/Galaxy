@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Nejdb.Bson;
-using Codestellation.Galaxy.Infrastructure;
 
 namespace Codestellation.Galaxy.Domain
 {
@@ -8,12 +7,6 @@ namespace Codestellation.Galaxy.Domain
     {
         private readonly Dictionary<ObjectId, NugetFeed> _feeds;
         private readonly Dictionary<ObjectId, Deployment> _deployments;
-        private readonly VersionPackageCache _versionPackageCache = new VersionPackageCache();
-
-        public VersionPackageCache VersionCache
-        {
-            get { return _versionPackageCache; }
-        } 
 
         public DashBoard()
         {
@@ -50,8 +43,6 @@ namespace Codestellation.Galaxy.Domain
         public void AddDeployment(Deployment deployment)
         {
             _deployments.Add(deployment.Id, deployment);
-
-            VersionCache.AddPackage(deployment.PackageName, GetFeed(deployment.FeedId));
         }
 
         public Deployment GetDeployment(ObjectId id)

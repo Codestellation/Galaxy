@@ -46,6 +46,7 @@ namespace Codestellation.Galaxy
             container.Register<IUserMapper, UserDatabase>().AsSingleton();
 
             container.Register<DashBoard>().AsSingleton();
+            container.Register<PackageVersionCache>().AsSingleton();
 
             //This should be the assembly your views are embedded in
             ResourceViewLocationProvider.RootNamespaces.Add(Assembly, ViewsNamespace);
@@ -64,6 +65,8 @@ namespace Codestellation.Galaxy
             CreateDefaultUser(collections);
 
             FillDashBoard(container, collections);
+
+            container.Resolve<PackageVersionCache>().Start();
 
             base.ApplicationStartup(container, pipelines);
         }
