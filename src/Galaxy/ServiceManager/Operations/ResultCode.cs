@@ -2,8 +2,8 @@
 {
     public enum ResultCode
     {
-        NotRan,
-        Succeed,
-        Failed
+        NotRan = 0,
+        Succeed = 1,
+        Failed = 2
     }
 }

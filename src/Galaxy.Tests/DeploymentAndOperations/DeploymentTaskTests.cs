@@ -1,5 +1,4 @@
-﻿using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.ServiceManager;
+﻿using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes;
 using NUnit.Framework;
@@ -7,25 +6,12 @@ using NUnit.Framework;
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
 {
     [TestFixture]
-    public class DeploymentProcessorTests
+    public class DeploymentTaskTests
     {
-        private OperationResult ExecuteServiceControl(DeploymentTask task)
-        {
-            OperationResult result = null;
-
-            var processor =  new DeploymentProcessor();
-            processor.Process(task, e => { result = e.Result; });
-
-            processor.Wait();
-
-            return result;
-        }
-
         [Test]
         public void DeploymentProcessor_sequence_success()
         {
             var successSequenceTask = TestTaskBuilder.SequenceTaskSuccess();
-
             var result = ExecuteServiceControl(successSequenceTask);
             Assert.AreEqual(ResultCode.Succeed, result.ResultCode);
         }
@@ -67,6 +53,17 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
             var result = ExecuteServiceControl(sequence);
 
             Assert.That(result.Details, Is.StringContaining(typeof(FakeOpFail).Name).And.StringContaining("failed"));
-        } 
+        }
+
+        private OperationResult ExecuteServiceControl(DeploymentTask task)
+        {
+            OperationResult result = null;
+
+            task.Process(e => { result = e.Result; });
+
+            task.Wait();
+
+            return result;
+        }
     }
 }

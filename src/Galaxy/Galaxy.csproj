@@ -146,7 +146,6 @@
     <Compile Include="ServiceManager\Helpers\HostFeedHelper.cs" />
     <Compile Include="ServiceManager\Helpers\PlatformDetector.cs" />
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
-    <Compile Include="ServiceManager\Helpers\ResultsDescriberHelper.cs" />
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\ConfigurePlatform.cs" />
@@ -162,7 +161,6 @@
     <Compile Include="ServiceManager\Operations\StopService.cs" />
     <Compile Include="ServiceManager\Operations\UninstallService.cs" />
     <Compile Include="ServiceManager\Operations\UninstallPackage.cs" />
-    <Compile Include="ServiceManager\DeploymentProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />

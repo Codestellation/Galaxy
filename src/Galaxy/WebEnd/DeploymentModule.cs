@@ -165,7 +165,7 @@ namespace Codestellation.Galaxy.WebEnd
             if (targetFeed != null)
             {
                 var task = taskFactory(deployment, targetFeed);
-                new DeploymentProcessor().Process(task, OnDeploymentCompleted);
+                task.Process(OnDeploymentCompleted);
             }
         }
         

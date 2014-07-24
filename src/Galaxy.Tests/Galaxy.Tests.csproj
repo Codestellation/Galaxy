@@ -85,7 +85,7 @@
     <Compile Include="DeploymentAndOperations\Fakes\FakeOpSuccess.cs" />
     <Compile Include="DeploymentAndOperations\Fakes\FakeOpThrow.cs" />
     <Compile Include="DeploymentAndOperations\Fakes\TestTaskBuilder.cs" />
-    <Compile Include="DeploymentAndOperations\DeploymentProcessorTests.cs" />
+    <Compile Include="DeploymentAndOperations\DeploymentTaskTests.cs" />
     <Compile Include="WebEnd\FeedModuleTest.cs" />
   </ItemGroup>
   <ItemGroup>

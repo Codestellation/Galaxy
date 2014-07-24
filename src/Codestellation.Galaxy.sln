@@ -7,13 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galaxy", "Galaxy\Galaxy.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galaxy.Tests", "Galaxy.Tests\Galaxy.Tests.csproj", "{87977A22-53CA-4BDF-B57C-BF5BE9C7B242}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B75D1AA2-B2E6-4A88-9EF0-C9263C9E3198}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galaxy.Host", "Galaxy.Host\Galaxy.Host.csproj", "{459DF6FD-3F74-41B2-86F0-99C4B897FA67}"
 EndProject
 Global
