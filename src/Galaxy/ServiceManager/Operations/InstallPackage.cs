@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using NuGet;
 
@@ -33,7 +34,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _orders = orders;
         }
 
-        public void Execute(StringBuilder buildLog)
+        public void Execute(TextWriter buildLog)
         {
             foreach (var order in _orders)
             {

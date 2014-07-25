@@ -12,7 +12,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
         }
 
-        public override void Execute(StringBuilder buildLog)
+        public override void Execute(TextWriter buildLog)
         {
             string exePath = Path.Combine(ServiceFolder, ServiceHostFileName);
 

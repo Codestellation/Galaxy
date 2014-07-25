@@ -47,7 +47,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             var installPackage = new InstallPackage(_testDeployment.GetDeployFolder(_targetPath), orders);
 
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
             installPackage.Execute(buildLog);
 
 
@@ -67,7 +67,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             var copyNugetsToRoot = new CopyNugetsToRoot(_targetPath, _testDeployment);
 
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
             copyNugetsToRoot.Execute(buildLog);
 
             var files = Directory

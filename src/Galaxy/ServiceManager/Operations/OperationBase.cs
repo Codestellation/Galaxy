@@ -1,4 +1,5 @@
 ﻿
+using System.IO;
 using System.Text;
 using Codestellation.Galaxy.Domain;
 
@@ -17,6 +18,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             ServiceFolder = deployment.GetDeployFolder(basePath);
         }
 
-        public abstract void Execute(StringBuilder buildLog);
+        public abstract void Execute(TextWriter buildLog);
     }
 }

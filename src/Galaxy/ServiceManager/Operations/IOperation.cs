@@ -1,9 +1,9 @@
-﻿using System.Text;
+﻿using System.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public interface IOperation
     {
-        void Execute(StringBuilder buildLog);
+        void Execute(TextWriter buildLog);
     }
 }

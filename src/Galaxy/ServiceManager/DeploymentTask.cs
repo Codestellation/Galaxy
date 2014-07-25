@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
@@ -18,7 +19,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly Deployment _deployment;
         private readonly NugetFeed _feed;
         private readonly string _basePath;
-        private readonly StringBuilder _buildLog;
+        private readonly StringWriter _buildLog;
 
         public NugetFeed Feed
         {
@@ -53,7 +54,8 @@ namespace Codestellation.Galaxy.ServiceManager
         private DeploymentTask()
         {
             _operations =new List<IOperation>();
-            _buildLog = new StringBuilder(4000);
+            var stringBuilder = new StringBuilder(4000);
+            _buildLog = new StringWriter(stringBuilder);
         }
 
         public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string basePath) : this()

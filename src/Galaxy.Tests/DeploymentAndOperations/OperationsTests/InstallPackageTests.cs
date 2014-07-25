@@ -32,7 +32,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var version10 = new Version(1, 0);
             var order = new[] { new InstallPackage.InstallPackageOrder("TestNugetPackage", _nugetFeed, version10)  };
             var op = new InstallPackage(_targetPath, order);
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
 
             op.Execute(buildLog);
 

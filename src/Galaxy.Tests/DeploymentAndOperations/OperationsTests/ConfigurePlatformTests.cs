@@ -36,7 +36,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var orders = new[] {new InstallPackage.InstallPackageOrder( "Codestellation.Galaxy.Host", _nugetFeedUri)};
             var installHost = new InstallPackage(hostDeployment.GetDeployFolder(OutputFolder), orders);
 
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
 
             installHost.Execute(buildLog);
 
@@ -61,7 +61,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_anycpu"
                 });
 
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
             configurePlatform.Execute(buildLog);
             Assert.That(PlatformDetector.GetPlatform(Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe")),
                         Is.EqualTo(PlatformType.AnyCPU));
@@ -78,7 +78,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     PackageVersion = new Version(1, 0),
                     AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x86"
                 });
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
             configurePlatform.Execute(buildLog);
 
             Assert.That(PlatformDetector.GetPlatform(Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe")),
@@ -97,7 +97,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x64"
                 });
 
-            var buildLog = new StringBuilder();
+            var buildLog = new StringWriter();
             configurePlatform.Execute(buildLog);
 
             Assert.That(PlatformDetector.GetPlatform(Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe")),

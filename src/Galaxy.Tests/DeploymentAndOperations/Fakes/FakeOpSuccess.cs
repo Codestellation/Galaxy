@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
@@ -11,7 +12,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
         {
         }
 
-        public override void Execute(StringBuilder buildLog)
+        public override void Execute(TextWriter buildLog)
         {
         }
     }
