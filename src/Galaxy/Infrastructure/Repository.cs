@@ -28,6 +28,7 @@ namespace Codestellation.Galaxy.Infrastructure
             CreateCollection("users", typeof(User));
             CreateCollection("feeds", typeof(NugetFeed));
             CreateCollection("deployments", typeof(Deployment));
+            CreateCollection("options", typeof(Options));
         }
 
         private void CreateCollection(string collectionName, Type entityType)

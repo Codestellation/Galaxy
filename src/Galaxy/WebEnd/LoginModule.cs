@@ -9,11 +9,12 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class LoginModule : ModuleBase
     {
+        public const string Path = "login";
         private readonly UserDatabase _userDatabase;
         private readonly Collection _users;
 
         public LoginModule(Repository repository, UserDatabase userDatabase)
-            : base("login")
+            : base(Path)
         {
             _userDatabase = userDatabase;
             _users = repository.GetCollection<User>();

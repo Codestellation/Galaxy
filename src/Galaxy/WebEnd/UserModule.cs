@@ -12,10 +12,11 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class UserModule : CrudModule
     {
+        public const string Path = "user";
         private readonly Collection _users;
 
         public UserModule(Repository repository)
-            : base("user")
+            : base(Path)
         {
             this.RequiresClaims(new[] { "Admin" });
             

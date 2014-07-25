@@ -47,15 +47,16 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="/">Dashboard</a></li>
-                        <li><a href="/feed">Feeds</a></li>
+                        <li><a href="/@FeedModule.Path">Feeds</a></li>
                         <li><a href="/@DeploymentModule.Path">Deployments</a></li>
+                        <li><a href="/@OptionsModule.Path">Options</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">@RenderContext.Context.CurrentUser<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="/login/logout">Sign Out</a></li>
-                                <li><a href="/user">Manage Users</a></li>
+                                <li><a href="/@LoginModule.Path/logout">Sign Out</a></li>
+                                <li><a href="/@UserModule.Path">Manage Users</a></li>
                             </ul>
                         </li>
                     </ul>

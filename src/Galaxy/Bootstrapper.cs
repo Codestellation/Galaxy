@@ -59,16 +59,27 @@ namespace Codestellation.Galaxy
 
             CookieBasedSessions.Enable(pipelines);
 
-            var collections = container.Resolve<Repository>();
-            collections.Start();
+            var repository = container.Resolve<Repository>();
+            repository.Start();
             
-            CreateDefaultUser(collections);
-
-            FillDashBoard(container, collections);
+            CreateDefaultUser(repository);
+            LoadOptions(container, repository);
+            FillDashBoard(container, repository);
 
             container.Resolve<PackageVersionCache>().Start();
 
             base.ApplicationStartup(container, pipelines);
+        }
+
+        private void LoadOptions(TinyIoCContainer container, Repository repository)
+        {
+            var optionCollection = repository.GetCollection<Options>();
+            using (var query = optionCollection.CreateQuery<Options>())
+            using (var cursor = query.Execute())
+            {
+                var options = cursor.Count == 0 ? new Options() : cursor.Current;
+                container.Register(options);
+            }
         }
 
         private void FillDashBoard(TinyIoCContainer container,  Repository repository)
