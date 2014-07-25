@@ -23,7 +23,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             };
 
-            return new DeploymentTask("DeployService", deployment, deploymentFeed, _options.RootDeployFolder)
+            return new DeploymentTask("DeployService", deployment, _options.RootDeployFolder)
                 .InstallPackage(serviceFolder, orders)
                 .CopyNugetsToRoot()
                 .ProvideServiceConfig()
@@ -33,7 +33,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("InstallService", deployment, deploymentFeed, _options.GetDeployFolder())
+            return new DeploymentTask("InstallService", deployment, _options.GetDeployFolder())
                 .ProvideServiceConfig()
                 .InstallService()
                 .DeployUserConfig();
@@ -41,19 +41,19 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("UninstallService", deployment, deploymentFeed, _options.GetDeployFolder())
+            return new DeploymentTask("UninstallService", deployment, _options.GetDeployFolder())
                 .StopService()
                 .UninstallService()
                 .UninstallPackage();
         }
         public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("StartService", deployment, deploymentFeed, _options.GetDeployFolder())
+            return new DeploymentTask("StartService", deployment, _options.GetDeployFolder())
                 .StartService();
         }
         public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("StopService", deployment, deploymentFeed, _options.GetDeployFolder())
+            return new DeploymentTask("StopService", deployment, _options.GetDeployFolder())
                 .StopService();
         }
     }

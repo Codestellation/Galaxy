@@ -17,14 +17,8 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private readonly string _name;
         private readonly Deployment _deployment;
-        private readonly NugetFeed _feed;
         private readonly string _basePath;
         private readonly StringWriter _buildLog;
-
-        public NugetFeed Feed
-        {
-            get { return _feed; }
-        }
 
         public string BasePath
         {
@@ -58,16 +52,15 @@ namespace Codestellation.Galaxy.ServiceManager
             _buildLog = new StringWriter(stringBuilder);
         }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string basePath) : this()
+        public DeploymentTask(string name, Deployment deployment, string basePath) : this()
         {
             _name = name;
             _deployment = deployment;
-            _feed = feed;
             _basePath = basePath;
         }
 
-        public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string basePath, IEnumerable<OperationBase> operations) :
-            this(name, deployment, feed, basePath)
+        public DeploymentTask(string name, Deployment deployment, string basePath, IEnumerable<OperationBase> operations) :
+            this(name, deployment, basePath)
         {
             _operations.AddRange(operations);
         }
