@@ -15,13 +15,13 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute(StringBuilder buildLog)
         {
-            if (string.IsNullOrEmpty(_deployment.ConfigFileContent))
+            if (string.IsNullOrEmpty(Deployment.ConfigFileContent))
             {
                 throw new InvalidOperationException("Can't deploy missing config.");
             }
 
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(_deployment.ConfigFileContent);
+            doc.LoadXml(Deployment.ConfigFileContent);
 
             var configFileName = string.Format("{0}\\{1}.config", ServiceFolder, ServiceHostFileName);
             doc.Save(configFileName);

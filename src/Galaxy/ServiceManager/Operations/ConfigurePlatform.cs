@@ -31,12 +31,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         private string GetServiceLibName()
         {
-            if (string.IsNullOrEmpty(_deployment.AssemblyQualifiedType))
+            if (string.IsNullOrEmpty(Deployment.AssemblyQualifiedType))
             {
                 throw new ArgumentException("Can't get service library name from AssemblyQualifiedType (null or empty)");
             }
 
-            var assemblyNameParts = _deployment.AssemblyQualifiedType.Split(',');
+            var assemblyNameParts = Deployment.AssemblyQualifiedType.Split(',');
 
             if (assemblyNameParts.Count() != 2)
             {

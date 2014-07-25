@@ -15,18 +15,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute(StringBuilder buildLog)
         {
-            string packageId = _deployment.PackageId;
+            string packageId = Deployment.PackageId;
 
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(_feed.Uri);
+            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(Feed.Uri);
 
             PackageManager packageManager = new PackageManager(repo, ServiceFolder);
 
-            if (_deployment.PackageVersion == null)
+            if (Deployment.PackageVersion == null)
             {
-                throw new ArgumentException(string.Format("No package version was specified for deployment {0}", _deployment.DisplayName));
+                throw new ArgumentException(string.Format("No package version was specified for deployment {0}", Deployment.DisplayName));
             }
 
-            packageManager.InstallPackage(packageId, new SemanticVersion(_deployment.PackageVersion));
+            packageManager.InstallPackage(packageId, new SemanticVersion(Deployment.PackageVersion));
         }
     }
 }

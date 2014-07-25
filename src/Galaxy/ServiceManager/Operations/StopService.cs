@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute(StringBuilder buildLog)
         {
-            if(IsServiceExists(Deployment.ServiceName))
+            if (IsServiceExists(Deployment.ServiceName))
             {
                 using (ServiceController sc = new ServiceController(Deployment.GetServiceName()))
                 {
