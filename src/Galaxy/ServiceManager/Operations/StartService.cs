@@ -1,4 +1,5 @@
 ﻿using System.ServiceProcess;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -11,7 +12,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         }
 
-        public override void Execute()
+        public override void Execute(StringBuilder buildLog)
         {
             using (ServiceController sc = new ServiceController(Deployment.GetServiceName()))
             {

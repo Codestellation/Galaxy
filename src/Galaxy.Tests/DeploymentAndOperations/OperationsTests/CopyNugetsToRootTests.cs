@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.Text;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
 using NUnit.Framework;
@@ -50,18 +51,13 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             targetPath = Path.Combine(output, "extracted");
 
-            InstallPackage op = new InstallPackage(
-                targetPath,
-                testDeployment,
-                testFeed);
+            var op = new InstallPackage(targetPath, testDeployment, testFeed);
 
-            InstallPackage installHost = new InstallPackage(
-                targetPath,
-                hostDeployment,
-                testFeed);
+            var installHost = new InstallPackage(targetPath, hostDeployment, testFeed);
 
-            installHost.Execute();
-            op.Execute();
+            var buildLog = new StringBuilder();
+            installHost.Execute(buildLog);
+            op.Execute(buildLog);
         }
 
         [Test]
@@ -75,11 +71,14 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 "Topshelf.NLog.dll"
             };
 
-            CopyNugetsToRoot copyNugetsToRoot = new CopyNugetsToRoot(targetPath, testDeployment, testFeed);
+            var copyNugetsToRoot = new CopyNugetsToRoot(targetPath, testDeployment, testFeed);
 
-            copyNugetsToRoot.Execute();
+            var buildLog = new StringBuilder();
+            copyNugetsToRoot.Execute(buildLog);
 
-            var files = Directory.GetFiles(targetPath, "*.*", SearchOption.AllDirectories).Select(item => Path.GetFileName(item));
+            var files = Directory
+                .GetFiles(targetPath, "*.*", SearchOption.AllDirectories)
+                .Select(Path.GetFileName);
 
             Assert.That(sampleFiles, Is.SubsetOf(files));
         }

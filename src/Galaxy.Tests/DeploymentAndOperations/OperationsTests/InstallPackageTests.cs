@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.Text;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
 using NUnit.Framework;
@@ -40,8 +41,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     Name = "TestNugetPackage",
                     Uri = output
                 });
+            var buildLog = new StringBuilder();
 
-            op.Execute();
+            op.Execute(buildLog);
 
             var dllFiles = Directory.GetFiles(targetPath, "*.dll", SearchOption.AllDirectories);
 
@@ -65,8 +67,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     Name = "TestNugetPackage",
                     Uri = output
                 });
-
-            Assert.That(() => op.Execute(), Throws.TypeOf<ArgumentException>());
+            var buildLog = new StringBuilder();
+            Assert.That(() => op.Execute(buildLog), Throws.TypeOf<ArgumentException>());
         }
 
         [TearDown]

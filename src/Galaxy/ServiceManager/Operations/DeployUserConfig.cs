@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 using System.Xml;
 
@@ -12,7 +13,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         }
 
-        public override void Execute()
+        public override void Execute(StringBuilder buildLog)
         {
             if (string.IsNullOrEmpty(_deployment.ConfigFileContent))
             {

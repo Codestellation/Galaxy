@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -30,6 +31,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             get { return _deployment; }
         }
 
-        public abstract void Execute();
+        public abstract void Execute(StringBuilder buildLog);
     }
 }

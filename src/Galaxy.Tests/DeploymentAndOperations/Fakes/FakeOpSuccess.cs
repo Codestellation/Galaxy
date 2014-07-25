@@ -1,23 +1,18 @@
-﻿using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.ServiceManager;
+﻿using System.Text;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
-    public class FakeOpSuccess: OperationBase
+    public class FakeOpSuccess : OperationBase
     {
         public FakeOpSuccess(string basePath, Deployment deployment, NugetFeed feed) :
             base(basePath, deployment, feed)
         {
         }
 
-        public override void Execute()
-        {            
+        public override void Execute(StringBuilder buildLog)
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 
@@ -13,7 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
 
         }
-        public override void Execute()
+        public override void Execute(StringBuilder buildLog)
         {
             string serviceConfigFileNameFull = Path.Combine(ServiceFolder, ServiceConfigFileName);
 

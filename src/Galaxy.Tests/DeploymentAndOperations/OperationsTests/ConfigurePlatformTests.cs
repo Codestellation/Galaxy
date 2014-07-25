@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.Text;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
@@ -38,16 +39,15 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 Uri = outputPath
             };
 
-            InstallPackage installHost = new InstallPackage(
-                outputPath,
-                hostDeployment,
-                testFeed);
+            var installHost = new InstallPackage(outputPath, hostDeployment, testFeed);
 
-            installHost.Execute();
+            var buildLog = new StringBuilder();
 
-            CopyNugetsToRoot copyNugetsToRoot = new CopyNugetsToRoot(outputPath, hostDeployment, testFeed);
+            installHost.Execute(buildLog);
 
-            copyNugetsToRoot.Execute();
+            var copyNugetsToRoot = new CopyNugetsToRoot(outputPath, hostDeployment, testFeed);
+
+            copyNugetsToRoot.Execute(buildLog);
 
             EmbeddedResource.Extract(Path.Combine(outputPath, TestDeployment), "Codestellation.Galaxy.Tests.Resources", "TestNugetPackLib_anycpu.dll");
             EmbeddedResource.Extract(Path.Combine(outputPath, TestDeployment), "Codestellation.Galaxy.Tests.Resources", "TestNugetPackLib_x86.dll");
@@ -71,7 +71,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     Uri = ""
                 });
 
-            configurePlatform.Execute();
+            var buildLog = new StringBuilder();
+            configurePlatform.Execute(buildLog);
             Assert.That(PlatformDetector.GetPlatform(Path.Combine(outputPath, "testdeployment\\Codestellation.Galaxy.Host.exe")),
                         Is.EqualTo(PlatformType.AnyCPU));
         }
@@ -92,8 +93,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     Name = "TestNugetPackage",
                     Uri = ""
                 });
-
-            configurePlatform.Execute();
+            var buildLog = new StringBuilder();
+            configurePlatform.Execute(buildLog);
 
             Assert.That(PlatformDetector.GetPlatform(Path.Combine(outputPath, "testdeployment\\Codestellation.Galaxy.Host.exe")),
                         Is.EqualTo(PlatformType.x86));
@@ -116,7 +117,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     Uri = ""
                 });
 
-            configurePlatform.Execute();
+            var buildLog = new StringBuilder();
+            configurePlatform.Execute(buildLog);
 
             Assert.That(PlatformDetector.GetPlatform(Path.Combine(outputPath, "testdeployment\\Codestellation.Galaxy.Host.exe")),
                         Is.EqualTo(PlatformType.AnyCPU));

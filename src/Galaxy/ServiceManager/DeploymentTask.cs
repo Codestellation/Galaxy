@@ -19,6 +19,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly Deployment _deployment;
         private readonly NugetFeed _feed;
         private readonly string _basePath;
+        private StringBuilder _buildLog;
 
         public NugetFeed Feed
         {
@@ -53,6 +54,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private DeploymentTask()
         {
             _operations =new List<OperationBase>();
+            _buildLog = new StringBuilder(4000);
         }
 
         public DeploymentTask(string name, Deployment deployment, NugetFeed feed, string basePath) : this()
@@ -101,7 +103,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
                 try
                 {
-                    operation.Execute();
+                    operation.Execute(_buildLog);
                     results[index] = new OperationResult(operationName, ResultCode.Succeed);
                 }
                 catch (Exception ex)

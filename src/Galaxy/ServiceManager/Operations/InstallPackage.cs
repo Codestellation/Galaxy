@@ -1,4 +1,5 @@
-﻿using NuGet;
+﻿using System.Text;
+using NuGet;
 using Codestellation.Galaxy.Domain;
 using System;
 
@@ -12,7 +13,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         }
 
-        public override void Execute()
+        public override void Execute(StringBuilder buildLog)
         {
             string packageId = _deployment.PackageId;
 

@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.Text;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using System;
 using System.IO;
@@ -13,7 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
         }
 
-        public override void Execute()
+        public override void Execute(StringBuilder buildLog)
         {
             var serviceLib = GetServiceLibName();
             var libPath = Path.Combine(ServiceFolder, serviceLib);

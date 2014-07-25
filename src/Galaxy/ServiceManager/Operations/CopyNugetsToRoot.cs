@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using System;
@@ -20,7 +21,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         }
 
 
-        public override void Execute()
+        public override void Execute(StringBuilder buildLog)
         {
             var packageFolders = Directory.EnumerateDirectories(ServiceFolder).ToArray();
 
