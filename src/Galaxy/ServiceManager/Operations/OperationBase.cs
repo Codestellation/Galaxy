@@ -4,7 +4,7 @@ using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public abstract class OperationBase
+    public abstract class OperationBase : IOperation
     {
         protected const string ServiceHostFileName = "Codestellation.Galaxy.Host.exe";
 

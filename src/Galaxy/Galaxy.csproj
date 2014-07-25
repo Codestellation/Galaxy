@@ -155,6 +155,7 @@
     <Compile Include="ServiceManager\Operations\DeployUserConfig.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />
+    <Compile Include="ServiceManager\Operations\IOperation.cs" />
     <Compile Include="ServiceManager\Operations\OperationResult.cs" />
     <Compile Include="ServiceManager\Operations\ResultCode.cs" />
     <Compile Include="ServiceManager\Operations\OperationBase.cs" />

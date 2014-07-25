@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
@@ -13,13 +12,13 @@ namespace Codestellation.Galaxy.ServiceManager
     {
         private Task _task;
         
-        private readonly List<OperationBase> _operations; 
+        private readonly List<IOperation> _operations; 
 
         private readonly string _name;
         private readonly Deployment _deployment;
         private readonly NugetFeed _feed;
         private readonly string _basePath;
-        private StringBuilder _buildLog;
+        private readonly StringBuilder _buildLog;
 
         public NugetFeed Feed
         {
@@ -31,12 +30,12 @@ namespace Codestellation.Galaxy.ServiceManager
             get { return _basePath; }
         } 
 
-        public IReadOnlyList<OperationBase> Operations
+        public IReadOnlyList<IOperation> Operations
         {
             get { return _operations; }
         }
 
-        public void Add(OperationBase operation)
+        public void Add(IOperation operation)
         {
             _operations.Add(operation);
         }
@@ -53,7 +52,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private DeploymentTask()
         {
-            _operations =new List<OperationBase>();
+            _operations =new List<IOperation>();
             _buildLog = new StringBuilder(4000);
         }
 
