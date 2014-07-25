@@ -13,7 +13,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public OptionsModel(Options options)
         {
-            DeployFolder = options.DeployFolder;
+            DeployFolder = options.RootDeployFolder;
             HostPackageId = options.HostPackageId;
             HostPackageFeedUri = options.HostPackageFeedUri;
         }
@@ -29,7 +29,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public void Update(Options options)
         {
-            options.DeployFolder = DeployFolder;
+            options.RootDeployFolder = DeployFolder;
             options.HostPackageId = HostPackageId;
             options.HostPackageFeedUri = HostPackageFeedUri;
         }

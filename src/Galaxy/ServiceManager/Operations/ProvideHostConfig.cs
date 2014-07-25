@@ -9,8 +9,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         private const string ServiceConfigFileName = "service-config.xml";
 
-        public ProvideHostConfig(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public ProvideHostConfig(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
 
         }

@@ -21,14 +21,16 @@ namespace Codestellation.Galaxy.WebEnd
     {
         private readonly DashBoard _dashBoard;
         private readonly PackageVersionCache _versionCache;
+        private readonly TaskBuilder _taskBuilder;
         private readonly Collection _deployments;
         public const string Path = "deployment";
 
-        public DeploymentModule(Repository repository, DashBoard dashBoard, PackageVersionCache versionCache)
+        public DeploymentModule(Repository repository, DashBoard dashBoard, PackageVersionCache versionCache, TaskBuilder taskBuilder)
             : base(Path)
         {
             _dashBoard = dashBoard;
             _versionCache = versionCache;
+            _taskBuilder = taskBuilder;
             _deployments = repository.GetCollection<Deployment>();
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
@@ -122,7 +124,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, Build.InstallServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.InstallServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -131,7 +133,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, Build.StartServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.StartServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -140,7 +142,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, Build.StopServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.StopServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -149,7 +151,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, Build.UninstallServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.UninstallServiceTask);         
 
             return RedirectToDetails(id);
         }
@@ -192,7 +194,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             SaveDeployment(deployment);
 
-            ExecuteServiceControlAction(id, Build.DeployServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.DeployServiceTask);         
 
             return RedirectToDetails(id);
         }

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
 using NUnit.Framework;
@@ -12,52 +13,45 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
     [TestFixture]
     public class CopyNugetsToRootTests
     {
-        private string output;
-        private string targetPath;
+        private string _feedUri;
+        private string _targetPath;
 
-        private Deployment testDeployment = null;
-        private NugetFeed testFeed = null;
+        private Deployment _testDeployment;
 
         [SetUp]
         public void Init()
         {
-            output = Path.Combine(Environment.CurrentDirectory, "testnuget");
+            _feedUri = Path.Combine(Environment.CurrentDirectory, "testnuget");
+            Folder.Delete(_feedUri);
+            Folder.Delete(_targetPath);
 
-            if (Directory.Exists(output))
-                Directory.Delete(output, true);
+            EmbeddedResource.ExtractAndRename(_feedUri, "Codestellation.Galaxy.Tests.Resources", "Codestellation.Galaxy.Host.1.0.0", "Codestellation.Galaxy.Host.1.0.0.nupkg");
+            EmbeddedResource.ExtractAndRename(_feedUri, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
 
-            testFeed = new NugetFeed()
-            {
-                Name = "TestNugetPackage",
-                Uri = output
-            };
-
-            testDeployment = new Deployment()
+            
+            _testDeployment = new Deployment()
             {
                 DisplayName = "testdeployment",
                 PackageId = "TestNugetPackage",
                 PackageVersion = new Version(1, 0)
             };
+            
+            _targetPath = Path.Combine(_feedUri, "extracted");
 
-            var hostDeployment = new Deployment()
+            var version10 = new Version(1, 0);
+            var orders = new[]
             {
-                DisplayName = "testdeployment",
-                PackageId = "Codestellation.Galaxy.Host",
-                PackageVersion = new Version(1, 0)
+                new InstallPackage.InstallPackageOrder("TestNugetPackage", _feedUri, version10),
+                new InstallPackage.InstallPackageOrder("Codestellation.Galaxy.Host", _feedUri, version10),
             };
 
-            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "Codestellation.Galaxy.Host.1.0.0", "Codestellation.Galaxy.Host.1.0.0.nupkg");
-            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
-
-            targetPath = Path.Combine(output, "extracted");
-
-            var op = new InstallPackage(targetPath, testDeployment, testFeed);
-
-            var installHost = new InstallPackage(targetPath, hostDeployment, testFeed);
+            var installPackage = new InstallPackage(_testDeployment.GetDeployFolder(_targetPath), orders);
 
             var buildLog = new StringBuilder();
-            installHost.Execute(buildLog);
-            op.Execute(buildLog);
+            installPackage.Execute(buildLog);
+
+
+            
         }
 
         [Test]
@@ -71,13 +65,13 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 "Topshelf.NLog.dll"
             };
 
-            var copyNugetsToRoot = new CopyNugetsToRoot(targetPath, testDeployment, testFeed);
+            var copyNugetsToRoot = new CopyNugetsToRoot(_targetPath, _testDeployment);
 
             var buildLog = new StringBuilder();
             copyNugetsToRoot.Execute(buildLog);
 
             var files = Directory
-                .GetFiles(targetPath, "*.*", SearchOption.AllDirectories)
+                .GetFiles(_targetPath, "*.*", SearchOption.AllDirectories)
                 .Select(Path.GetFileName);
 
             Assert.That(sampleFiles, Is.SubsetOf(files));
@@ -86,7 +80,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         [TearDown]
         public void Cleanup()
         {
-            Directory.Delete(output, true);
+            Folder.Delete(_feedUri);
+            Folder.Delete(_targetPath);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StopService : WinServiceOperation
     {
-        public StopService(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public StopService(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
 
         }

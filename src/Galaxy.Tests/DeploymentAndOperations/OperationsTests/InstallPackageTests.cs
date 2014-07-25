@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
 using NUnit.Framework;
@@ -12,69 +12,42 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
     [TestFixture]
     public class InstallPackageTests
     {
-        private string output;
-        private string targetPath;
+        private string _nugetFeed;
+        private string _targetPath;
 
         [SetUp]
         public void Init()
         {
-            output = Path.Combine(Environment.CurrentDirectory, "testnuget");
+            _nugetFeed = Path.Combine(Environment.CurrentDirectory, "testnuget");
+            Folder.Delete(_nugetFeed);
 
-            EmbeddedResource.ExtractAndRename(output, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
+            EmbeddedResource.ExtractAndRename(_nugetFeed, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
 
-            targetPath = Path.Combine(output, "extracted");
+            _targetPath = Path.Combine(_nugetFeed, "extracted");
         }
 
         [Test]
         public void InstallPackage_extract_package_success()
         {
-            InstallPackage op = new InstallPackage(
-                targetPath,
-                new Deployment()
-                {
-                    DisplayName = "testdeployment",
-                    PackageId = "TestNugetPackage",
-                    PackageVersion = new Version(1, 0)
-                },
-                new NugetFeed()
-                {
-                    Name = "TestNugetPackage",
-                    Uri = output
-                });
+            var version10 = new Version(1, 0);
+            var order = new[] { new InstallPackage.InstallPackageOrder("TestNugetPackage", _nugetFeed, version10)  };
+            var op = new InstallPackage(_targetPath, order);
             var buildLog = new StringBuilder();
 
             op.Execute(buildLog);
 
-            var dllFiles = Directory.GetFiles(targetPath, "*.dll", SearchOption.AllDirectories);
+            
+            var dllFiles = Directory.GetFiles(_targetPath, "*.dll", SearchOption.AllDirectories);
 
             var expectedDll = dllFiles.FirstOrDefault(item => item.Contains("TestNugetPackLib.dll"));
 
             Assert.That(expectedDll, Is.Not.Null);
         }
 
-        [Test]
-        public void InstallPackage_extract_package_no_version_fail()
-        {
-            InstallPackage op = new InstallPackage(
-                targetPath,
-                new Deployment()
-                {
-                    DisplayName = "testdeployment",
-                    PackageId = "TestNugetPackage"
-                },
-                new NugetFeed()
-                {
-                    Name = "TestNugetPackage",
-                    Uri = output
-                });
-            var buildLog = new StringBuilder();
-            Assert.That(() => op.Execute(buildLog), Throws.TypeOf<ArgumentException>());
-        }
-
         [TearDown]
         public void Cleanup()
         {
-            Directory.Delete(output, true);
+            Folder.Delete(_nugetFeed);
         }
     }
 }

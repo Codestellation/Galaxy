@@ -9,8 +9,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
         {
             var deployment = GetDeployment();
             var feed = GetFeed();
-            var task = new DeploymentTask("TaskSuccess", deployment, feed, "");
-            task.Add(new FakeOpSuccess("", deployment, feed));
+            var task = new DeploymentTask("TaskSuccess", deployment, feed, string.Empty);
+            task.Add(new FakeOpSuccess(string.Empty, deployment));
             return task;
         }
 
@@ -19,7 +19,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
             var deployment = GetDeployment();
             var feed = GetFeed();
             var task = new DeploymentTask("TaskFail", deployment, feed, "");
-            task.Add(new FakeOpFail("", deployment, feed));
+            task.Add(new FakeOpFail(string.Empty, deployment));
             return task;
         }
 
@@ -29,9 +29,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
             var feed = GetFeed();
 
             var task = new DeploymentTask("TaskFailInTheMiddle", deployment, feed, "");
-            task.Add(new FakeOpSuccess("", deployment, feed));
-            task.Add(new FakeOpFail("", deployment, feed));
-            task.Add(new FakeOpSuccess("", deployment, feed));
+            task.Add(new FakeOpSuccess(string.Empty, deployment));
+            task.Add(new FakeOpFail(string.Empty, deployment));
+            task.Add(new FakeOpSuccess(string.Empty, deployment));
             return task;
         }
 

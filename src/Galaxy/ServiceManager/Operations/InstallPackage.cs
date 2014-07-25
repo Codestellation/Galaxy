@@ -1,32 +1,62 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using NuGet;
-using Codestellation.Galaxy.Domain;
-using System;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class InstallPackage: OperationBase
+    public class InstallPackage: IOperation
     {
-        public InstallPackage(string basePath, Deployment deployment, NugetFeed feed):
-            base(basePath, deployment, feed)
+        private readonly string _destination;
+        private readonly InstallPackageOrder[] _orders;
+
+        public class InstallPackageOrder
         {
+            public readonly string PackageId;
+            public readonly string FeedUri;
+            public readonly Version Version;
 
-        }
-
-        public override void Execute(StringBuilder buildLog)
-        {
-            string packageId = Deployment.PackageId;
-
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(Feed.Uri);
-
-            PackageManager packageManager = new PackageManager(repo, ServiceFolder);
-
-            if (Deployment.PackageVersion == null)
+            public InstallPackageOrder(string packageId, string feedUri, Version version)
             {
-                throw new ArgumentException(string.Format("No package version was specified for deployment {0}", Deployment.DisplayName));
+                PackageId = packageId;
+                FeedUri = feedUri;
+                Version = version;
             }
 
-            packageManager.InstallPackage(packageId, new SemanticVersion(Deployment.PackageVersion));
+            public InstallPackageOrder(string packageId, string feedUri) : this(packageId, feedUri, null)
+            {
+            }
+        }
+        
+        public InstallPackage(string destination, InstallPackageOrder[] orders)
+        {
+            _destination = destination;
+            _orders = orders;
+        }
+
+        public void Execute(StringBuilder buildLog)
+        {
+            foreach (var order in _orders)
+            {
+                Install(order);
+            }
+        }
+
+        private void Install(InstallPackageOrder order)
+        {
+            string packageId = order.PackageId;
+
+            var repository = PackageRepositoryFactory.Default.CreateRepository(order.FeedUri);
+            
+            var manager = new PackageManager(repository, _destination);
+
+            if (order.Version == null)
+            {
+                manager.InstallPackage(packageId);
+            }
+            else
+            {
+                manager.InstallPackage(packageId, new SemanticVersion(order.Version));
+            }
         }
     }
 }

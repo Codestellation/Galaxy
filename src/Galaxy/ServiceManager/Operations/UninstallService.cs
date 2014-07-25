@@ -7,8 +7,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallService : WinServiceOperation
     {
-        public UninstallService(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public UninstallService(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
         }
 

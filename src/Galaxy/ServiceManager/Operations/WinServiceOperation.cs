@@ -6,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public abstract class WinServiceOperation : OperationBase
     {
-        public WinServiceOperation(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public WinServiceOperation(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
             
         }

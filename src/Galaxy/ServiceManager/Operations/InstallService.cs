@@ -7,8 +7,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class InstallService : WinServiceOperation
     {
-        public InstallService(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public InstallService(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
         }
 

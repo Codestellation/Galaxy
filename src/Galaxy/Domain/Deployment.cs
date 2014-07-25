@@ -1,4 +1,6 @@
-﻿using Nejdb.Bson;
+﻿using System.IO;
+using Codestellation.Galaxy.Infrastructure;
+using Nejdb.Bson;
 using System;
 
 namespace Codestellation.Galaxy.Domain
@@ -30,6 +32,11 @@ namespace Codestellation.Galaxy.Domain
             }
 
             return string.Format("{0}${1}", ServiceName, InstanceName);
+        }
+
+        public string GetDeployFolder(string baseFolder)
+        {
+            return Folder.Combine(baseFolder, DisplayName);
         }
     }
 }

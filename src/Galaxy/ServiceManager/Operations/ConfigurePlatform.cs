@@ -9,8 +9,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class ConfigurePlatform : WinServiceOperation
     {
-        public ConfigurePlatform(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public ConfigurePlatform(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
         }
 

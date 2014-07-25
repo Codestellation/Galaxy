@@ -1,4 +1,5 @@
-﻿using Nejdb.Bson;
+﻿using Codestellation.Galaxy.Infrastructure;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.Domain
 {
@@ -6,10 +7,29 @@ namespace Codestellation.Galaxy.Domain
     {
         public ObjectId Id { get; private set; }
 
-        public string DeployFolder { get; set; }
+        public string RootDeployFolder { get; set; }
         
         public string HostPackageId { get; set; }
 
         public string HostPackageFeedUri { get; set; }
+
+        public string GetDeployFolder()
+        {
+            if (string.IsNullOrWhiteSpace(RootDeployFolder))
+            {
+                return Folder.BasePath;
+            }
+
+            return RootDeployFolder;
+        }
+
+        public string GetHostPackageId()
+        {
+            if (string.IsNullOrWhiteSpace(HostPackageId))
+            {
+                return "Codestellation.Galaxy.Host";
+            }
+            return HostPackageId;
+        }
     }
 }

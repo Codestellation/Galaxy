@@ -7,8 +7,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallPackage: OperationBase
     {
-        public UninstallPackage(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public UninstallPackage(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
 
         }

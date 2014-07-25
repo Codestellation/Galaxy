@@ -7,8 +7,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class DeployUserConfig : OperationBase
     {
-        public DeployUserConfig(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public DeployUserConfig(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
 
         }

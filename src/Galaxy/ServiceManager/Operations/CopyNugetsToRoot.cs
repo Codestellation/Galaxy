@@ -14,8 +14,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private const string LibFolder = "lib";
         private readonly string _hostPackageName;
 
-        public CopyNugetsToRoot(string basePath, Deployment deployment, NugetFeed feed) :
-            base(basePath, deployment, feed)
+        public CopyNugetsToRoot(string basePath, Deployment deployment) :
+            base(basePath, deployment)
         {
             _hostPackageName = ConfigurationManager.AppSettings["hostPackageName"] ?? "Codestellation.Galaxy.Host";
         }
