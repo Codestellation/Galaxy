@@ -179,7 +179,7 @@ end
 desc "create nuspec file"
 nuspec :createnuspec do |nuspec|
     puts "creating .nuspec file for #{@env_solutionpart_current}..."
-    nuspec.id="#{@env_solutionpart_current}"
+    nuspec.id="Codestellation.#{@env_solutionpart_current}"
     nuspec.version = "#{@env_buildversion_package}"
     nuspec.authors = @env_authors
     nuspec.description = "#{@env_solutionpart_current} based on native dll v#{@env_buildversion_native}"
