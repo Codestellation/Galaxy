@@ -18,14 +18,13 @@ namespace Codestellation.Galaxy.ServiceManager
 
             var orders = new[]
             {
-                new InstallPackage.InstallPackageOrder(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion), 
-                new InstallPackage.InstallPackageOrder(_options.GetHostPackageId(), _options.HostPackageFeedUri), 
+                new InstallPackageOrder(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion), 
+                new InstallPackageOrder(_options.GetHostPackageId(), _options.HostPackageFeedUri), 
 
             };
 
             return new DeploymentTask("DeployService", deployment, _options.RootDeployFolder)
                 .InstallPackage(serviceFolder, orders)
-                .CopyNugetsToRoot()
                 .ProvideServiceConfig()
                 .ConfigurePlatform()
                 .DeployUserConfig();

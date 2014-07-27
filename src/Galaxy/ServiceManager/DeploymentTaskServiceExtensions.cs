@@ -4,7 +4,7 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public static class DeploymentTaskServiceExtensions
     {
-        public static DeploymentTask InstallPackage(this DeploymentTask deploymentTask, string deployPath, InstallPackage.InstallPackageOrder[] orders)
+        public static DeploymentTask InstallPackage(this DeploymentTask deploymentTask, string deployPath, InstallPackageOrder[] orders)
         {
             deploymentTask.Add
                 (
@@ -66,14 +66,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 );
             return deploymentTask;
         }
-        public static DeploymentTask CopyNugetsToRoot(this DeploymentTask deploymentTask)
-        {
-            deploymentTask.Add
-                (
-                    new CopyNugetsToRoot(deploymentTask.BasePath, deploymentTask.Deployment)
-                );
-            return deploymentTask;
-        }
+        
         public static DeploymentTask DeployUserConfig(this DeploymentTask deploymentTask)
         {
             deploymentTask.Add

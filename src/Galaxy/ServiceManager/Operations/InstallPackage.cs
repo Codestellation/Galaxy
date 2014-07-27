@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Text;
+using System.Linq;
+using Codestellation.Galaxy.Infrastructure;
 using NuGet;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -9,25 +10,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         private readonly string _destination;
         private readonly InstallPackageOrder[] _orders;
+        private TextWriter _buildLog;
 
-        public class InstallPackageOrder
-        {
-            public readonly string PackageId;
-            public readonly string FeedUri;
-            public readonly Version Version;
-
-            public InstallPackageOrder(string packageId, string feedUri, Version version)
-            {
-                PackageId = packageId;
-                FeedUri = feedUri;
-                Version = version;
-            }
-
-            public InstallPackageOrder(string packageId, string feedUri) : this(packageId, feedUri, null)
-            {
-            }
-        }
-        
         public InstallPackage(string destination, InstallPackageOrder[] orders)
         {
             _destination = destination;
@@ -36,6 +20,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public void Execute(TextWriter buildLog)
         {
+            _buildLog = buildLog;
             foreach (var order in _orders)
             {
                 Install(order);
@@ -50,6 +35,10 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             
             var manager = new PackageManager(repository, _destination);
 
+            _buildLog.WriteLine("Install '{0}' from '{1}' to '{2}'.", packageId, order.FeedUri, _destination);
+
+            manager.PackageInstalled += MoveFilesToDestination;
+
             if (order.Version == null)
             {
                 manager.InstallPackage(packageId);
@@ -57,6 +46,37 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             else
             {
                 manager.InstallPackage(packageId, new SemanticVersion(order.Version));
+            }
+        }
+
+        private void MoveFilesToDestination(object sender, PackageOperationEventArgs e)
+        {
+            var installPath = e.InstallPath;
+            _buildLog.WriteLine("Installed '{0}.{1}' to '{2}'.", e.Package.Id, e.Package.Version, installPath);
+            
+            foreach (var file in e.Package.GetFiles())
+            {
+                MoveFileToDestination(installPath, file);
+            }
+
+            _buildLog.WriteLine("Delete '{0}'", installPath);
+            Folder.Delete(installPath);
+        }
+
+        private void MoveFileToDestination(string installPath, IPackageFile file)
+        {
+            var origin = Path.Combine(installPath, file.Path);
+            var destination = Path.Combine(_destination, file.EffectivePath);
+            try
+            {
+                _buildLog.Write("Copy '{0}' to '{1}' ", origin, destination);
+                File.Move(origin, destination);
+                _buildLog.WriteLine("Ok");
+            }
+            catch (Exception ex)
+            {
+                _buildLog.WriteLine("Failed: {0}", ex);
+                throw;
             }
         }
     }

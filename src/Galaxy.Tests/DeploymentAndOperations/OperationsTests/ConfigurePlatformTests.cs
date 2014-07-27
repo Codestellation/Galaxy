@@ -33,16 +33,12 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 PackageVersion = new Version(1,0)
             };
 
-            var orders = new[] {new InstallPackage.InstallPackageOrder( "Codestellation.Galaxy.Host", _nugetFeedUri)};
+            var orders = new[] {new InstallPackageOrder( "Codestellation.Galaxy.Host", _nugetFeedUri)};
             var installHost = new InstallPackage(hostDeployment.GetDeployFolder(OutputFolder), orders);
 
             var buildLog = new StringWriter();
 
             installHost.Execute(buildLog);
-
-            var copyNugetsToRoot = new CopyNugetsToRoot(_nugetFeedUri, hostDeployment);
-
-            copyNugetsToRoot.Execute(buildLog);
 
             EmbeddedResource.Extract(Path.Combine(_nugetFeedUri, TestDeployment), "Codestellation.Galaxy.Tests.Resources", "TestNugetPackLib_anycpu.dll");
             EmbeddedResource.Extract(Path.Combine(_nugetFeedUri, TestDeployment), "Codestellation.Galaxy.Tests.Resources", "TestNugetPackLib_x86.dll");

@@ -141,6 +141,7 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
+    <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
@@ -151,7 +152,6 @@
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\ConfigurePlatform.cs" />
-    <Compile Include="ServiceManager\Operations\CopyNugetsToRoot.cs" />
     <Compile Include="ServiceManager\Operations\DeployUserConfig.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />
