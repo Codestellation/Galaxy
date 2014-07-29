@@ -192,7 +192,6 @@
     <Compile Include="WebEnd\TagBuilder\InputTag.cs" />
     <Compile Include="WebEnd\TagBuilder\OptionTag.cs" />
     <Compile Include="WebEnd\TagBuilder\FastPropertyReader.cs" />
-    <Compile Include="WebEnd\TagBuilder\SelectTag.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\SimpleAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\Tag.cs" />
     <Compile Include="WebEnd\TagBuilder\Tags.cs" />

@@ -26,9 +26,9 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
                 return new CheckboxTag();
             }
 
-            internal static SelectTag Select()
+            internal static Tag Select()
             {
-                return new SelectTag();
+                return new Tag("select");
             }
 
             internal static OptionTag Option()
