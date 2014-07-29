@@ -1,20 +1,22 @@
-﻿using System.Text;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.ServiceManager.Helpers;
+﻿using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class InstallService : WinServiceOperation
+    public class InstallService : IOperation
     {
-        public InstallService(string basePath, Deployment deployment) :
-            base(basePath, deployment)
+        private readonly string _serviceFolder;
+        private readonly string _hostFileName;
+
+        public InstallService(string serviceFolder, string hostFileName)
         {
+            _serviceFolder = serviceFolder;
+            _hostFileName = hostFileName;
         }
 
-        public override void Execute(TextWriter buildLog)
+        public void Execute(TextWriter buildLog)
         {
-            string exePath = Path.Combine(ServiceFolder, ServiceHostFileName);
+            string exePath = Path.Combine(_serviceFolder, _hostFileName);
 
             string exeParams = string.Format("install");
 

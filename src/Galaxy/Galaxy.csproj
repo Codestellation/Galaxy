@@ -144,7 +144,6 @@
     <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />
-    <Compile Include="ServiceManager\DeploymentTaskServiceExtensions.cs" />
     <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
     <Compile Include="ServiceManager\Helpers\CopyDirectory.cs" />
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
@@ -159,7 +158,6 @@
     <Compile Include="ServiceManager\Operations\IOperation.cs" />
     <Compile Include="ServiceManager\Operations\OperationResult.cs" />
     <Compile Include="ServiceManager\Operations\ResultCode.cs" />
-    <Compile Include="ServiceManager\Operations\OperationBase.cs" />
     <Compile Include="ServiceManager\Operations\ProvideHostConfig.cs" />
     <Compile Include="ServiceManager\Operations\StartService.cs" />
     <Compile Include="ServiceManager\Operations\StopService.cs" />

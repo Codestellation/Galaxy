@@ -1,23 +1,27 @@
-﻿using System.Text;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.ServiceManager.Helpers;
+﻿using Codestellation.Galaxy.ServiceManager.Helpers;
 using System;
 using System.IO;
 using System.Linq;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class ConfigurePlatform : WinServiceOperation
+    public class ConfigurePlatform : IOperation
     {
-        public ConfigurePlatform(string basePath, Deployment deployment) :
-            base(basePath, deployment)
+        private readonly string _serviceFolder;
+        private readonly string _hostFileName;
+        private readonly string _assemblyQualifiedType;
+
+        public ConfigurePlatform(string serviceFolder, string hostFileName, string assemblyQualifiedType)
         {
+            _serviceFolder = serviceFolder;
+            _hostFileName = hostFileName;
+            _assemblyQualifiedType = assemblyQualifiedType;
         }
 
-        public override void Execute(TextWriter buildLog)
+        public void Execute(TextWriter buildLog)
         {
             var serviceLib = GetServiceLibName();
-            var libPath = Path.Combine(ServiceFolder, serviceLib);
+            var libPath = Path.Combine(_serviceFolder, serviceLib);
 
             if (!File.Exists(libPath))
             {
@@ -26,17 +30,17 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             var platform = PlatformDetector.GetPlatform(libPath);
 
-            PlatformDetector.ApplyPlatformToHost(platform, Path.Combine(ServiceFolder, ServiceHostFileName));
+            PlatformDetector.ApplyPlatformToHost(platform, Path.Combine(_serviceFolder, _hostFileName));
         }
 
         private string GetServiceLibName()
         {
-            if (string.IsNullOrEmpty(Deployment.AssemblyQualifiedType))
+            if (string.IsNullOrEmpty(_assemblyQualifiedType))
             {
                 throw new ArgumentException("Can't get service library name from AssemblyQualifiedType (null or empty)");
             }
 
-            var assemblyNameParts = Deployment.AssemblyQualifiedType.Split(',');
+            var assemblyNameParts = _assemblyQualifiedType.Split(',');
 
             if (assemblyNameParts.Count() != 2)
             {

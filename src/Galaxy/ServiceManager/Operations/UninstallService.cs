@@ -1,25 +1,23 @@
-﻿using System.Text;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.ServiceManager.Helpers;
+﻿using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class UninstallService : WinServiceOperation
+    public class UninstallService : IOperation
     {
-        public UninstallService(string basePath, Deployment deployment) :
-            base(basePath, deployment)
+        private readonly string _serviceFolder;
+        private readonly string _hostFileName;
+
+        public UninstallService(string serviceFolder, string hostFileName)
+
         {
+            _serviceFolder = serviceFolder;
+            _hostFileName = hostFileName;
         }
 
-        public override void Execute(TextWriter buildLog)
+        public void Execute(TextWriter buildLog)
         {
-            if (!IsServiceExists(Deployment.GetServiceName()))
-            {
-                return;
-            }
-
-            var exePath = Path.Combine(ServiceFolder, ServiceHostFileName);
+            var exePath = Path.Combine(_serviceFolder, _hostFileName);
 
             var exeParams = "uninstall";
 

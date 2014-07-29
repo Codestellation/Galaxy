@@ -1,26 +1,25 @@
 ﻿using System.IO;
-using System.Text;
-using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class ProvideHostConfig: OperationBase
+    public class ProvideHostConfig  : IOperation
     {
+        private readonly string _serviceFolder;
+        private readonly ServiceConfig _config;
         private const string ServiceConfigFileName = "service-config.xml";
 
-        public ProvideHostConfig(string basePath, Deployment deployment) :
-            base(basePath, deployment)
+        public ProvideHostConfig(string serviceFolder, ServiceConfig config)
         {
-
+            _serviceFolder = serviceFolder;
+            _config = config;
         }
-        public override void Execute(TextWriter buildLog)
+
+        public void Execute(TextWriter buildLog)
         {
-            string serviceConfigFileNameFull = Path.Combine(ServiceFolder, ServiceConfigFileName);
+            var serviceConfigFileNameFull = Path.Combine(_serviceFolder, ServiceConfigFileName);
 
-            var config = new ServiceConfig(Deployment);
-
-            config.Serialize(serviceConfigFileNameFull);
+            _config.Serialize(serviceConfigFileNameFull);
         }
     }
 }

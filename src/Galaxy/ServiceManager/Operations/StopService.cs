@@ -1,33 +1,45 @@
 ﻿using System.IO;
 using System.ServiceProcess;
-using System.Text;
-using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StopService : WinServiceOperation
     {
-        public StopService(string basePath, Deployment deployment) :
-            base(basePath, deployment)
+        private TextWriter _buildLog;
+
+        public StopService(string serviceName)
+            : base(serviceName)
         {
 
         }
 
         public override void Execute(TextWriter buildLog)
         {
-            if (IsServiceExists(Deployment.ServiceName))
+            _buildLog = buildLog;
+            if (IsServiceExists())
             {
-                using (ServiceController sc = new ServiceController(Deployment.GetServiceName()))
-                {
-                    if(sc.Status != ServiceControllerStatus.Stopped)
-                    {
-                        sc.Stop();
-                        sc.WaitForStatus(ServiceControllerStatus.Stopped);
-                    }
-                }
-            
-            } 
+                Execute(StopServiceAction);
+            }
+            else
+            {
+                buildLog.WriteLine("Service '{0}' not found", ServiceName);
+            }
         }
 
+        private void StopServiceAction(ServiceController sc)
+        {
+            var status = sc.Status;
+            if (status == ServiceControllerStatus.Stopped || status == ServiceControllerStatus.StopPending)
+            {
+                _buildLog.WriteLine("Service '{0}' at state '{1}'. Stop skipped.", ServiceName, status.ToString());
+            }
+            else
+            {
+                _buildLog.WriteLine("Stopping service '{0}'", ServiceName);
+                sc.Stop();
+                sc.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+
+        }
     }
 }

@@ -6,6 +6,7 @@ using Codestellation.Galaxy.Domain;
 using System.Collections.Generic;
 using Codestellation.Galaxy.ServiceManager.EventParams;
 using Codestellation.Galaxy.ServiceManager.Operations;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
@@ -16,14 +17,10 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly List<IOperation> _operations; 
 
         private readonly string _name;
-        private readonly Deployment _deployment;
-        private readonly string _basePath;
+        private readonly ObjectId _deploymentId;
+
         private readonly StringWriter _buildLog;
 
-        public string BasePath
-        {
-            get { return _basePath; }
-        } 
 
         public IReadOnlyList<IOperation> Operations
         {
@@ -36,9 +33,9 @@ namespace Codestellation.Galaxy.ServiceManager
             return this;
         }
 
-        public Deployment Deployment
+        public ObjectId DeploymentId
         {
-            get { return _deployment; }
+            get { return _deploymentId; }
         }
 
         public string Name
@@ -53,15 +50,14 @@ namespace Codestellation.Galaxy.ServiceManager
             _buildLog = new StringWriter(stringBuilder);
         }
 
-        public DeploymentTask(string name, Deployment deployment, string basePath) : this()
+        public DeploymentTask(string name, ObjectId deploymentId) : this()
         {
             _name = name;
-            _deployment = deployment;
-            _basePath = basePath;
+            _deploymentId = deploymentId;
         }
 
-        public DeploymentTask(string name, Deployment deployment, string basePath, IEnumerable<OperationBase> operations) :
-            this(name, deployment, basePath)
+        public DeploymentTask(string name, ObjectId deploymentId, IEnumerable<IOperation> operations) :
+            this(name, deploymentId)
         {
             _operations.AddRange(operations);
         }

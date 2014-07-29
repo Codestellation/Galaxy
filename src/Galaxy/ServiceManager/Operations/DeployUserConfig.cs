@@ -1,30 +1,33 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using Codestellation.Galaxy.Domain;
+﻿using System.IO;
 using System.Xml;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class DeployUserConfig : OperationBase
+    public class DeployUserConfig : IOperation
     {
-        public DeployUserConfig(string basePath, Deployment deployment) :
-            base(basePath, deployment)
-        {
+        private readonly string _serviceFolder;
+        private readonly string _serviceHostFileName;
+        private readonly string _content;
 
+        public DeployUserConfig(string serviceFolder, string serviceHostFileName, string content)
+        {
+            _serviceFolder = serviceFolder;
+            _serviceHostFileName = serviceHostFileName;
+            _content = content;
         }
 
-        public override void Execute(TextWriter buildLog)
+        public void Execute(TextWriter buildLog)
         {
-            if (string.IsNullOrEmpty(Deployment.ConfigFileContent))
+            if (string.IsNullOrEmpty(_content))
             {
-                throw new InvalidOperationException("Can't deploy missing config.");
+                buildLog.WriteLine("No config file found. Skipped.");
+               return;
             }
 
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(Deployment.ConfigFileContent);
+            var doc = new XmlDocument();
+            doc.LoadXml(_content);
 
-            var configFileName = string.Format("{0}\\{1}.config", ServiceFolder, ServiceHostFileName);
+            var configFileName = string.Format("{0}\\{1}.config", _serviceFolder, _serviceHostFileName);
             doc.Save(configFileName);
         }
     }

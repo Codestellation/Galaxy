@@ -31,5 +31,10 @@ namespace Codestellation.Galaxy.Domain
             }
             return HostPackageId;
         }
+
+        public string GetHostFileName()
+        {
+            return "Codestellation.Galaxy.Host.exe";
+        }
     }
 }

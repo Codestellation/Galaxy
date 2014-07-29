@@ -179,7 +179,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         private void UpdateDeploymentStatus(DeploymentTaskCompletedEventArgs e)
         {
-            var deployment = _dashBoard.GetDeployment(e.Task.Deployment.Id);
+            var deployment = _dashBoard.GetDeployment(e.Task.DeploymentId);
             deployment.Status = e.Result.Details;
 
             SaveDeployment(deployment);

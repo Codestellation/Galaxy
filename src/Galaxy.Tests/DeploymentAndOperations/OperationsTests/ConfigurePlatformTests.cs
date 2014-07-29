@@ -14,6 +14,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
     public class ConfigurePlatformTests
     {
         private string _nugetFeedUri;
+        private string _serviceFolder;
         private const string OutputFolder = "output";
         private const string TestDeployment = "testdeployment";
 
@@ -34,7 +35,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             };
 
             var orders = new[] {new InstallPackageOrder( "Codestellation.Galaxy.Host", _nugetFeedUri)};
-            var installHost = new InstallPackage(hostDeployment.GetDeployFolder(OutputFolder), orders);
+            _serviceFolder = hostDeployment.GetDeployFolder(OutputFolder);
+            var installHost = new InstallPackage(_serviceFolder, orders);
 
             var buildLog = new StringWriter();
 
@@ -48,56 +50,45 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         [Test]
         public void Configure_host_platform_to_anycpu_success()
         {
-            ConfigurePlatform configurePlatform = new ConfigurePlatform(OutputFolder,
-                new Deployment()
-                {
-                    DisplayName = TestDeployment,
-                    PackageId = "TestNugetPackage",
-                    PackageVersion = new Version(1, 0),
-                    AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_anycpu"
-                });
+            var assemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_anycpu";
+            var platformType = PlatformType.AnyCPU;
 
-            var buildLog = new StringWriter();
-            configurePlatform.Execute(buildLog);
-            Assert.That(PlatformDetector.GetPlatform(Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe")),
-                        Is.EqualTo(PlatformType.AnyCPU));
+            AssertPlatformChanged(assemblyQualifiedType, platformType);
         }
 
         [Test]
         public void Configure_host_platform_to_x86_success()
         {
-            var configurePlatform = new ConfigurePlatform(OutputFolder,
-                new Deployment()
-                {
-                    DisplayName = TestDeployment,
-                    PackageId = "TestNugetPackage",
-                    PackageVersion = new Version(1, 0),
-                    AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x86"
-                });
-            var buildLog = new StringWriter();
-            configurePlatform.Execute(buildLog);
+            var assemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x86";
+            var platformType = PlatformType.x86;
 
-            Assert.That(PlatformDetector.GetPlatform(Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe")),
-                        Is.EqualTo(PlatformType.x86));
+            AssertPlatformChanged(assemblyQualifiedType, platformType);
         }
 
         [Test]
         public void Configure_host_platform_to_x64_success()
         {
-            var configurePlatform = new ConfigurePlatform(OutputFolder,
-                new Deployment()
-                {
-                    DisplayName = TestDeployment,
-                    PackageId = "TestNugetPackage",
-                    PackageVersion = new Version(1, 0),
-                    AssemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x64"
-                });
+            var assemblyQualifiedType = "TestNugetPackLib.TestServiceClass, TestNugetPackLib_x64";
+            //no need to set target to X64, it works by default
+            var platformType = PlatformType.AnyCPU;
+
+            AssertPlatformChanged(assemblyQualifiedType, platformType);
+        }
+
+        private void AssertPlatformChanged(string assemblyQualifiedType, PlatformType platformType)
+        {
+            var hostFileName = "Codestellation.Galaxy.Host.exe";
+            var assemblyPath = Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe");
+
+            
+            var configurePlatform = new ConfigurePlatform(_serviceFolder, hostFileName, assemblyQualifiedType);
 
             var buildLog = new StringWriter();
             configurePlatform.Execute(buildLog);
+            
+            var actualPlatform = PlatformDetector.GetPlatform(assemblyPath);
 
-            Assert.That(PlatformDetector.GetPlatform(Path.Combine(_nugetFeedUri, "testdeployment\\Codestellation.Galaxy.Host.exe")),
-                        Is.EqualTo(PlatformType.AnyCPU));
+            Assert.That(actualPlatform, Is.EqualTo(platformType));
         }
 
         [TearDown]

@@ -1,5 +1,5 @@
 ﻿using Codestellation.Galaxy.ServiceManager;
-using Codestellation.Galaxy.Domain;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
@@ -7,34 +7,25 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
     {
         public static DeploymentTask SequenceTaskSuccess()
         {
-            var deployment = GetDeployment();
-            var task = new DeploymentTask("TaskSuccess", deployment, string.Empty);
-            task.Add(new FakeOpSuccess(string.Empty, deployment));
+            var task = new DeploymentTask("TaskSuccess", new ObjectId());
+            task.Add(new FakeOpSuccess());
             return task;
         }
 
         public static DeploymentTask SequenceTaskFail()
         {
-            var deployment = GetDeployment();
-            var task = new DeploymentTask("TaskFail", deployment, "");
-            task.Add(new FakeOpFail(string.Empty, deployment));
+            var task = new DeploymentTask("TaskFail", new ObjectId());
+            task.Add(new FakeOpFail());
             return task;
         }
 
         public static DeploymentTask SequenceTaskFailInTheMiddle()
         {
-            var deployment = GetDeployment();
-
-            var task = new DeploymentTask("TaskFailInTheMiddle", deployment, "");
-            task.Add(new FakeOpSuccess(string.Empty, deployment));
-            task.Add(new FakeOpFail(string.Empty, deployment));
-            task.Add(new FakeOpSuccess(string.Empty, deployment));
+            var task = new DeploymentTask("TaskFailInTheMiddle", new ObjectId());
+            task.Add(new FakeOpSuccess());
+            task.Add(new FakeOpFail());
+            task.Add(new FakeOpSuccess());
             return task;
-        }
-
-        private static Deployment GetDeployment()
-        {
-            return new Deployment { DisplayName = "FooService" };
         }
     }
 }

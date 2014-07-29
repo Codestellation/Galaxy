@@ -1,25 +1,25 @@
 ﻿using System.IO;
 using System.ServiceProcess;
-using System.Text;
-using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class StartService: WinServiceOperation
+    public class StartService : WinServiceOperation
     {
-        public StartService(string basePath, Deployment deployment) :
-            base(basePath, deployment)
+        public StartService(string serviceName)
+            : base(serviceName)
         {
 
         }
 
         public override void Execute(TextWriter buildLog)
         {
-            using (ServiceController sc = new ServiceController(Deployment.GetServiceName()))
+            buildLog.WriteLine("Starting service {0}", ServiceName);
+
+            Execute(sc =>
             {
                 sc.Start();
                 sc.WaitForStatus(ServiceControllerStatus.StartPending);
-            }
+            });
         }
     }
 }
