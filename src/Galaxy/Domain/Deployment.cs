@@ -7,6 +7,7 @@ namespace Codestellation.Galaxy.Domain
 {
     public class Deployment
     {
+        private string _deployLogFolder;
         public ObjectId Id { get; internal set; }
         public string AssemblyQualifiedType { get; set; }
         
@@ -37,6 +38,11 @@ namespace Codestellation.Galaxy.Domain
         public string GetDeployFolder(string baseFolder)
         {
             return Folder.Combine(baseFolder, DisplayName);
+        }
+
+        public string GetDeployLogFolder()
+        {
+            return _deployLogFolder ?? (_deployLogFolder = Folder.Combine(Folder.BasePath, "BuildLogs" , Id.ToString()));
         }
     }
 }

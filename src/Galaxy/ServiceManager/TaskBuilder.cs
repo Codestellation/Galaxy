@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
@@ -16,7 +18,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("DeployService", deployment.Id)
+            return CreateDeployTask("DeployService", deployment)
                 .Add(InstallPackage(deployment, deploymentFeed, FileList.Empty))
                 .Add(ProvideHostConfig(deployment))
                 .Add(ConfigurePlatform(deployment))
@@ -41,7 +43,7 @@ namespace Codestellation.Galaxy.ServiceManager
             var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
 
             var clearBinaries = new ClearBinaries(serviceFolder, deployment.KeepOnUpdate);
-            return new DeploymentTask("UpdateService", deployment.Id)
+            return CreateDeployTask("UpdateService", deployment)
                 .Add(StopService(deployment))
                 .Add(clearBinaries)
                 .Add(InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
@@ -51,7 +53,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("InstallService", deployment.Id)
+            return CreateDeployTask("InstallService", deployment)
                 .Add(ProvideHostConfig(deployment))
                 .Add(InstallService(deployment))
                 .Add(DeployConfig(deployment));
@@ -60,7 +62,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
-            return new DeploymentTask("UninstallService", deployment.Id)
+            return CreateDeployTask("UninstallService", deployment)
                 .Add(StopService(deployment))
                 .Add(UninstallService(deployment))
                 .Add(new UninstallPackage(serviceFolder));
@@ -68,14 +70,27 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("StartService", deployment.Id)
+            return CreateDeployTask("StartService", deployment)
                 .Add(StartService(deployment));
         }
 
         public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return new DeploymentTask("StopService", deployment.Id)
+            return CreateDeployTask("StopService", deployment)
                 .Add(StopService(deployment));
+        }
+
+        private static DeploymentTask CreateDeployTask(string name, Deployment deployment)
+        {
+            var deployLogFolder = deployment.GetDeployLogFolder();
+
+            Folder.Ensure(deployLogFolder);
+            var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, DateTime.Now);
+            var fullPath = Path.Combine(deployLogFolder, filename);
+
+            var logStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
+            
+            return new DeploymentTask(name, deployment.Id, logStream);
         }
 
         private IOperation ConfigurePlatform(Deployment deployment)

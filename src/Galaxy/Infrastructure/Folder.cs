@@ -22,5 +22,14 @@ namespace Codestellation.Galaxy.Infrastructure
                 Directory.Delete(folder, true);
             }
         }
+
+        public static void Ensure(string folder)
+        {
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+        }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using Codestellation.Galaxy.Domain;
 using System.Collections.Generic;
 using Codestellation.Galaxy.ServiceManager.EventParams;
 using Codestellation.Galaxy.ServiceManager.Operations;
@@ -13,13 +11,15 @@ namespace Codestellation.Galaxy.ServiceManager
     public class DeploymentTask
     {
         private Task _task;
-        
-        private readonly List<IOperation> _operations; 
+
+        private readonly List<IOperation> _operations;
 
         private readonly string _name;
         private readonly ObjectId _deploymentId;
+        private readonly Stream _logStream;
 
-        private readonly StringWriter _buildLog;
+        private StreamWriter _buildLog;
+        private OperationResult[] _operationResults;
 
 
         public IReadOnlyList<IOperation> Operations
@@ -43,25 +43,14 @@ namespace Codestellation.Galaxy.ServiceManager
             get { return _name; }
         }
 
-        private DeploymentTask()
+        public DeploymentTask(string name, ObjectId deploymentId, Stream logStream)
         {
-            _operations =new List<IOperation>();
-            var stringBuilder = new StringBuilder(4000);
-            _buildLog = new StringWriter(stringBuilder);
-        }
+            _operations = new List<IOperation>();
 
-        public DeploymentTask(string name, ObjectId deploymentId) : this()
-        {
             _name = name;
             _deploymentId = deploymentId;
+            _logStream = logStream;
         }
-
-        public DeploymentTask(string name, ObjectId deploymentId, IEnumerable<IOperation> operations) :
-            this(name, deploymentId)
-        {
-            _operations.AddRange(operations);
-        }
-
 
         public void Process(Action<DeploymentTaskCompletedEventArgs> callback)
         {
@@ -76,39 +65,85 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private void ProcessInternal(Action<DeploymentTaskCompletedEventArgs> callback)
         {
-            var results = new OperationResult[Operations.Count];
+            using (_buildLog = new StreamWriter(_logStream))
+            {
+                _buildLog.WriteLine("Task '{0}' started", _name);
 
+                ExecuteOperations();
+
+                _buildLog.WriteLine("Task '{0}' finished", _name);
+            }
+
+            var deploymentResult = new OperationResult(Name, _operationResults);
+
+            var args = new DeploymentTaskCompletedEventArgs(this, deploymentResult);
+
+            callback.Invoke(args);
+        }
+
+        private void ExecuteOperations()
+        {
+            _operationResults = new OperationResult[Operations.Count];
             var failureDetected = false;
-
-            for (int index = 0; index < Operations.Count; index++)
+            for (var index = 0; index < Operations.Count; index++)
             {
                 var operation = Operations[index];
 
                 string operationName = operation.GetType().Name;
 
-                if (failureDetected)
-                {
-                    results[index] = new OperationResult(operationName, ResultCode.NotRan);
-                    continue;
-                }
+                var operationIndex = index + 1;
 
-                try
-                {
-                    operation.Execute(_buildLog);
-                    results[index] = new OperationResult(operationName, ResultCode.Succeed);
-                }
-                catch (Exception ex)
-                {
-                    results[index] = new OperationResult(operationName, ResultCode.Failed, ex.Message);
-                    failureDetected = true;
-                }
+                _buildLog.WriteLine("Operation '{0}' started. ({1}/{2})", operationName, operationIndex, Operations.Count);
+
+                var operationResult = _operationResults[index] = 
+                    failureDetected 
+                    ? new OperationResult(operationName, ResultCode.NotRan) //do not execute operation if any previous failed
+                    : Execute(operation);
+
+                WriteResult(operationResult, operationIndex);
+
+                failureDetected = operationResult.ResultCode != ResultCode.Succeed;
             }
+        }
 
-            var deploymentResult = new OperationResult(Name, results);
+        private OperationResult Execute(IOperation operation)
+        {
+            var operationName = operation.GetType().Name;
 
-            var args = new DeploymentTaskCompletedEventArgs(this, deploymentResult);
+            try
+            {
+                operation.Execute(_buildLog);
+                return new OperationResult(operationName, ResultCode.Succeed);
 
-            callback.Invoke(args);
+            }
+            catch (Exception ex)
+            {
+                _buildLog.WriteLine(ex.ToString());
+                return new OperationResult(operationName, ResultCode.Failed, ex.Message);
+            }
+        }
+
+        private void WriteResult(OperationResult operationResult, int operationIndex)
+        {
+            var operationName = operationResult.OperationName;
+
+            string result = DefineResult(operationResult);
+
+            _buildLog.WriteLine("Operation '{0}' {1}. ({2}/{3})", operationName, result, operationIndex, Operations.Count);
+        }
+
+        private string DefineResult(OperationResult operationResult)
+        {
+            switch (operationResult.ResultCode)
+            {
+                case ResultCode.Succeed:
+                    return "succeed";
+                case ResultCode.Failed:
+                    return "failed";
+                case ResultCode.NotRan:
+                    return "skipped";
+            }
+            throw new InvalidOperationException();
         }
 
         public override string ToString()
