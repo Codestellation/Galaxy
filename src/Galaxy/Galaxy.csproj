@@ -71,6 +71,7 @@
     <EmbeddedResource Include="WebEnd\Views\Deployment\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\Details.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Options\Options.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Deployment\BuildLogs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -169,6 +170,7 @@
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
+    <Compile Include="WebEnd\Models\BuildLogsModel.cs" />
     <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\Converters\ObjectIdTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\InputProperties.cs" />

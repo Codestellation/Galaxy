@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
@@ -30,6 +31,11 @@ namespace Codestellation.Galaxy.Infrastructure
                 Directory.CreateDirectory(folder);
             }
 
+        }
+
+        public static string[] EnumerateFiles(string logFolder)
+        {
+            return Directory.EnumerateFiles(logFolder).ToArray();
         }
     }
 }

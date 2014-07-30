@@ -41,6 +41,51 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/update/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostUpdate(parameters), token);
             Post["/config/{id}", true] = (parameters, token) => ProcessRequest(() => PostConfig(parameters), token);
             Get["/config/{id}", true] = (parameters, token) => ProcessRequest(() => GetConfig(parameters), token);
+
+            Get["/build-log/{id}", true] = (parameters, token) => ProcessRequest(() => GetBuildLogs(parameters), token);
+            Get["/build-log/{id}/{filename}", true] = (parameters, token) => ProcessRequest(() => GetBuildLog(parameters), token);
+            
+        }
+
+        private object GetBuildLog(dynamic parameters)
+        {
+            Deployment deployment = GetDeployment(parameters);
+            string filename = parameters.filename;
+
+            var fullPath = System.IO.Path.Combine(deployment.GetDeployLogFolder(), filename);
+
+            var content = File.ReadAllText(fullPath);
+
+                        var response = new Response();
+
+            response.ContentType = "text/plain";
+            response.Contents = stream =>
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    
+                    writer.Write(content);
+                }
+            };
+
+            return response;
+        
+        }
+
+        private object GetBuildLogs(dynamic parameters)
+        {
+            Deployment deployment = GetDeployment(parameters);
+
+            var logFolder = deployment.GetDeployLogFolder();
+
+            var files = Folder
+                .EnumerateFiles(logFolder)
+                .Select(x => new FileInfo(x))
+                .OrderByDescending(x => x.LastWriteTime)
+                .ToArray();
+
+
+            return new BuildLogsModel(deployment.Id, files);
         }
 
         protected override CrudOperations SupportedOperations
@@ -74,8 +119,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetEdit(dynamic parameters)
         {
-            var id = new ObjectId(parameters.id);
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = GetDeployment(parameters);
 
             return View["Edit", new DeploymentModel(deployment, GetAvailableFeeds())];
         }
@@ -158,6 +202,7 @@ namespace Codestellation.Galaxy.WebEnd
         }
 
         //TODO: three following methods are not eligible for web-module
+
         private void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFactory)
         {
             var deployment = _dashBoard.GetDeployment(deploymentId);
@@ -171,7 +216,7 @@ namespace Codestellation.Galaxy.WebEnd
                 task.Process(OnDeploymentCompleted);
             }
         }
-        
+
         private void OnDeploymentCompleted(DeploymentTaskCompletedEventArgs e)
         {
             Task.Factory.StartNew(() => UpdateDeploymentStatus(e), CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
@@ -248,6 +293,8 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             var deployment = _dashBoard.GetDeployment(id);
 
+            var configFileContent = deployment.ConfigFileContent;
+
             var response = new Response();
 
             response.Headers.Add("Content-Disposition", "attachment; filename=config_preview.xml");
@@ -256,7 +303,8 @@ namespace Codestellation.Galaxy.WebEnd
             {
                 using (var writer = new StreamWriter(stream))
                 {
-                    writer.Write(deployment.ConfigFileContent);
+                    
+                    writer.Write(configFileContent);
                 }
             };
 
@@ -274,5 +322,11 @@ namespace Codestellation.Galaxy.WebEnd
             return new RedirectResponse(detailsPath);
         }
 
+        private Deployment GetDeployment(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var deployment = _dashBoard.GetDeployment(id);
+            return deployment;
+        }
     }
 }
