@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Codestellation.Galaxy.Infrastructure;
+﻿using Codestellation.Galaxy.Infrastructure;
 using Nejdb.Bson;
 using System;
 
@@ -42,7 +41,17 @@ namespace Codestellation.Galaxy.Domain
 
         public string GetDeployLogFolder()
         {
-            return _deployLogFolder ?? (_deployLogFolder = Folder.Combine(Folder.BasePath, "BuildLogs" , Id.ToString()));
+            return _deployLogFolder ?? (_deployLogFolder = BuildServiceFolder("BuildLogs"));
+        }
+
+        public string GetFilesFolder()
+        {
+            return _deployLogFolder ?? (_deployLogFolder = BuildServiceFolder("FileOverrides"));
+        }
+
+        private string BuildServiceFolder(string subfolder)
+        {
+            return Folder.Combine(Folder.BasePath, Id.ToString() , subfolder);
         }
     }
 }
