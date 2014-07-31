@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
 using NUnit.Framework;
@@ -20,10 +21,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         {
             _nugetFeedFolder = Path.Combine(Environment.CurrentDirectory, "testnuget");
 
-            if (Directory.Exists(_nugetFeedFolder))
-            {
-                Directory.Delete(_nugetFeedFolder, true);
-            }
+            Folder.Delete(_nugetFeedFolder);
 
             var version10 = new Version(1, 0);
 
@@ -99,7 +97,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         [TearDown]
         public void Cleanup()
         {
-            Directory.Delete(_nugetFeedFolder, true);
+            Folder.Delete(_nugetFeedFolder);
         }
     }
 }
