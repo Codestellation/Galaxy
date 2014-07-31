@@ -11,7 +11,8 @@ namespace Codestellation.Galaxy.Infrastructure
         private static readonly string[] UserClaims = new string[0];
 
         private static readonly string[] AdminClaims = { "Admin" };
-        
+        private string _userName;
+
         public UserIdentity(User user)
         {
             UserName = user.DisplayName;
@@ -22,7 +23,13 @@ namespace Codestellation.Galaxy.Infrastructure
             Guid = Guid.NewGuid();
 
         }
-        public string UserName { get; set; }
+
+        public string UserName
+        {
+            get { return _userName ?? "<Unknown User>"; }
+            set { _userName = value; }
+        }
+
         public IEnumerable<string> Claims { get; set; }
         public Guid Guid { get; private set; }
         public DateTime? Expiry { get; private set; }
