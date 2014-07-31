@@ -1,47 +1,45 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using NLog;
 using Topshelf;
+using Topshelf.Logging;
 
 namespace Codestellation.Galaxy.Host
 {
     internal static class Program
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        private static void Main()
+        private static int Main()
         {
-            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            TopshelfExitCode code = HostFactory.Run(x =>
+            {
+                x.UseNLog();
 
-            var config = GetSettings();
+                var config = GetSettings();
 
-            HostFactory.Run(x =>
+                x.Service<ServiceProxy>(s =>
                 {
-                    x.UseNLog();
-
-                    x.Service<ServiceProxy>(s =>
-                        {
-                            s.ConstructUsing(name => new ServiceProxy(config));
-                            s.WhenStarted(tc => tc.Start());
-                            s.WhenStopped(tc => tc.Stop());
-                            s.WhenShutdown(tc => tc.Stop());
-                        });
-
-                    x.EnableShutdown();
-                    x.RunAsLocalSystem();
-
-                    x.SetDescription(config.Description);
-                    
-                    x.SetServiceName(config.ServiceName);
-                    x.SetDisplayName(config.DisplayName);
-
-
-                    if (!string.IsNullOrEmpty(config.InstanceName))
-                    {
-                        x.SetInstanceName(config.InstanceName);
-                    }
+                    s.ConstructUsing(name => new ServiceProxy(config));
+                    s.WhenStarted(tc => tc.Start());
+                    s.WhenStopped(tc => tc.Stop());
+                    s.WhenShutdown(tc => tc.Stop());
                 });
+
+                x.EnableShutdown();
+                x.RunAsLocalSystem();
+
+                x.SetDescription(config.Description);
+                    
+                x.SetServiceName(config.ServiceName);
+                x.SetDisplayName(config.DisplayName);
+
+                if (!string.IsNullOrEmpty(config.InstanceName))
+                {
+                    x.SetInstanceName(config.InstanceName);
+                }
+            });
+
+            HostLogger.Shutdown();
+            return (int) code;
         }
 
         private static ServiceConfig GetSettings()
@@ -54,13 +52,6 @@ namespace Codestellation.Galaxy.Host
             {
                 return (ServiceConfig)serializer.Deserialize(stream);
             }
-        }
-
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            var exception = e.ExceptionObject as Exception;
-            Log.Fatal("Unhandled exception.", exception);
-            LogManager.Flush(3000);
         }
     }
 }
