@@ -84,7 +84,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             PackageId = deployment.PackageId;
             
             ConfigFileContent = deployment.ConfigFileContent;
-            KeepOnUpdate = deployment.KeepOnUpdate.ToString();
+            KeepOnUpdate = (deployment.KeepOnUpdate ?? new FileList(new string[0])).ToString();
 
             IsNew = false;
         }
