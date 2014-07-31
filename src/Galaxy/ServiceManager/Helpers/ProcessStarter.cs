@@ -1,17 +1,11 @@
 ﻿using System;
-using System.IO;
+
 
 namespace Codestellation.Galaxy.ServiceManager.Helpers
 {
     public class ProcessStarter
     {
-        public static void ExecuteWithParams(string exePath, string exeParams)
-        {
-            string output;
-            ExecuteWithParams(exePath, exeParams, out output);
-        }
-
-        public static void ExecuteWithParams(string exePath, string exeParams, out string output)
+        public static string ExecuteWithParams(string exePath, string exeParams, out string error)
         {
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
@@ -21,20 +15,25 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             startInfo.Verb = "runas";
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
             process.StartInfo = startInfo;
             process.Start();
-            StreamReader streamReader = process.StandardOutput;
-            output = streamReader.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
+            error = process.StandardError.ReadToEnd();
+
             process.WaitForExit();
 
             if (process.ExitCode != 0)
+            {
                 ThrowExecuteIOPException(exePath, exeParams, process.ExitCode, output);
+            }
+            return output;
         }
 
         private static void ThrowExecuteIOPException(string exePath, string exeParams, int resultCode, string output)
         {
-            throw new InvalidOperationException(
-                string.Format("execution of {0} with params {1} returned {2} with output {3}", exePath, exeParams, resultCode, output));
+            var message = string.Format("execution of {0} with params {1} returned {2} with output {3}", exePath, exeParams, resultCode, output);
+            throw new InvalidOperationException(message);
         }
     }
 }

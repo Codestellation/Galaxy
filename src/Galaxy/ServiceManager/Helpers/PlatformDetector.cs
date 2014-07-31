@@ -17,14 +17,14 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
 
         public static PlatformType GetPlatform(string assemblyPath)
         {
-            string output;
             var exePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), CorflagsPath);
             var exeParams = assemblyPath;
 
-            ProcessStarter.ExecuteWithParams(exePath, exeParams, out output);
+            string error;
+            string output = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
 
-            Match matchFlagX86 = Regex.Match(output, @"32BIT[\s:]*(\d)+", RegexOptions.IgnoreCase);
-            Match matchFlagPE = Regex.Match(output, @"PE[\s:]*([\w+]{4,})+", RegexOptions.IgnoreCase);
+            var matchFlagX86 = Regex.Match(output, @"32BIT[\s:]*(\d)+", RegexOptions.IgnoreCase);
+            var matchFlagPE = Regex.Match(output, @"PE[\s:]*([\w+]{4,})+", RegexOptions.IgnoreCase);
 
             if (matchFlagX86.Success && matchFlagPE.Success)
             {
@@ -60,7 +60,8 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             var exePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), CorflagsPath);
             var exeParams = string.Format("{0} {1}", libPath, "/32bit+");
 
-            ProcessStarter.ExecuteWithParams(exePath, exeParams);
+            string error;
+            ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
         }
     }
 }
