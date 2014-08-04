@@ -102,9 +102,13 @@ namespace Codestellation.Galaxy.Infrastructure
         {
             Func<FeedPackageTuple[]> getTuplesFunc = GetTuples;
             var getTuplesTask = Task.Factory.StartNew(getTuplesFunc, CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
-            var tuples = getTuplesTask.Result;
-         
-            RefreshCache(tuples);
+            getTuplesTask.ContinueWith(prev =>
+            {
+                if (prev.IsFaulted) return;
+                var tuples = prev.Result;
+                RefreshCache(tuples);
+            });
+
         }
 
         private void RefreshCache(FeedPackageTuple[] tuples)
