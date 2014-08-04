@@ -1,4 +1,5 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System.Linq;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.WebEnd.Models;
 using Nancy.ModelBinding;
@@ -50,7 +51,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var feed = _dashBoard.GetFeed(id);
-            var model = new FeedModel(feed);
+            var model = new FeedModel(feed, false);
             return View["Edit", model];
         }
 
@@ -73,8 +74,13 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            _dashBoard.RemoveFeed(id);
-            _feeds.Delete(id);
+            var feedInUse = _dashBoard.Deployments.Any(x => x.FeedId.Equals(id));
+
+            if (!feedInUse)
+            {
+                _dashBoard.RemoveFeed(id);
+                _feeds.Delete(id);
+            }
 
             return new RedirectResponse("/feed");
         }

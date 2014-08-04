@@ -5,12 +5,15 @@ namespace Codestellation.Galaxy.WebEnd.Models
 {
     public class FeedModel
     {
+        public bool InUse { get; set; }
+
         public FeedModel()
         {
 
         }
-        public FeedModel(NugetFeed feed)
+        public FeedModel(NugetFeed feed, bool inUse)
         {
+            InUse = inUse;
             Id = feed.Id;
             Name = feed.Name;
             Uri = feed.Uri;
