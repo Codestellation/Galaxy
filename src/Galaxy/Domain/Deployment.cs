@@ -1,4 +1,6 @@
-﻿using Codestellation.Galaxy.Infrastructure;
+﻿using System.Linq;
+using System.ServiceProcess;
+using Codestellation.Galaxy.Infrastructure;
 using Nejdb.Bson;
 using System;
 
@@ -52,6 +54,19 @@ namespace Codestellation.Galaxy.Domain
         private string BuildServiceFolder(string subfolder)
         {
             return Folder.Combine(Folder.BasePath, Id.ToString() , subfolder);
+        }
+
+        public string GetServiceState()
+        {
+            ServiceController[] services = ServiceController.GetServices();
+            var controller = services.SingleOrDefault(item => item.ServiceName == ServiceName);
+
+            if (controller == null)
+            {
+                return "NotFound";
+            }
+
+            return controller.Status.ToString();
         }
     }
 }

@@ -51,6 +51,8 @@ namespace Codestellation.Galaxy.WebEnd.Models
             get { return _allFeeds.Single(x => x.Key == FeedId).Value; }
         }
 
+        public string State { get; set; }
+
         //used by nancy model binder
         public DeploymentModel()
         {
@@ -85,6 +87,9 @@ namespace Codestellation.Galaxy.WebEnd.Models
             
             ConfigFileContent = deployment.ConfigFileContent;
             KeepOnUpdate = (deployment.KeepOnUpdate ?? new FileList(new string[0])).ToString();
+
+
+            State = deployment.GetServiceState();
 
             IsNew = false;
         }
