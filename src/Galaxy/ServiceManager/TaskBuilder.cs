@@ -27,7 +27,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private IOperation InstallPackage(Deployment deployment, NugetFeed deploymentFeed, FileList keepOnUpdate)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
 
             var orders = new[]
             {
@@ -40,7 +40,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask UpdateServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
 
             var clearBinaries = new ClearBinaries(serviceFolder, deployment.KeepOnUpdate);
             return CreateDeployTask("UpdateService", deployment)
@@ -61,7 +61,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
             return CreateDeployTask("UninstallService", deployment)
                 .Add(StopService(deployment))
                 .Add(UninstallService(deployment))
@@ -95,7 +95,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private IOperation ConfigurePlatform(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
             return new ConfigurePlatform(serviceFolder, _options.GetHostFileName(), deployment.AssemblyQualifiedType);
         }
 
@@ -117,7 +117,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private IOperation UninstallService(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.RootDeployFolder);
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
             return new UninstallService(serviceFolder, _options.GetHostFileName());
         }
 
