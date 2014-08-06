@@ -30,12 +30,13 @@ namespace Codestellation.Galaxy.Infrastructure
             {
                 Directory.CreateDirectory(folder);
             }
-
         }
 
-        public static string[] EnumerateFiles(string logFolder)
+        public static FileInfo[] EnumerateFiles(string folder)
         {
-            return Directory.EnumerateFiles(logFolder).ToArray();
+            return Directory.EnumerateFiles(folder)
+                .Select(x => new FileInfo(x))
+                .ToArray();
         }
     }
 }

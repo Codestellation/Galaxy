@@ -72,6 +72,7 @@
     <EmbeddedResource Include="WebEnd\Views\Deployment\Details.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Options\Options.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\BuildLogs.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\File\DeploymentFiles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -136,6 +137,7 @@
     <Compile Include="Domain\Options.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
+    <Compile Include="Infrastructure\FileResponse.cs" />
     <Compile Include="Infrastructure\Folder.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
@@ -152,7 +154,7 @@
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
-    <Compile Include="ServiceManager\Operations\DeployUserConfig.cs" />
+    <Compile Include="ServiceManager\Operations\OverrideFiles.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />
     <Compile Include="ServiceManager\Operations\IOperation.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
+    <Compile Include="WebEnd\FileModule.cs" />
     <Compile Include="WebEnd\Models\BuildLogsModel.cs" />
     <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\Converters\ObjectIdTypeConverter.cs" />
@@ -182,6 +185,7 @@
     <Compile Include="WebEnd\Models\FeedModel.cs" />
     <Compile Include="WebEnd\DeploymentModule.cs" />
     <Compile Include="WebEnd\Models\OptionsModel.cs" />
+    <Compile Include="WebEnd\Models\DeploymentFilesModel.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\PresentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\AbsentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\BootstrapClass.cs" />

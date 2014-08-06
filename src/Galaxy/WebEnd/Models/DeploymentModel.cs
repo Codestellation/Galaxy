@@ -26,7 +26,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string PackageId { get; set; }
         [Display(Prompt = "<Select version>")]
         public Version PackageVersion { get; set; }
-        public string ConfigFileContent { get; set; }
+
         public string Status { get; set; }
 
         [Display(Name = "Keep on update", Prompt = "files, folders, allowed file masks")]
@@ -81,10 +81,8 @@ namespace Codestellation.Galaxy.WebEnd.Models
             Status = deployment.Status;
             PackageVersion = deployment.PackageVersion;
             PackageId = deployment.PackageId;
-            
-            ConfigFileContent = deployment.ConfigFileContent;
-            KeepOnUpdate = (deployment.KeepOnUpdate ?? new FileList(new string[0])).ToString();
 
+            KeepOnUpdate = (deployment.KeepOnUpdate ?? new FileList(new string[0])).ToString();
 
             State = deployment.GetServiceState();
 

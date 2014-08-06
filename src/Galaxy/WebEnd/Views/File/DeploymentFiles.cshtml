@@ -1,0 +1,72 @@
+﻿@using System.Linq
+@using Codestellation.Galaxy.WebEnd
+@using Codestellation.Galaxy.WebEnd.Misc
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentFilesModel>
+@{ Layout = "Master";}
+
+<script>
+    $(document).ready(function () {
+        $('input[type=file]').bootstrapFileInput();
+        $('.file-inputs').bootstrapFileInput();
+    });
+</script>
+
+<div class="row">
+    <div class="container  col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Uploaded Files
+            </div>
+            <form enctype="multipart/form-data" method="POST" action="/@FileModule.Path/@Model.DeploymentId">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <input type="file" name="configfile" title="Browse...">
+                        </td>
+                        <td>
+                            <input type="submit" value="Upload" id="submit" class="btn btn-primary btn-block" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="container  col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Uploaded Files
+            </div>
+            <ul class="list-group">
+                @foreach (var file in Model.Files)
+                {
+                    <li class="list-group-item">
+                            <a href="/@FileModule.Path/@Model.DeploymentId/@file.Name">@file.Name</a>
+                            <button type="button" class="btn btn-danger btn-xs pull-right" value="@file.Name">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[type=button]')
+            .click(function () {
+                var button = $(this);
+                $.ajax({
+                    url: '/@FileModule.Path/delete/@Model.DeploymentId?file=' + button.val(),
+                    type: 'POST',
+                    success: function () {
+                        var listElement = button.closest('.list-group-item');
+                        listElement.remove();
+                    },
+                });
+            });
+    });
+</script>

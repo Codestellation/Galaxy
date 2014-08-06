@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nejdb;
@@ -39,8 +40,6 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/uninstall/{id}", true] = (parameters, token) => ProcessRequest(() => PostUninstall(parameters), token);
             Post["/deploy/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostDeploy(parameters), token);
             Post["/update/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostUpdate(parameters), token);
-            Post["/config/{id}", true] = (parameters, token) => ProcessRequest(() => PostConfig(parameters), token);
-            Get["/config/{id}", true] = (parameters, token) => ProcessRequest(() => GetConfig(parameters), token);
 
             Get["/build-log/{id}", true] = (parameters, token) => ProcessRequest(() => GetBuildLogs(parameters), token);
             Get["/build-log/{id}/{filename}", true] = (parameters, token) => ProcessRequest(() => GetBuildLog(parameters), token);
@@ -54,22 +53,10 @@ namespace Codestellation.Galaxy.WebEnd
 
             var fullPath = System.IO.Path.Combine(deployment.GetDeployLogFolder(), filename);
 
-            var content = File.ReadAllText(fullPath);
 
-                        var response = new Response();
+            return new FileResponse(fullPath);
 
-            response.ContentType = "text/plain";
-            response.Contents = stream =>
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    
-                    writer.Write(content);
-                }
-            };
-
-            return response;
-        
+            
         }
 
         private object GetBuildLogs(dynamic parameters)
@@ -80,10 +67,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             var files = Folder
                 .EnumerateFiles(logFolder)
-                .Select(x => new FileInfo(x))
-                .OrderByDescending(x => x.LastWriteTime)
-                .ToArray();
-
+                .SortDescending(x => x.LastWriteTime);
 
             return new BuildLogsModel(deployment.Id, files);
         }
@@ -267,48 +251,6 @@ namespace Codestellation.Galaxy.WebEnd
                 _deployments.Save(deployment, false);
                 tx.Commit();
             }
-        }
-
-        private object PostConfig(dynamic parameters)
-        {
-            var id = new ObjectId(parameters.id);
-            var content = ReceiveFile();
-            var deployment = _dashBoard.GetDeployment(id);
-            deployment.ConfigFileContent = content;
-            SaveDeployment(deployment);
-
-            return RedirectToDetails(id);
-        }
-
-        private string ReceiveFile()
-        {
-            var file = Request.Files.FirstOrDefault();
-            var reader = new StreamReader(file.Value);
-            var content = reader.ReadToEnd();
-            return content;
-        }
-
-        private object GetConfig(dynamic parameters)
-        {
-            var id = new ObjectId(parameters.id);
-            var deployment = _dashBoard.GetDeployment(id);
-
-            var configFileContent = deployment.ConfigFileContent;
-
-            var response = new Response();
-
-            response.Headers.Add("Content-Disposition", "attachment; filename=config_preview.xml");
-            response.ContentType = "text/xml";
-            response.Contents = stream =>
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    
-                    writer.Write(configFileContent);
-                }
-            };
-
-            return response;
         }
 
         private static object RedirectToList()

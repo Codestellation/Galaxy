@@ -27,7 +27,6 @@ namespace Codestellation.Galaxy.Domain
         public void AddFeed(NugetFeed feed)
         {
             _feeds.Add(feed.Id, feed);
-
         }
 
         public void RemoveFeed(ObjectId id)

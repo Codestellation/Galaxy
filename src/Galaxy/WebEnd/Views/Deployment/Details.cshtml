@@ -3,14 +3,6 @@
 @using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentModel>
 @{ Layout = "Master";}
-<style>
-    .inner_table {
-        width: 100%;
-        border-spacing: 5px;
-        border-collapse: separate;
-        table-layout: fixed;
-    }
-</style>
 
 <div class="row">
     <div class="container  col-lg-6">
@@ -39,7 +31,6 @@
                 </tbody>
             </table>
             <div class="panel-footer">
-
             </div>
         </div>
 
@@ -70,57 +61,19 @@
 
             <ul class="list-group">
                 <li class="list-group-item">
-                    @if (string.IsNullOrEmpty(Model.ConfigFileContent))
-                    {
-                        <div class="alert alert-danger" style="margin-bottom: 0px;">
-                            <p>Upload config file!</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-success" style="margin-bottom: 0px;">
-                            <p>Upload config file to update the <a href="/@DeploymentModule.Path/config/@Model.Id">existing</a>.</p>
-                        </div>
-                    }
-                </li>
-                <li class="list-group-item">
-                    <form enctype="multipart/form-data" method="POST" action="/@DeploymentModule.Path/config/@Model.Id">
-                        <table class="inner_table">
-                            <colgroup>
-                                <col>
-                                <col width="20%">
-                            </colgroup>
-                            <tr>
-                                <td>
-                                    <input type="file" name="configfile" title="Browse for config file...">
-                                </td>
-                                <td>
-                                    <input type="submit" value="Upload" id="submit" class="btn btn-primary btn-sm btn-block" />
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+                    <a href="/@FileModule.Path/@Model.Id">Upload or view files</a>
                 </li>
                 <li class="list-group-item">
 
-                    <table class="inner_table">
-                        <colgroup>
-                            <col width="60%"/>
-                            <col/>
-                            <col/>
-                        </colgroup>
-                        <tr>
-                            <td>
-                                @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
-                            </td>
-                            <td>
-                                <button id="btn-deploy" type="button" class="btn btn-primary btn-sm btn-block">Deploy</button>
-                            </td>
-                            <td>
-                                <button id="btn-update" type="button" class="btn btn-primary btn-sm btn-block">Update</button>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="row">
+                        <div class="container col-lg-6">
+                            @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
+                        </div>
+                        <div class="btn-group">
+                            <button id="btn-deploy" type="button" class="btn btn-primary">Deploy</button>
+                            <button id="btn-update" type="button" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
 
                 </li>
             </ul>
@@ -171,9 +124,6 @@
 
 <script>
     $(document).ready(function () {
-        $('input[type=file]').bootstrapFileInput();
-        $('.file-inputs').bootstrapFileInput();
-
         var version = $('select[name=PackageVersion]');
 
         $('#btn-update')

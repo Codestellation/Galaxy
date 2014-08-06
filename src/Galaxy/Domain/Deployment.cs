@@ -9,6 +9,7 @@ namespace Codestellation.Galaxy.Domain
     public class Deployment
     {
         private string _deployLogFolder;
+        private string _fileOverridesFolder;
         public ObjectId Id { get; internal set; }
         
         public string ServiceName { get; set; }
@@ -20,8 +21,6 @@ namespace Codestellation.Galaxy.Domain
         public string Status { get; set; }
         public string PackageId { get; set; }
         public Version PackageVersion { get; set; }
-
-        public string ConfigFileContent { get; set; }
 
         public FileList KeepOnUpdate { get; set; }
 
@@ -47,7 +46,7 @@ namespace Codestellation.Galaxy.Domain
 
         public string GetFilesFolder()
         {
-            return _deployLogFolder ?? (_deployLogFolder = BuildServiceFolder("FileOverrides"));
+            return _fileOverridesFolder ?? (_fileOverridesFolder = BuildServiceFolder("FileOverrides"));
         }
 
         private string BuildServiceFolder(string subfolder)
