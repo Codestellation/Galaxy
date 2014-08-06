@@ -19,7 +19,6 @@
         @Html.LabeledTextBox(x => x.Description)
         @Html.LabeledDropDown(x => x.FeedId, Model.AllFeeds)
         @Html.LabeledTextBox(x => x.PackageId)
-        @Html.LabeledTextBox(x => x.AssemblyQualifiedType)
         @Html.LabeledTextArea(x => x.KeepOnUpdate)
 
         <div class="form-group">
@@ -50,11 +49,6 @@
                         required: true,
                         minlength: 5,
                         maxlength: 100
-                    },
-                    AssemblyQualifiedType: {
-                        required: true,
-                        minlength: 5,
-                        maxlength: 200
                     }
                 }
             });

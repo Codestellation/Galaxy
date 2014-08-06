@@ -8,10 +8,6 @@ namespace Codestellation.Galaxy.Domain
         public ObjectId Id { get; private set; }
 
         public string RootDeployFolder { get; set; }
-        
-        public string HostPackageId { get; set; }
-
-        public string HostPackageFeedUri { get; set; }
 
         public string GetDeployFolder()
         {
@@ -21,20 +17,6 @@ namespace Codestellation.Galaxy.Domain
             }
 
             return RootDeployFolder;
-        }
-
-        public string GetHostPackageId()
-        {
-            if (string.IsNullOrWhiteSpace(HostPackageId))
-            {
-                return "Codestellation.Galaxy.Host";
-            }
-            return HostPackageId;
-        }
-
-        public string GetHostFileName()
-        {
-            return "Codestellation.Galaxy.Host.exe";
         }
     }
 }

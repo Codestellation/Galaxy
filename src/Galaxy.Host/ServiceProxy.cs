@@ -12,17 +12,8 @@ namespace Codestellation.Galaxy.Host
         private readonly MethodInfo _stopMethod;
         private readonly object _instance;
 
-        public ServiceProxy(ServiceConfig config)
+        public ServiceProxy(Type serviceType, ServiceConfig config)
         {
-            var serviceType = Type.GetType(config.AssemblyQualifiedType);
-
-            if (serviceType == null)
-            {
-                var message = string.Format("Type '{0}' not found", config.AssemblyQualifiedType);
-                Logger.Fatal(message);
-                throw new InvalidOperationException(message);
-            }
-
             _instance = Activator.CreateInstance(serviceType);
             _startMethod = GetMethodOrThrow(config.StartMethod, serviceType);
             _stopMethod = GetMethodOrThrow(config.StopMethod, serviceType);

@@ -10,7 +10,6 @@ namespace Codestellation.Galaxy.Domain
     {
         private string _deployLogFolder;
         public ObjectId Id { get; internal set; }
-        public string AssemblyQualifiedType { get; set; }
         
         public string ServiceName { get; set; }
         public string DisplayName { get; set; }
@@ -67,6 +66,11 @@ namespace Codestellation.Galaxy.Domain
             }
 
             return controller.Status.ToString();
+        }
+
+        public string GetServiceHostFileName()
+        {
+            return string.Format("{0}.exe", ServiceName);
         }
     }
 }

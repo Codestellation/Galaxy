@@ -6,8 +6,6 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
     public class ServiceConfig
     {
         [XmlElement]
-        public string AssemblyQualifiedType { get; set; }
-        [XmlElement]
         public string ServiceName { get; set; }
         [XmlElement]
         public string DisplayName { get; set; }
@@ -26,7 +24,6 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
 
         public ServiceConfig(Deployment deployment)
         {
-            AssemblyQualifiedType = deployment.AssemblyQualifiedType;
             Description = deployment.Description;
             DisplayName = deployment.DisplayName;
             ServiceName = deployment.ServiceName;

@@ -6,19 +6,21 @@ using Topshelf.Logging;
 
 namespace Codestellation.Galaxy.Host
 {
-    internal static class Program
+    public static class Run
     {
-        private static int Main()
+        public static int Service<TService>()
         {
+            Type serviceType = typeof (TService);
+
             TopshelfExitCode code = HostFactory.Run(x =>
             {
-                x.UseNLog();
-
                 var config = GetSettings();
+
+                x.UseNLog();
 
                 x.Service<ServiceProxy>(s =>
                 {
-                    s.ConstructUsing(name => new ServiceProxy(config));
+                    s.ConstructUsing(name => new ServiceProxy(serviceType, config));
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                     s.WhenShutdown(tc => tc.Stop());
@@ -28,10 +30,8 @@ namespace Codestellation.Galaxy.Host
                 x.RunAsLocalSystem();
 
                 x.SetDescription(config.Description);
-                    
                 x.SetServiceName(config.ServiceName);
                 x.SetDisplayName(config.DisplayName);
-
                 if (!string.IsNullOrEmpty(config.InstanceName))
                 {
                     x.SetInstanceName(config.InstanceName);
@@ -39,7 +39,7 @@ namespace Codestellation.Galaxy.Host
             });
 
             HostLogger.Shutdown();
-            return (int) code;
+            return (int)code;
         }
 
         private static ServiceConfig GetSettings()

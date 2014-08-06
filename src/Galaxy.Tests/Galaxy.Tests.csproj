@@ -75,7 +75,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeploymentAndOperations\OperationsTests\ClearBinariesTests.cs" />
-    <Compile Include="DeploymentAndOperations\OperationsTests\ConfigurePlatformTests.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\InstallPackageTests.cs" />
     <Compile Include="Helpers\EmbeddedResource.cs" />
     <Compile Include="InfrastructureTests\VersionPackageCacheTests.cs" />

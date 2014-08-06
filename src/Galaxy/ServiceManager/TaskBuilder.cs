@@ -21,7 +21,6 @@ namespace Codestellation.Galaxy.ServiceManager
             return CreateDeployTask("DeployService", deployment)
                 .Add(InstallPackage(deployment, deploymentFeed, FileList.Empty))
                 .Add(ProvideHostConfig(deployment))
-                .Add(ConfigurePlatform(deployment))
                 .Add(DeployConfig(deployment));
         }
 
@@ -31,9 +30,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             var orders = new[]
             {
-                new InstallPackageOrder(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion), 
-                new InstallPackageOrder(_options.GetHostPackageId(), _options.HostPackageFeedUri), 
-
+                new InstallPackageOrder(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion)
             };
             return new InstallPackage(serviceFolder, orders, keepOnUpdate);
         }
@@ -47,8 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(StopService(deployment))
                 .Add(clearBinaries)
                 .Add(InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
-                .Add(ProvideHostConfig(deployment))
-                .Add(ConfigurePlatform(deployment));
+                .Add(ProvideHostConfig(deployment));
         }
 
         public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -93,12 +89,6 @@ namespace Codestellation.Galaxy.ServiceManager
             return new DeploymentTask(name, deployment.Id, logStream);
         }
 
-        private IOperation ConfigurePlatform(Deployment deployment)
-        {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            return new ConfigurePlatform(serviceFolder, _options.GetHostFileName(), deployment.AssemblyQualifiedType);
-        }
-
         private IOperation StartService(Deployment deployment)
         {
             return new StartService(deployment.GetServiceName());
@@ -112,19 +102,21 @@ namespace Codestellation.Galaxy.ServiceManager
         private IOperation InstallService(Deployment deployment)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            return new InstallService(serviceFolder, _options.GetHostFileName());
+            var hostFileName = deployment.GetServiceHostFileName();
+            return new InstallService(serviceFolder, hostFileName);
         }
 
         private IOperation UninstallService(Deployment deployment)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            return new UninstallService(serviceFolder, _options.GetHostFileName());
+            var hostFileName = deployment.GetServiceHostFileName();
+            return new UninstallService(serviceFolder, hostFileName);
         }
 
         private IOperation DeployConfig(Deployment deployment)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            var hostFileName = _options.GetHostFileName();
+            var hostFileName = deployment.GetServiceHostFileName();
             var content = deployment.ConfigFileContent;
 
             return new DeployUserConfig(serviceFolder, hostFileName, content);

@@ -22,8 +22,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public string Description { get; set; }
         [Display(Name = "Feed", Prompt = "<Select feed>")]
         public ObjectId FeedId { get; set; }
-        [Display(Name = "Assembly-qualified type name", Prompt = "Assembly-qualified type name")]
-        public string AssemblyQualifiedType { get; set; }
         [Display(Name = "Package", Prompt = "Package Id")]
         public string PackageId { get; set; }
         [Display(Prompt = "<Select version>")]
@@ -74,7 +72,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             Id = deployment.Id;
 
-            AssemblyQualifiedType = deployment.AssemblyQualifiedType;
             DisplayName = deployment.DisplayName;
             ServiceName = deployment.ServiceName;
             InstanceName = deployment.InstanceName;
@@ -112,7 +109,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public void Update(Deployment deployment)
         {
-            deployment.AssemblyQualifiedType = AssemblyQualifiedType;
             deployment.DisplayName = DisplayName;
             deployment.ServiceName = ServiceName;
             deployment.InstanceName = InstanceName;

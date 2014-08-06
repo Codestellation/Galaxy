@@ -152,7 +152,6 @@
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
     <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
-    <Compile Include="ServiceManager\Operations\ConfigurePlatform.cs" />
     <Compile Include="ServiceManager\Operations\DeployUserConfig.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />

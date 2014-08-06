@@ -2,8 +2,6 @@ namespace Codestellation.Galaxy.Host
 {
     public class ServiceConfig
     {
-        public string AssemblyQualifiedType { get; set; }
-        
         public string ServiceName { get; set; }
 
         public string DisplayName { get; set; }
