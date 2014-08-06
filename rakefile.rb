@@ -127,7 +127,7 @@ assemblyinfo :versionIt do |asm|
   asm.version = version.standard
   asm.file_version = version.standard
   asm.custom_attributes :AssemblyInformationalVersionAttribute => version.full
-  asm.output_file = "SolutionVersion.cs"
+  asm.output_file = "src/SolutionVersion.cs"
 
   @env_buildversion_native = version.native
   @env_buildversion_package = version.package
