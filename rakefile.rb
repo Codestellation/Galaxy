@@ -16,6 +16,7 @@ require 'albacore'
 @env_nugetpackagesfolder = "#{@env_solutionfolder}/packages"
 @env_nugetexefolder = "#{@env_solutionfolder}/.nuget"
 @env_authors = "Codestellation Team"
+@env_description = "Windows hosting service"
 
 # default parameters, actual version is build using git describe command
 @env_buildversion_native = "1.0"
@@ -93,12 +94,33 @@ class Version
   end
 end
 
+class Dependency
+    attr_accessor :Name, :Version
+    def initialize(name, version)
+        @Name = name
+        @Version = version
+    end
+end
+
+def get_nuget_dependencies(packages_folder)
+  nuget_packages_file = "#{packages_folder}/packages.config"
+  dependencies = Array.new
+  xml = File.read nuget_packages_file
+  doc = REXML::Document.new xml
+  doc.elements.each "packages/package" do |package|
+      packageId = package.attributes["id"]
+      packageVersion = package.attributes["version"]
+      dependencies << Dependency.new(packageId, packageVersion)
+  end
+  dependencies
+end
+
 # --------------------------------------------------------------------------------------------------------------------
 
 
 task :default => [:presentYourself, :buildIt , :testIt, :deployIt, :presentResults]
-task :buildIt => [:installNUnitRunners, :versionIt, :buildAll, :createCleanBuildFolder, :copyBinaries, :createnuspecs]
-task :testIt => [:runUnitTests]
+task :buildIt => [:versionIt, :buildAll, :createCleanBuildFolder, :copyBinaries, :createnuspecs]
+task :testIt => [:installNUnitRunners, :runUnitTests]
 task :deployIt => [:createnugets]
 
 task :presentYourself do
@@ -159,12 +181,12 @@ task :copyBinaries do
   @env_solutionparts.each do |solutionpart|
       if @env_debug_output
         puts "Copying output for #{solutionpart}..."
-        puts "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname} -> #{env_buildfolderpath}/#{solutionpart}"
+        puts "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname} -> #{env_buildfolderpath}/#{solutionpart}/lib"
       end
-      FileUtils.mkdir_p("#{env_buildfolderpath}/#{solutionpart}/")
+      FileUtils.mkdir_p("#{env_buildfolderpath}/#{solutionpart}/lib")
       FileUtils.cp_r(
-      FileList["#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname}/*.*"].exclude(/vshost/), 
-      "#{env_buildfolderpath}/#{solutionpart}")
+      FileList["#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname}/#{@env_projectname}.*.*"].exclude(/vshost/), 
+      "#{env_buildfolderpath}/#{solutionpart}/lib")
   end
 end
 
@@ -182,10 +204,14 @@ nuspec :createnuspec do |nuspec|
     nuspec.id="Codestellation.#{@env_solutionpart_current}"
     nuspec.version = "#{@env_buildversion_package}"
     nuspec.authors = @env_authors
-    nuspec.description = "#{@env_solutionpart_current} based on native dll v#{@env_buildversion_native}"
+    nuspec.description = @env_description
     nuspec.title = "#{@env_solutionpart_current}"
     nuspec.working_directory = "#{env_buildfolderpath}/#{@env_solutionpart_current}"
     nuspec.output_file = "#{@env_solutionpart_current}.nuspec"
+
+    get_nuget_dependencies("#{@env_solutionfolder}/#{@env_solutionpart_current}").each do |dep|
+      nuspec.dependency dep.Name, dep.Version
+    end
 end
 
 desc "Run unit tests"
