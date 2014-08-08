@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using Topshelf;
 using Topshelf.Logging;
@@ -8,6 +9,8 @@ namespace Codestellation.Galaxy.Host
 {
     public static class Run
     {
+        private static char[] InvalidCharacters = {' ', '/', '\\'};
+
         public static int Service<TService>()
         {
             Type serviceType = typeof (TService);
@@ -29,17 +32,32 @@ namespace Codestellation.Galaxy.Host
                 x.EnableShutdown();
                 x.RunAsLocalSystem();
 
-                x.SetDescription(config.Description);
-                x.SetServiceName(config.ServiceName);
-                x.SetDisplayName(config.DisplayName);
-                if (!string.IsNullOrEmpty(config.InstanceName))
+                var serviceName = config.ServiceName;
+                ValidateServiceName(serviceName);
+                x.SetServiceName(serviceName);
+
+                var instanceName = config.InstanceName;
+                if (!string.IsNullOrEmpty(instanceName))
                 {
-                    x.SetInstanceName(config.InstanceName);
+                    ValidateServiceName(instanceName);
+                    x.SetInstanceName(instanceName);
                 }
+
+                x.SetDescription(config.Description);
+                x.SetDisplayName(config.DisplayName);
             });
 
             HostLogger.Shutdown();
             return (int)code;
+        }
+
+        private static void ValidateServiceName(string name)
+        {
+            if (name.Intersect(InvalidCharacters).Any())
+            {
+                var message = "Service or instance name contains invalid characters: space, '/', '\'";
+                throw new InvalidOperationException(message);
+            }
         }
 
         private static ServiceConfig GetSettings()
