@@ -2,6 +2,7 @@
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.WebEnd.Models;
+using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Responses;
 using Nejdb;
@@ -15,7 +16,8 @@ namespace Codestellation.Galaxy.WebEnd
         private readonly Collection _feeds;
         public const string Path = "feed";
 
-        public FeedModule(DashBoard dashBoard, Repository repository) : base(Path)
+        public FeedModule(DashBoard dashBoard, Repository repository)
+            : base(Path)
         {
             _dashBoard = dashBoard;
             _feeds = repository.GetCollection<NugetFeed>();
@@ -41,7 +43,7 @@ namespace Codestellation.Galaxy.WebEnd
             FeedModel model = this.Bind();
             var feed = model.ToFeed();
             _feeds.Save(feed, false);
-            
+
             _dashBoard.AddFeed(feed);
 
             return new RedirectResponse("/feed");
@@ -76,13 +78,15 @@ namespace Codestellation.Galaxy.WebEnd
 
             var feedInUse = _dashBoard.Deployments.Any(x => x.FeedId.Equals(id));
 
-            if (!feedInUse)
+            if (feedInUse)
             {
-                _dashBoard.RemoveFeed(id);
-                _feeds.Delete(id);
+                return new TextResponse(HttpStatusCode.BadRequest, "Feed use. Remove it from deployments to delete");
             }
+        
+            _dashBoard.RemoveFeed(id);
+            _feeds.Delete(id);
 
-            return new RedirectResponse("/feed");
+            return "Ok";
         }
     }
 }

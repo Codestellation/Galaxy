@@ -2,12 +2,15 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.FeedListModel>
 @{ Layout = "Master";}
 <div class="row">
+    <div class="alert alert-danger" role="alert" style="visibility: hidden">
+        <p>Feed in use!</p>
+    </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3>Nuget feeds</h3>
         </div>
         <ul class="list-group">
-            
+
             @if (Model.FeedCount == 0)
             {
                 <li class="list-group-item">Be the first, add a feed!</li>
@@ -16,12 +19,10 @@
             @foreach (var feed in Model.Feeds)
             {
                 <li class="list-group-item">
-                    <a href="/@FeedModule.Path/edit/@feed.Id">
-                        <h4>@feed.Name (@feed.Uri)</h4>
-                    </a>
-                    <form action="/feed/delete/@feed.Id" method="POST">
-                        <input type="submit" class="btn btn-danger" value="Delete" @(feed.InUse ? "disabled" : string.Empty) />
-                    </form>
+                    <a href="/@FeedModule.Path/edit/@feed.Id">@feed.Name (@feed.Uri)</a>
+                    <button type="button" class="btn btn-danger btn-xs pull-right" @*@(feed.InUse ? "disabled" : string.Empty)*@ value="@feed.Id">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
                 </li>
             }
         </ul>
@@ -31,3 +32,29 @@
     </div>
 </div>
 
+
+<script>
+    $(document).ready(function () {
+
+        $(".alert").hide();
+
+        $('[type=button]')
+            .click(function () {
+                var button = $(this);
+                $.ajax({
+                    url: '/@FeedModule.Path/delete/' + button.val(),
+                    type: 'POST',
+                    success: function () {
+                        //$(".alert").hide();
+                        $('.alert').attr('style', 'visibility: hidden');
+                        var listElement = button.closest('.list-group-item');
+                        listElement.remove();
+                    },
+                    error: function() {
+                        //$(".alert").alert();
+                        $('.alert').attr('style', '');
+                    }
+                });
+            });
+    });
+</script>
