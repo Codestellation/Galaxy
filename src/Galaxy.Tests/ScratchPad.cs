@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Codestellation.Galaxy.Tests
 {
@@ -8,7 +9,7 @@ namespace Codestellation.Galaxy.Tests
         [Test]
         public void The_only_test()
         {
-
+            Console.Write(typeof (ScratchPad).FullName);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.IO;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager
@@ -20,7 +19,6 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             return CreateDeployTask("DeployService", deployment)
                 .Add(InstallPackage(deployment, deploymentFeed, FileList.Empty))
-                .Add(ProvideHostConfig(deployment))
                 .Add(OverrideFiles(deployment));
         }
 
@@ -33,14 +31,12 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(StopService(deployment))
                 .Add(clearBinaries)
                 .Add(InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
-                .Add(ProvideHostConfig(deployment))
                 .Add(OverrideFiles(deployment));
         }
 
         public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return CreateDeployTask("InstallService", deployment)
-                .Add(ProvideHostConfig(deployment))
                 .Add(InstallService(deployment));
         }
 
@@ -103,21 +99,16 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
             var hostFileName = deployment.GetServiceHostFileName();
-            return new InstallService(serviceFolder, hostFileName);
+            var instanceName = deployment.InstanceName;
+            return new InstallService(serviceFolder, hostFileName, instanceName);
         }
 
         private IOperation UninstallService(Deployment deployment)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
             var hostFileName = deployment.GetServiceHostFileName();
-            return new UninstallService(serviceFolder, hostFileName);
-        }
-
-        private IOperation ProvideHostConfig(Deployment deployment)
-        {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            var settings = new ServiceConfig(deployment);
-            return new ProvideHostConfig(serviceFolder, settings);
+            var instanceName = deployment.InstanceName;
+            return new UninstallService(serviceFolder, hostFileName, instanceName);
         }
 
         private IOperation OverrideFiles(Deployment deployment)

@@ -12,11 +12,9 @@ namespace Codestellation.Galaxy.Domain
         private string _fileOverridesFolder;
         public ObjectId Id { get; internal set; }
         
-        public string ServiceName { get; set; }
-        public string DisplayName { get; set; }
+        //public string ServiceName { get; set; }
         public string InstanceName { get; set; }
-        public string Description { get; set; }
-        
+
         public ObjectId FeedId { get; set; }
         public string Status { get; set; }
         public string PackageId { get; set; }
@@ -28,15 +26,15 @@ namespace Codestellation.Galaxy.Domain
         {
             if (string.IsNullOrWhiteSpace(InstanceName))
             {
-                return ServiceName;
+                return PackageId;
             }
 
-            return string.Format("{0}${1}", ServiceName, InstanceName);
+            return string.Format("{0}${1}", PackageId, InstanceName);
         }
 
         public string GetDeployFolder(string baseFolder)
         {
-            return Folder.Combine(baseFolder, DisplayName);
+            return Folder.Combine(baseFolder, string.Format("{0}-{1}", PackageId, InstanceName));
         }
 
         public string GetDeployLogFolder()
@@ -57,7 +55,7 @@ namespace Codestellation.Galaxy.Domain
         public string GetServiceState()
         {
             ServiceController[] services = ServiceController.GetServices();
-            var controller = services.SingleOrDefault(item => item.ServiceName == ServiceName);
+            var controller = services.SingleOrDefault(item => item.ServiceName == PackageId);
 
             if (controller == null)
             {
@@ -69,7 +67,7 @@ namespace Codestellation.Galaxy.Domain
 
         public string GetServiceHostFileName()
         {
-            return string.Format("{0}.exe", ServiceName);
+            return string.Format("{0}.exe", PackageId);
         }
     }
 }

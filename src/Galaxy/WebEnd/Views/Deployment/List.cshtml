@@ -19,22 +19,18 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Display name</th>
                             <th>Service name</th>
                             <th>Feed name</th>
                             <th>Status</th>
-                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var deployment in Model.Deployments)
                         {
                             <tr>
-                                <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.DisplayName</a></td>
-                                <td>@deployment.ServiceName</td>
+                                <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.ServiceFullName</a></td>
                                 <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == deployment.FeedId).Value</td>
                                 <td>@deployment.Status</td>
-                                <td>@deployment.Description</td>
                             </tr>
                         }
                     </tbody>

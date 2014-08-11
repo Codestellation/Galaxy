@@ -12,14 +12,14 @@ namespace Codestellation.Galaxy.Host
         private readonly MethodInfo _stopMethod;
         private readonly object _instance;
 
-        public ServiceProxy(Type serviceType, ServiceConfig config)
+        public ServiceProxy(Type serviceType)
         {
             _instance = Activator.CreateInstance(serviceType);
-            _startMethod = GetMethodOrThrow(config.StartMethod, serviceType);
-            _stopMethod = GetMethodOrThrow(config.StopMethod, serviceType);
+            _startMethod = GetMethodOrThrow(serviceType, "Start");
+            _stopMethod = GetMethodOrThrow(serviceType, "Stop");
         }
 
-        private static MethodInfo GetMethodOrThrow(string methodName, Type serviceType)
+        private static MethodInfo GetMethodOrThrow(Type serviceType, string methodName)
         {
             var result = serviceType.GetMethod(methodName);
             if (result != null)

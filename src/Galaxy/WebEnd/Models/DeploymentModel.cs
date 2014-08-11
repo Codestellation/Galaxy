@@ -11,15 +11,20 @@ namespace Codestellation.Galaxy.WebEnd.Models
     {
         public ObjectId Id { get; set; }
         public bool IsNew { get; set; }
-        [Display(Name = "Service name", Prompt = "Service name")]
-        public string ServiceName { get; set; }
-        [Display(Name = "Display name", Prompt = "Display name")]
-        public string DisplayName { get; set; }
+
+        public string ServiceFullName
+        {
+            get
+            {
+                return string.IsNullOrEmpty(InstanceName)
+                    ? PackageId
+                    : string.Format("{0} ({1})", PackageId, InstanceName);
+            }
+        }
 
         [Display(Name = "Instance name", Prompt = "Instance name")]
         public string InstanceName { get; set; }
 
-        public string Description { get; set; }
         [Display(Name = "Feed", Prompt = "<Select feed>")]
         public ObjectId FeedId { get; set; }
         [Display(Name = "Package", Prompt = "Package Id")]
@@ -72,10 +77,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             Id = deployment.Id;
 
-            DisplayName = deployment.DisplayName;
-            ServiceName = deployment.ServiceName;
             InstanceName = deployment.InstanceName;
-            Description = deployment.Description;
 
             FeedId = deployment.FeedId;
             Status = deployment.Status;
@@ -107,10 +109,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public void Update(Deployment deployment)
         {
-            deployment.DisplayName = DisplayName;
-            deployment.ServiceName = ServiceName;
             deployment.InstanceName = InstanceName;
-            deployment.Description = Description;
             deployment.FeedId = FeedId;
             deployment.PackageId = PackageId;
 

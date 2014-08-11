@@ -152,7 +152,6 @@
     <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
     <Compile Include="ServiceManager\Helpers\PlatformDetector.cs" />
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
-    <Compile Include="ServiceManager\Helpers\ServiceConfig.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\OverrideFiles.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
@@ -160,7 +159,6 @@
     <Compile Include="ServiceManager\Operations\IOperation.cs" />
     <Compile Include="ServiceManager\Operations\OperationResult.cs" />
     <Compile Include="ServiceManager\Operations\ResultCode.cs" />
-    <Compile Include="ServiceManager\Operations\ProvideHostConfig.cs" />
     <Compile Include="ServiceManager\Operations\StartService.cs" />
     <Compile Include="ServiceManager\Operations\StopService.cs" />
     <Compile Include="ServiceManager\Operations\UninstallService.cs" />

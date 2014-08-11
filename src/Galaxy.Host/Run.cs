@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
+using System.Reflection;
 using Topshelf;
 using Topshelf.Logging;
 
@@ -9,21 +8,17 @@ namespace Codestellation.Galaxy.Host
 {
     public static class Run
     {
-        private static char[] InvalidCharacters = {' ', '/', '\\'};
-
         public static int Service<TService>()
         {
             Type serviceType = typeof (TService);
 
             TopshelfExitCode code = HostFactory.Run(x =>
             {
-                var config = GetSettings();
-
                 x.UseNLog();
 
                 x.Service<ServiceProxy>(s =>
                 {
-                    s.ConstructUsing(name => new ServiceProxy(serviceType, config));
+                    s.ConstructUsing(name => new ServiceProxy(serviceType));
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                     s.WhenShutdown(tc => tc.Stop());
@@ -32,44 +27,31 @@ namespace Codestellation.Galaxy.Host
                 x.EnableShutdown();
                 x.RunAsLocalSystem();
 
-                var serviceName = config.ServiceName;
-                ValidateServiceName(serviceName);
+                Assembly serviceAssembly = Assembly.GetEntryAssembly();
+                string serviceName = GetServiceName(serviceAssembly);
                 x.SetServiceName(serviceName);
-
-                var instanceName = config.InstanceName;
-                if (!string.IsNullOrEmpty(instanceName))
-                {
-                    ValidateServiceName(instanceName);
-                    x.SetInstanceName(instanceName);
-                }
-
-                x.SetDescription(config.Description);
-                x.SetDisplayName(config.DisplayName);
+                x.SetDisplayName(serviceName.Replace('.', ' '));
+                x.SetDescription(GetServiceDescription(serviceAssembly));
             });
 
             HostLogger.Shutdown();
             return (int)code;
         }
 
-        private static void ValidateServiceName(string name)
+        static string GetServiceName(Assembly assembly)
         {
-            if (name.Intersect(InvalidCharacters).Any())
-            {
-                var message = "Service or instance name contains invalid characters: space, '/', '\'";
-                throw new InvalidOperationException(message);
-            }
+            AssemblyName assemblyName = assembly.GetName();
+            return assemblyName.Name;
         }
 
-        private static ServiceConfig GetSettings()
+        static string GetServiceDescription(Assembly assembly)
         {
-            var serializer = new XmlSerializer(typeof(ServiceConfig));
+            AssemblyDescriptionAttribute description = assembly
+                .GetCustomAttributes(typeof (AssemblyDescriptionAttribute), false)
+                .Cast<AssemblyDescriptionAttribute>()
+                .FirstOrDefault();
 
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "service-config.xml");
-
-            using (var stream = File.OpenRead(path))
-            {
-                return (ServiceConfig)serializer.Deserialize(stream);
-            }
+            return description != null ? description.Description : null;
         }
     }
 }
