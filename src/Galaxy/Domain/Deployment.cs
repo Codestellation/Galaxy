@@ -55,7 +55,7 @@ namespace Codestellation.Galaxy.Domain
         public string GetServiceState()
         {
             ServiceController[] services = ServiceController.GetServices();
-            var controller = services.SingleOrDefault(item => item.ServiceName == PackageId);
+            var controller = services.SingleOrDefault(item => item.ServiceName == GetServiceName());
 
             if (controller == null)
             {
