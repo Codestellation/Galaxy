@@ -38,5 +38,10 @@ namespace Codestellation.Galaxy.Infrastructure
                 .Select(x => new FileInfo(x))
                 .ToArray();
         }
+
+        public static bool Exists(string folder)
+        {
+            return Directory.Exists(folder);
+        }
     }
 }

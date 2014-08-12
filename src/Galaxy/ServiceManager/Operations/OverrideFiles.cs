@@ -23,16 +23,28 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             _buildLog = buildLog;
 
+            if (Folder.Exists(_deploymentFilesFolder))
+            {
+                CopyFiles();
+            }
+            else
+            {
+                _buildLog.WriteLine("No files to override.");
+            }
+        }
+
+        private void CopyFiles()
+        {
             var files = Folder.EnumerateFiles(_deploymentFilesFolder);
 
             foreach (var file in files)
             {
                 var destination = Path.Combine(_serviceFolder, file.Name);
-                MoveFileToDestination(file.FullName, destination);    
+                CopyFileToDestination(file.FullName, destination);
             }
         }
 
-        private void MoveFileToDestination(string source, string destination)
+        private void CopyFileToDestination(string source, string destination)
         {
             try
             {
