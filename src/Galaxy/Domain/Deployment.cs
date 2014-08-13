@@ -34,6 +34,11 @@ namespace Codestellation.Galaxy.Domain
 
         public string GetDeployFolder(string baseFolder)
         {
+            if (string.IsNullOrWhiteSpace(InstanceName))
+            {
+                return Folder.Combine(baseFolder, PackageId);
+            }
+
             return Folder.Combine(baseFolder, string.Format("{0}-{1}", PackageId, InstanceName));
         }
 
