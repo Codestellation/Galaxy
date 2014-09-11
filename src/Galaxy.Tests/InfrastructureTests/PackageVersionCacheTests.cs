@@ -9,7 +9,7 @@ using System.Threading;
 namespace Codestellation.Galaxy.Tests.InfrastructureTests
 {
     [TestFixture]
-    public class VersionPackageCacheTests
+    public class PackageVersionCacheTests
     {
         private const string TestPackageId = "TestNugetPackage";
 
