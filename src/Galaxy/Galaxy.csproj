@@ -148,9 +148,6 @@
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />
     <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
-    <Compile Include="ServiceManager\Helpers\CopyDirectory.cs" />
-    <Compile Include="ServiceManager\Helpers\DotNetVersionHelper.cs" />
-    <Compile Include="ServiceManager\Helpers\PlatformDetector.cs" />
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\OverrideFiles.cs" />
