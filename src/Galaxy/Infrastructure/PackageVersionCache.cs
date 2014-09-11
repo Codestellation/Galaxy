@@ -90,6 +90,11 @@ namespace Codestellation.Galaxy.Infrastructure
             {
                 return;
             }
+            ForceRefresh();
+        }
+
+        public void ForceRefresh()
+        {
             _timerStarted = true;
 
             var refreshPeriod = TimeSpan.FromMinutes(5);

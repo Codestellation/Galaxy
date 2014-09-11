@@ -251,6 +251,7 @@ namespace Codestellation.Galaxy.WebEnd
                 _deployments.Save(deployment, false);
                 tx.Commit();
             }
+            _versionCache.ForceRefresh();
         }
 
         private static object RedirectToList()
