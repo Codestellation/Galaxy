@@ -48,7 +48,7 @@ namespace Codestellation.Galaxy.Infrastructure
             }
         }
 
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly ConcurrentDictionary<FeedPackageTuple, SemanticVersion[]> _cache;
         private readonly Timer _refreshTimer;
         private bool _timerStarted;
@@ -109,7 +109,11 @@ namespace Codestellation.Galaxy.Infrastructure
             var getTuplesTask = Task.Factory.StartNew(getTuplesFunc, CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
             getTuplesTask.ContinueWith(prev =>
             {
-                if (prev.IsFaulted) return;
+                if (prev.IsFaulted)
+                {
+                    return;
+                }
+
                 var tuples = prev.Result;
                 RefreshCache(tuples);
             });
@@ -123,21 +127,29 @@ namespace Codestellation.Galaxy.Infrastructure
 
             Parallel.ForEach(tuples, parallelOptions, RefreshCacheForPackage);
 
-            Log.Info("Nuget packages versions cache successfully refreshed.");
+            Logger.Info("Nuget packages versions cache successfully refreshed.");
 
             Refreshed();
         }
 
         private void RefreshCacheForPackage(FeedPackageTuple source)
         {
-            var repo = PackageRepositoryFactory.Default.CreateRepository(source.FeedUri);
+            try
+            {
+                var repo = PackageRepositoryFactory.Default.CreateRepository(source.FeedUri);
 
-            SemanticVersion[] versions = repo
-                .FindPackagesById(source.PackageId)
-                .Select(x => x.Version)
-                .ToArray();
+                SemanticVersion[] versions = repo
+                    .FindPackagesById(source.PackageId)
+                    .Select(x => x.Version)
+                    .ToArray();
 
-            _cache.AddOrUpdate(source, versions, (key, old) => versions);
+                _cache.AddOrUpdate(source, versions, (key, old) => versions);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Notify error somehow
+                Logger.Error("Package version cache update error" ,ex);
+            }
         }
 
         private FeedPackageTuple[] GetTuples()
