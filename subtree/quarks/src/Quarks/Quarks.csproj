@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5DED6761-43E0-4552-B4F0-DDB8B1C8B269}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Codestellation.Quarks</RootNamespace>
+    <AssemblyName>Codestellation.Quarks</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\CollectionExtensions.cs" />
+    <Compile Include="Collections\DictionaryExtensions.cs" />
+    <Compile Include="Collections\HashSetExtensions.cs" />
+    <Compile Include="Exceptions\ExceptionExtensions.cs" />
+    <Compile Include="IO\Folder.cs" />
+    <Compile Include="Properties\AssebmlyInfo.cs" />
+    <Compile Include="Enumerations\EnumIndexer.cs" />
+    <Compile Include="Enumerations\EnumUtil.cs" />
+    <Compile Include="Collections\EnumerableExtensions.cs" />
+    <Compile Include="Streams\ReusableStream.cs" />
+    <Compile Include="StringUtils\StringExtensions.cs" />
+    <Compile Include="Native\LibraryHandle.cs" />
+    <Compile Include="Native\MethodHandle.cs" />
+    <Compile Include="Native\Platform.cs" />
+    <Compile Include="Native\UnmanagedProcName.cs" />
+    <Compile Include="Resources\EmbeddedResource.cs" />
+    <Compile Include="Streams\PooledMemoryStream.cs" />
+    <Compile Include="Streams\PoolSizeSettings.cs" />
+    <Compile Include="Streams\StreamExtensions.cs" />
+    <Compile Include="Streams\StreamPool.cs" />
+    <Compile Include="Streams\UnsafeStringStream.cs" />
+    <Compile Include="StringUtils\TemplateExpander.cs" />
+    <Compile Include="DateAndTime\Clock.cs" />
+    <Compile Include="Threading\PreciseTimer.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
