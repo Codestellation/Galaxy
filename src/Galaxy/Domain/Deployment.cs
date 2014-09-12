@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.ServiceProcess;
-using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Quarks.IO;
 using Nejdb.Bson;
 using System;
 

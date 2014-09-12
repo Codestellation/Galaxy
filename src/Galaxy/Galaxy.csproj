@@ -130,6 +130,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\DateAndTime\Clock.cs">
+      <Link>Quarks\Clock.cs</Link>
+    </Compile>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\IO\Folder.cs">
+      <Link>Quarks\Folder.cs</Link>
+    </Compile>
     <Compile Include="Domain\DashBoard.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
@@ -138,7 +144,6 @@
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\CollectionExtensions.cs" />
     <Compile Include="Infrastructure\FileResponse.cs" />
-    <Compile Include="Infrastructure\Folder.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />

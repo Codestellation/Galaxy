@@ -3,7 +3,7 @@ using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.WebEnd.Models;
-using Nancy.Responses;
+using Codestellation.Quarks.IO;
 using Nancy.Security;
 using Nejdb.Bson;
 
@@ -34,7 +34,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             var filesFolder = deployment.GetFilesFolder();
 
-            Folder.Ensure(filesFolder);
+            Folder.EnsureExists(filesFolder);
 
             var files = Folder
                 .EnumerateFiles(filesFolder)

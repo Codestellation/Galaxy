@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Quarks.IO;
 using NuGet;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -67,7 +67,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             }
 
             _buildLog.WriteLine("Delete '{0}'", installPath);
-            Folder.Delete(installPath);
+            Folder.EnsureDeleted(installPath);
         }
 
         private void MoveFileToDestination(string installPath, IPackageFile file)

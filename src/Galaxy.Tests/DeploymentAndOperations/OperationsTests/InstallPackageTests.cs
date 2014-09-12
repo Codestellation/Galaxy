@@ -1,7 +1,6 @@
-﻿using System.Text;
-using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.ServiceManager.Operations;
+﻿using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Helpers;
+using Codestellation.Quarks.IO;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -19,7 +18,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         public void Init()
         {
             _feedUri = Path.Combine(Environment.CurrentDirectory, "testnuget");
-            Folder.Delete(_feedUri);
+            Folder.EnsureDeleted(_feedUri);
 
             EmbeddedResource.ExtractAndRename(_feedUri, "Codestellation.Galaxy.Tests.Resources", "Codestellation.Galaxy.Host.1.0.0", "Codestellation.Galaxy.Host.1.0.0.nupkg");
             EmbeddedResource.ExtractAndRename(_feedUri, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
@@ -64,7 +63,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         [TearDown]
         public void Cleanup()
         {
-            Folder.Delete(_feedUri);
+            Folder.EnsureDeleted(_feedUri);
         }
     }
 }

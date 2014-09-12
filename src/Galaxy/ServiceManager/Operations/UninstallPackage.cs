@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -15,7 +15,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public void Execute(TextWriter buildLog)
         {
             buildLog.WriteLine("Delete folder {0}", _serviceFolder);
-            Folder.Delete(_serviceFolder);
+            Folder.EnsureDeleted(_serviceFolder);
         }
     }
 }

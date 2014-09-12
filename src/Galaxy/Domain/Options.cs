@@ -1,4 +1,4 @@
-﻿using Codestellation.Galaxy.Infrastructure;
+﻿using Codestellation.Quarks.IO;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.Domain
