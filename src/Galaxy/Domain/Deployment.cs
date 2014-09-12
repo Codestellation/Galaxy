@@ -10,6 +10,8 @@ namespace Codestellation.Galaxy.Domain
     {
         private string _deployLogFolder;
         private string _fileOverridesFolder;
+        private string _backupFolder;
+
         public ObjectId Id { get; internal set; }
         
         //public string ServiceName { get; set; }
@@ -50,6 +52,11 @@ namespace Codestellation.Galaxy.Domain
         public string GetFilesFolder()
         {
             return _fileOverridesFolder ?? (_fileOverridesFolder = BuildServiceFolder("FileOverrides"));
+        }
+
+        public string GetBackupFolder()
+        {
+            return _backupFolder ?? (_backupFolder = BuildServiceFolder("Backups"));
         }
 
         private string BuildServiceFolder(string subfolder)
