@@ -149,6 +149,7 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
+    <Compile Include="ServiceManager\OperationBuilder.cs" />
     <Compile Include="ServiceManager\Operations\BackupService.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
