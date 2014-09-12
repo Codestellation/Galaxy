@@ -78,7 +78,11 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private IOperation BackupService(Deployment deployment)
         {
-            return new BackupService(deployment, _options);
+            var serviceName = deployment.GetServiceName();
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var backupFolder = deployment.GetBackupFolder();
+            
+            return new BackupService(serviceName, serviceFolder, backupFolder);
         }
 
         private IOperation InstallPackage(Deployment deployment, NugetFeed deploymentFeed, FileList keepOnUpdate)
