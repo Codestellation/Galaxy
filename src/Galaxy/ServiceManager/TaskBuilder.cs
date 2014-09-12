@@ -82,7 +82,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private IOperation ClearBinaries(Deployment deployment)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            var keepOnUpdate = deployment.KeepOnUpdate;
+            var keepOnUpdate = deployment.KeepOnUpdate.Clone();
             return new ClearBinaries(serviceFolder, keepOnUpdate);
         }
 
