@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager
@@ -62,7 +63,7 @@ namespace Codestellation.Galaxy.ServiceManager
             var deployLogFolder = deployment.GetDeployLogFolder();
             Folder.EnsureExists(deployLogFolder);
             
-            var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, DateTime.Now);
+            var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, Clock.UtcNow.ToLocalTime());
             var fullPath = Path.Combine(deployLogFolder, filename);
             var logStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
             
