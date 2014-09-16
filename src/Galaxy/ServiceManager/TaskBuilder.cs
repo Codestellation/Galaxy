@@ -42,8 +42,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             return CreateDeployTask("UninstallService", deployment)
                 .Add(_operations.StopService(deployment))
-                .Add(_operations.UninstallService(deployment))
-                .Add(_operations.UninstallPackage(deployment));
+                .Add(_operations.UninstallService(deployment));
         }
 
         public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
