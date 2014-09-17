@@ -93,6 +93,7 @@
     <Compile Include="..\..\subtree\quarks\src\Quarks\Streams\StreamExtensions.cs">
       <Link>Quarks\StreamExtensions.cs</Link>
     </Compile>
+    <Compile Include="Content\TestPackages.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\ClearBinariesTests.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\InstallPackageTests.cs" />
     <Compile Include="InfrastructureTests\PackageVersionCacheTests.cs" />
@@ -107,9 +108,15 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\TestNugetPackage.1.0.0" />
-    <EmbeddedResource Include="Resources\TestNugetPackage.1.1.0" />
-    <EmbeddedResource Include="Resources\Codestellation.Galaxy.Host.1.0.0" />
+    <None Include="Content\TestNugetPackage.1.0.0.nupkg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\TestNugetPackage.1.1.0.nupkg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Codestellation.Galaxy.Host.1.0.0.nupkg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Galaxy\Galaxy.csproj">

@@ -1,7 +1,6 @@
 ﻿using Codestellation.Galaxy.ServiceManager.Operations;
+using Codestellation.Galaxy.Tests.Content;
 using Codestellation.Quarks.IO;
-using Codestellation.Quarks.Resources;
-using Codestellation.Quarks.Streams;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -23,15 +22,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             Folder.EnsureDeleted(_nugetFeedFolder);
             Folder.EnsureExists(_nugetFeedFolder);
 
-            var hostPackage = Folder.Combine(_nugetFeedFolder, "Codestellation.Galaxy.Host.1.0.0.nupkg");
-            EmbeddedResource
-                .EndsWith("Codestellation.Galaxy.Host.1.0.0")
-                .ExportTo(hostPackage);
-
-            var testPackage = Folder.Combine(_nugetFeedFolder, "TestNugetPackage.1.0.0.nupkg");
-            EmbeddedResource
-                .EndsWith("TestNugetPackage.1.0.0")
-                .ExportTo(testPackage);
+            TestPackages.CopyHostPackageTo(_nugetFeedFolder);
+            TestPackages.CopyTest10To(_nugetFeedFolder);
 
             _targetPath = Path.Combine(_nugetFeedFolder, "extracted");
         }

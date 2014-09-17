@@ -3,9 +3,8 @@ using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
+using Codestellation.Galaxy.Tests.Content;
 using Codestellation.Quarks.IO;
-using Codestellation.Quarks.Resources;
-using Codestellation.Quarks.Streams;
 using NUnit.Framework;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
@@ -24,18 +23,10 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             Folder.EnsureDeleted(_nugetFeedFolder);
             Folder.EnsureExists(_nugetFeedFolder);
 
-
             var version10 = new Version(1, 0);
             
-            var hostPackage = Folder.Combine(_nugetFeedFolder, "Codestellation.Galaxy.Host.1.0.0.nupkg");
-            EmbeddedResource
-                .EndsWith("Codestellation.Galaxy.Host.1.0.0")
-                .ExportTo(hostPackage);
-            
-            var testPackage = Folder.Combine(_nugetFeedFolder, "TestNugetPackage.1.0.0.nupkg");
-            EmbeddedResource
-                .EndsWith("TestNugetPackage.1.0.0")
-                .ExportTo(testPackage);
+            TestPackages.CopyHostPackageTo(_nugetFeedFolder);
+            TestPackages.CopyTest10To(_nugetFeedFolder);
 
             _basePath = Folder.Combine(_nugetFeedFolder, "extracted");
 
@@ -50,7 +41,6 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             _buildLog = new StringWriter();
             installPackage.Execute(_buildLog);
-            
         }
 
         [Test]
