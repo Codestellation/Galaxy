@@ -25,7 +25,7 @@ namespace Codestellation.Quarks.Collections
             return ConvertToArray(self, converter, self.Count);
         }
 
-        private static TOutput[] ConvertToArray<TInput, TOutput>(IEnumerable<TInput> self, Func<TInput, TOutput> converter, int arraySize)
+        public static TOutput[] ConvertToArray<TInput, TOutput>(this IEnumerable<TInput> self, Func<TInput, TOutput> converter, int arraySize)
         {
             var result = new TOutput[arraySize];
 
