@@ -7,7 +7,7 @@ namespace Codestellation.Quarks.Collections
     {
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> self)
         {
-            return self ?? CollectionExtensions.ArrayOf<T>.Empty;
+            return self ?? CollectionExtensions.ArrayOf<T>.EmptyArray;
         }
 
         public static string ToJoinedString<T>(this IEnumerable<T> self)
