@@ -1,6 +1,8 @@
 ﻿using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.Tests.Helpers;
+using Codestellation.Quarks.IO;
+using Codestellation.Quarks.Resources;
+using Codestellation.Quarks.Streams;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -20,13 +22,18 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
         {
             _nugetFeedFolder = Path.Combine(Environment.CurrentDirectory, "testnuget");
 
-            if (Directory.Exists(_nugetFeedFolder))
-            {
-                Directory.Delete(_nugetFeedFolder, true);
-            }
+            Folder.EnsureDeleted(_nugetFeedFolder);
+            Folder.EnsureExists(_nugetFeedFolder);
 
-            EmbeddedResource.ExtractAndRename(_nugetFeedFolder, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
-            EmbeddedResource.ExtractAndRename(_nugetFeedFolder, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.1.0", "TestNugetPackage.1.1.0.nupkg");
+            var testPackage10 = Folder.Combine(_nugetFeedFolder, "TestNugetPackage.1.0.0.nupkg");
+            EmbeddedResource
+                .EndsWith("TestNugetPackage.1.0.0")
+                .ExportTo(testPackage10);
+
+            var testPackage11 = Folder.Combine(_nugetFeedFolder, "TestNugetPackage.1.1.0.nupkg");
+            EmbeddedResource
+                .EndsWith("TestNugetPackage.1.1.0")
+                .ExportTo(testPackage11);
         }
 
         [Test]

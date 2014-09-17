@@ -3,8 +3,9 @@ using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
-using Codestellation.Galaxy.Tests.Helpers;
 using Codestellation.Quarks.IO;
+using Codestellation.Quarks.Resources;
+using Codestellation.Quarks.Streams;
 using NUnit.Framework;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
@@ -20,15 +21,23 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         public void Init()
         {
             _nugetFeedFolder = Path.Combine(Environment.CurrentDirectory, "testnuget");
-
             Folder.EnsureDeleted(_nugetFeedFolder);
+            Folder.EnsureExists(_nugetFeedFolder);
+
 
             var version10 = new Version(1, 0);
+            
+            var hostPackage = Folder.Combine(_nugetFeedFolder, "Codestellation.Galaxy.Host.1.0.0.nupkg");
+            EmbeddedResource
+                .EndsWith("Codestellation.Galaxy.Host.1.0.0")
+                .ExportTo(hostPackage);
+            
+            var testPackage = Folder.Combine(_nugetFeedFolder, "TestNugetPackage.1.0.0.nupkg");
+            EmbeddedResource
+                .EndsWith("TestNugetPackage.1.0.0")
+                .ExportTo(testPackage);
 
-            EmbeddedResource.ExtractAndRename(_nugetFeedFolder, "Codestellation.Galaxy.Tests.Resources", "Codestellation.Galaxy.Host.1.0.0", "Codestellation.Galaxy.Host.1.0.0.nupkg");
-            EmbeddedResource.ExtractAndRename(_nugetFeedFolder, "Codestellation.Galaxy.Tests.Resources", "TestNugetPackage.1.0.0", "TestNugetPackage.1.0.0.nupkg");
-
-            _basePath = Path.Combine(_nugetFeedFolder, "extracted");
+            _basePath = Folder.Combine(_nugetFeedFolder, "extracted");
 
             var orders = new[]
             {
