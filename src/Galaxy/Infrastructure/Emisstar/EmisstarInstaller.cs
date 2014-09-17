@@ -35,7 +35,7 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
 
                 var interfaceCount = type.GetInterfaces().Length;
 
-                return hanldersCount > 0 && hanldersCount == interfaceCount && type.Name.EndsWith("Handler");
+                return hanldersCount > 0 && hanldersCount == interfaceCount;
             }
         }
     }

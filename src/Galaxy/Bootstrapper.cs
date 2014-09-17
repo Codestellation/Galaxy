@@ -4,6 +4,7 @@ using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Codestellation.Emisstar.CastleWindsor.Facility;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd;
@@ -82,7 +83,11 @@ namespace Codestellation.Galaxy
 
                 Component
                     .For<OperationBuilder>()
-                    .LifestyleTransient()
+                    .LifestyleTransient(),
+
+                Component
+                    .For<Notifier>()
+                    .LifestyleSingleton()
                 );
             base.ConfigureApplicationContainer(container);
 

@@ -156,6 +156,9 @@
     </Compile>
     <Compile Include="Domain\DashBoard.cs" />
     <Compile Include="Domain\FileList.cs" />
+    <Compile Include="Domain\Notifications\Severity.cs" />
+    <Compile Include="Domain\Notifications\Notification.cs" />
+    <Compile Include="Domain\Notifications\Notifier.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\Options.cs" />
@@ -170,6 +173,7 @@
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />
+    <Compile Include="ServiceManager\Events\DeploymentTaskCompletedNotifier.cs" />
     <Compile Include="ServiceManager\OperationBuilder.cs" />
     <Compile Include="ServiceManager\Operations\BackupService.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />

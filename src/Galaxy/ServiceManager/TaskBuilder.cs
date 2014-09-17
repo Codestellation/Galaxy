@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Quarks.DateAndTime;

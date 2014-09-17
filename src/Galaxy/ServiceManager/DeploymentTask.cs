@@ -23,7 +23,6 @@ namespace Codestellation.Galaxy.ServiceManager
         private StreamWriter _buildLog;
         private OperationResult[] _operationResults;
 
-
         public IReadOnlyList<IOperation> Operations
         {
             get { return _operations; }
@@ -80,7 +79,6 @@ namespace Codestellation.Galaxy.ServiceManager
             var deploymentResult = new OperationResult(Name, _operationResults);
 
             var anEvent =  new DeploymentTaskCompletedEvent(this, deploymentResult);
-
             _publisher.Publish(anEvent);
         }
 
