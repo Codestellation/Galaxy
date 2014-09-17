@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
 using Nejdb;
 using Nejdb.Bson;
@@ -142,8 +143,11 @@ namespace Codestellation.Galaxy.WebEnd
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
-            var allFeeds = _dashBoard.Feeds.
-                ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name));
+            var allFeeds =
+                _dashBoard
+                .Feeds
+                .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _dashBoard.Feeds.Count);
+                
             return allFeeds;
         }
 

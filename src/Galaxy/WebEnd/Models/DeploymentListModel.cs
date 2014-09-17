@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Quarks.Collections;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd.Models
@@ -12,8 +12,8 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         public DeploymentListModel(DashBoard dashBoard)
         {
-            AllFeeds = dashBoard.Feeds.ConvertToArray(x => new KeyValuePair<ObjectId, string>(x.Id, x.Name));
-            Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentModel(x, AllFeeds));
+            AllFeeds = dashBoard.Feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), dashBoard.Feeds.Count);
+            Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentModel(x, AllFeeds), dashBoard.Deployments.Count);
         }
 
         public int Count

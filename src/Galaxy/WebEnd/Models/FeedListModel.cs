@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Quarks.Collections;
 
 namespace Codestellation.Galaxy.WebEnd.Models
 {
@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             {
                 var inUse = dashBoard.Deployments.Any(deployment => deployment.FeedId.Equals(x.Id));
                 return new FeedModel(x, inUse);
-            });
+            }, dashBoard.Feeds.Count);
         }
 
         public FeedModel[] Feeds

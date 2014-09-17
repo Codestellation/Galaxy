@@ -3,6 +3,7 @@ using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.WebEnd.Models;
+using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
 using Nancy.Security;
 using Nejdb.Bson;
