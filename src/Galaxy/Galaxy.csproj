@@ -75,6 +75,12 @@
     <EmbeddedResource Include="WebEnd\Views\File\DeploymentFiles.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="Codestellation.Emisstar">
       <HintPath>..\packages\Codestellation.Emisstar.0.0.40\lib\net45\Codestellation.Emisstar.dll</HintPath>
     </Reference>
@@ -89,6 +95,9 @@
     <Reference Include="Nancy.Authentication.Forms, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.Authentication.Forms.0.23.0\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Bootstrappers.Windsor">
+      <HintPath>..\packages\Nancy.Bootstrappers.Windsor.0.23.0\lib\net40\Nancy.Bootstrappers.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Hosting.Self, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
