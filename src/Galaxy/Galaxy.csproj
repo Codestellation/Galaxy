@@ -161,6 +161,8 @@
     <Compile Include="Domain\Options.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\FileResponse.cs" />
+    <Compile Include="Infrastructure\SynchronizedAttribute.cs" />
+    <Compile Include="Infrastructure\SynchronizedDispatcher.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />

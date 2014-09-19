@@ -43,7 +43,12 @@ namespace Codestellation.Galaxy
 
         protected override void ConfigureApplicationContainer(IWindsorContainer container)
         {
-            container.AddFacility<EmisstarFacility>();
+            container.AddFacility<EmisstarFacility>(x =>
+            {
+                x.RegisterRuleBaseDispatcher<SynchronizedDispatcher>();
+                x.UseSimpleDispatcher();
+
+            });
             
             container.Register(
                 Component
