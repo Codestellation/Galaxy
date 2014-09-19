@@ -1,11 +1,15 @@
 ﻿using System.Reflection;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd;
 using Codestellation.Galaxy.WebEnd.Misc;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Bootstrappers.Windsor;
 using Nancy.ErrorHandling;
 using Nancy.Session;
 using Nancy.TinyIoc;
@@ -15,7 +19,7 @@ using Nejdb;
 
 namespace Codestellation.Galaxy
 {
-    public class Bootstrapper : DefaultNancyBootstrapper
+    public class Bootstrapper : WindsorNancyBootstrapper
     {
         private static readonly Assembly Assembly;
         private static readonly string ViewsNamespace;
@@ -36,32 +40,61 @@ namespace Codestellation.Galaxy
             base.ConfigureConventions(nancyConventions);
         }
 
-        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(IWindsorContainer container)
         {
+            container.Register(
+                Component
+                    .For<Repository>()
+                    .LifestyleSingleton(),
+                Component
+                    .For<IRazorConfiguration>()
+                    .Named("DefaultRazorConfiguration")
+                    .IsDefault()
+                    .ImplementedBy<RazorConfiguration>()
+                    .LifestyleSingleton(),
+
+                Component
+                    .For<IStatusCodeHandler>()
+                    .ImplementedBy<ForbiddenErrorHandler>()
+                    .Named("DefaultErrorHandler")
+                    .IsDefault()
+                    .LifestyleSingleton(),
+
+                Component
+                    .For<IUserMapper, UserDatabase>()
+                    .ImplementedBy<UserDatabase>()
+                    .LifestyleSingleton(),
+
+                Component
+                    .For<DashBoard>()
+                    .LifestyleSingleton(),
+                Component.
+                    For<PackageVersionCache>()
+                    .LifestyleSingleton(),
+
+                Component
+                    .For<TaskBuilder>()
+                    .LifestyleTransient(),
+
+                Component
+                    .For<OperationBuilder>()
+                    .LifestyleTransient()
+                );
             base.ConfigureApplicationContainer(container);
-            
-            container.Register<Repository>().AsSingleton();
-            container.Register<IRazorConfiguration,RazorConfiguration>().AsSingleton();
-            container.Register<IStatusCodeHandler,ForbiddenErrorHandler>().AsSingleton();
-            container.Register<IUserMapper, UserDatabase>().AsSingleton();
-
-            container.Register<DashBoard>().AsSingleton();
-            container.Register<PackageVersionCache>().AsSingleton();
-
             //This should be the assembly your views are embedded in
             ResourceViewLocationProvider.RootNamespaces.Add(Assembly, ViewsNamespace);
         }
 
-        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        protected override void ApplicationStartup(IWindsorContainer container, IPipelines pipelines)
         {
-            var formsAuthConfiguration = new FormsAuthenticationConfiguration { RedirectUrl = "~/login", UserMapper = container.Resolve<IUserMapper>()};
+            var formsAuthConfiguration = new FormsAuthenticationConfiguration { RedirectUrl = "~/login", UserMapper = container.Resolve<IUserMapper>() };
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
 
             CookieBasedSessions.Enable(pipelines);
 
             var repository = container.Resolve<Repository>();
             repository.Start();
-            
+
             CreateDefaultUser(repository);
             LoadOptions(container, repository);
             FillDashBoard(container, repository);
@@ -71,30 +104,33 @@ namespace Codestellation.Galaxy
             base.ApplicationStartup(container, pipelines);
         }
 
-        private void LoadOptions(TinyIoCContainer container, Repository repository)
+        private void LoadOptions(IWindsorContainer container, Repository repository)
         {
             var optionCollection = repository.GetCollection<Options>();
             using (var query = optionCollection.CreateQuery<Options>())
             using (var cursor = query.Execute())
             {
                 var options = cursor.Count == 0 ? new Options() : cursor.Current;
-                container.Register(options);
+                container.Register(
+                    Component
+                    .For<Options>()
+                    .Instance(options));
             }
         }
 
-        private void FillDashBoard(TinyIoCContainer container,  Repository repository)
+        private void FillDashBoard(IWindsorContainer container, Repository repository)
         {
             var dashBoard = container.Resolve<DashBoard>();
 
-            using(var query = repository.GetCollection<NugetFeed>().CreateQuery<NugetFeed>())
-            using(var cursor = query.Execute())
+            using (var query = repository.GetCollection<NugetFeed>().CreateQuery<NugetFeed>())
+            using (var cursor = query.Execute())
             {
                 foreach (var feed in cursor)
                 {
                     dashBoard.AddFeed(feed);
                 }
             }
-            
+
             using (var query = repository.GetCollection<Deployment>().CreateQuery<Deployment>())
             using (var cursor = query.Execute())
             {
