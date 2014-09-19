@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Codestellation.Emisstar.CastleWindsor.Facility;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
@@ -42,6 +43,8 @@ namespace Codestellation.Galaxy
 
         protected override void ConfigureApplicationContainer(IWindsorContainer container)
         {
+            container.AddFacility<EmisstarFacility>();
+            
             container.Register(
                 Component
                     .For<Repository>()
@@ -81,6 +84,7 @@ namespace Codestellation.Galaxy
                     .LifestyleTransient()
                 );
             base.ConfigureApplicationContainer(container);
+
             //This should be the assembly your views are embedded in
             ResourceViewLocationProvider.RootNamespaces.Add(Assembly, ViewsNamespace);
         }

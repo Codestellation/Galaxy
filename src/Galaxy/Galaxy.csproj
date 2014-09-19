@@ -84,6 +84,9 @@
     <Reference Include="Codestellation.Emisstar">
       <HintPath>..\packages\Codestellation.Emisstar.0.0.40\lib\net45\Codestellation.Emisstar.dll</HintPath>
     </Reference>
+    <Reference Include="Codestellation.Emisstar.CastleWindsor">
+      <HintPath>..\packages\Codestellation.Emisstar.Windsor.0.0.40\lib\net45\Codestellation.Emisstar.CastleWindsor.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.XmlTransform">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
