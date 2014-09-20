@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Codestellation.Emisstar.Impl;
 
-namespace Codestellation.Galaxy.Infrastructure
+namespace Codestellation.Galaxy.Infrastructure.Emisstar
 {
     public class SynchronizedDispatcher : RuleBasedDispatcher
     {

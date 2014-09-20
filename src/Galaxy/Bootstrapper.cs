@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Castle.Windsor.Installer;
 using Codestellation.Emisstar.CastleWindsor.Facility;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
@@ -43,12 +44,7 @@ namespace Codestellation.Galaxy
 
         protected override void ConfigureApplicationContainer(IWindsorContainer container)
         {
-            container.AddFacility<EmisstarFacility>(x =>
-            {
-                x.RegisterRuleBaseDispatcher<SynchronizedDispatcher>();
-                x.UseSimpleDispatcher();
-
-            });
+            container.Install(FromAssembly.This());
             
             container.Register(
                 Component

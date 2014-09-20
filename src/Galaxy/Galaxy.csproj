@@ -160,9 +160,10 @@
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\Options.cs" />
     <Compile Include="Domain\User.cs" />
+    <Compile Include="Infrastructure\Emisstar\EmisstarInstaller.cs" />
     <Compile Include="Infrastructure\FileResponse.cs" />
-    <Compile Include="Infrastructure\SynchronizedAttribute.cs" />
-    <Compile Include="Infrastructure\SynchronizedDispatcher.cs" />
+    <Compile Include="Infrastructure\Emisstar\SynchronizedAttribute.cs" />
+    <Compile Include="Infrastructure\Emisstar\SynchronizedDispatcher.cs" />
     <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
