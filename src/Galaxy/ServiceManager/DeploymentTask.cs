@@ -2,7 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Codestellation.Galaxy.ServiceManager.EventParams;
+using Codestellation.Emisstar;
+using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Nejdb.Bson;
 
@@ -17,6 +18,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly string _name;
         private readonly ObjectId _deploymentId;
         private readonly Stream _logStream;
+        private readonly IPublisher _publisher;
 
         private StreamWriter _buildLog;
         private OperationResult[] _operationResults;
@@ -43,19 +45,20 @@ namespace Codestellation.Galaxy.ServiceManager
             get { return _name; }
         }
 
-        public DeploymentTask(string name, ObjectId deploymentId, Stream logStream)
+        public DeploymentTask(string name, ObjectId deploymentId, Stream logStream, IPublisher publisher)
         {
             _operations = new List<IOperation>();
 
             _name = name;
             _deploymentId = deploymentId;
             _logStream = logStream;
+            _publisher = publisher;
         }
 
-        public void Process(Action<DeploymentTaskCompletedEventArgs> callback)
+        public void Process()
         {
             //All exceptions are catched. No need to prevent task finalizers faults.
-            _task = Task.Factory.StartNew(() => ProcessInternal(callback));
+            _task = Task.Factory.StartNew(ProcessInternal);
         }
 
         public void Wait()
@@ -63,7 +66,7 @@ namespace Codestellation.Galaxy.ServiceManager
             _task.Wait();
         }
 
-        private void ProcessInternal(Action<DeploymentTaskCompletedEventArgs> callback)
+        private void ProcessInternal()
         {
             using (_buildLog = new StreamWriter(_logStream))
             {
@@ -76,9 +79,9 @@ namespace Codestellation.Galaxy.ServiceManager
 
             var deploymentResult = new OperationResult(Name, _operationResults);
 
-            var args = new DeploymentTaskCompletedEventArgs(this, deploymentResult);
+            var anEvent =  new DeploymentTaskCompletedEvent(this, deploymentResult);
 
-            callback.Invoke(args);
+            _publisher.Publish(anEvent);
         }
 
         private void ExecuteOperations()

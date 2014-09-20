@@ -169,12 +169,13 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
+    <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />
     <Compile Include="ServiceManager\OperationBuilder.cs" />
     <Compile Include="ServiceManager\Operations\BackupService.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />
-    <Compile Include="ServiceManager\EventParams\DeploymentTaskCompletedEventArgs.cs" />
+    <Compile Include="ServiceManager\Events\DeploymentTaskCompletedEvent.cs" />
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
     <Compile Include="ServiceManager\Operations\OverrideFiles.cs" />

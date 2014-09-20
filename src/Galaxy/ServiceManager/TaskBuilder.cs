@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
@@ -9,10 +10,12 @@ namespace Codestellation.Galaxy.ServiceManager
     public class TaskBuilder
     {
         private readonly OperationBuilder _operations;
+        private readonly IPublisher _publisher;
 
-        public TaskBuilder(OperationBuilder operationBuilder)
+        public TaskBuilder(OperationBuilder operationBuilder, IPublisher publisher)
         {
             _operations = operationBuilder;
+            _publisher = publisher;
         }
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -58,7 +61,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.StopService(deployment));
         }
 
-        private static DeploymentTask CreateDeployTask(string name, Deployment deployment)
+        private DeploymentTask CreateDeployTask(string name, Deployment deployment)
         {
             var deployLogFolder = deployment.GetDeployLogFolder();
             Folder.EnsureExists(deployLogFolder);
@@ -67,7 +70,7 @@ namespace Codestellation.Galaxy.ServiceManager
             var fullPath = Path.Combine(deployLogFolder, filename);
             var logStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
             
-            return new DeploymentTask(name, deployment.Id, logStream);
+            return new DeploymentTask(name, deployment.Id, logStream, _publisher);
         }
     }
 }

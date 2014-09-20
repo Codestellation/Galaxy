@@ -12,7 +12,6 @@ using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using System;
-using Codestellation.Galaxy.ServiceManager.EventParams;
 using System.Threading;
 
 namespace Codestellation.Galaxy.WebEnd
@@ -52,10 +51,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             var fullPath = System.IO.Path.Combine(deployment.GetDeployLogFolder(), filename);
 
-
             return new FileResponse(fullPath);
-
-            
         }
 
         private object GetBuildLogs(dynamic parameters)
@@ -199,21 +195,8 @@ namespace Codestellation.Galaxy.WebEnd
             if (targetFeed != null)
             {
                 var task = taskFactory(deployment, targetFeed);
-                task.Process(OnDeploymentCompleted);
+                task.Process();
             }
-        }
-
-        private void OnDeploymentCompleted(DeploymentTaskCompletedEventArgs e)
-        {
-            Task.Factory.StartNew(() => UpdateDeploymentStatus(e), CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
-        }
-
-        private void UpdateDeploymentStatus(DeploymentTaskCompletedEventArgs e)
-        {
-            var deployment = _dashBoard.GetDeployment(e.Task.DeploymentId);
-            deployment.Status = e.Result.Details;
-
-            SaveDeployment(deployment);
         }
 
         private object PostDeploy(dynamic parameters)
