@@ -1,5 +1,6 @@
 ﻿using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.IO;
+using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -18,9 +19,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public void Execute(TextWriter buildLog)
         {
-            string exePath = Path.Combine(_serviceFolder, _hostFileName);
+            var exePath = Folder.Combine(_serviceFolder, _hostFileName);
 
-            string exeParams = string.Format("install -instance:{0}", _instance);
+            var exeParams = string.Format("install -instance:{0}", _instance);
+
+            buildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
 
             string error;
             var result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
