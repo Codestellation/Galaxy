@@ -22,6 +22,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             var exePath = Path.Combine(_serviceFolder, _hostFileName);
 
             var exeParams = string.Format("uninstall -instance:{0}", _instance);
+            
+            buildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
 
             string error;
             var result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
