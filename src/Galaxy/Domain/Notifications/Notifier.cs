@@ -31,10 +31,8 @@ namespace Codestellation.Galaxy.Domain.Notifications
                     var notification = _notifications[index];
                     if (predicate(notification))
                     {
-                        continue;
+                        result.Add(notification);
                     }
-
-                    result.Add(notification);
 
                     if (result.Count == count)
                     {
