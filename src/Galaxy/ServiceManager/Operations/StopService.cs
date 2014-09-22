@@ -16,14 +16,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public override void Execute(TextWriter buildLog)
         {
             _buildLog = buildLog;
-            if (IsServiceExists())
-            {
-                Execute(StopServiceAction);
-            }
-            else
-            {
-                buildLog.WriteLine("Service '{0}' not found", ServiceName);
-            }
+
+            Execute(StopServiceAction);
         }
 
         private void StopServiceAction(ServiceController sc)
