@@ -88,6 +88,18 @@
       <HintPath>..\packages\Codestellation.Emisstar.Windsor.0.0.40\lib\net45\Codestellation.Emisstar.CastleWindsor.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.3.0.0\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.XmlTransform">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
     </Reference>
@@ -102,9 +114,8 @@
     <Reference Include="Nancy.Bootstrappers.Windsor">
       <HintPath>..\packages\Nancy.Bootstrappers.Windsor.0.23.0\lib\net40\Nancy.Bootstrappers.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Hosting.Self, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.Hosting.Self.0.23.0\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    <Reference Include="Nancy.Owin">
+      <HintPath>..\packages\Nancy.Owin.0.23.0\lib\net40\Nancy.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.ViewEngines.Razor, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -125,6 +136,9 @@
     <Reference Include="NuGet.Core, Version=2.8.50506.491, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nuget.Core.2.8.2\lib\net40-Client\NuGet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -196,6 +210,7 @@
     <Compile Include="Service.cs" />
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
     <Compile Include="WebEnd\FileModule.cs" />
