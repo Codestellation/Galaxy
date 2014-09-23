@@ -17,7 +17,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
             IsAdmin = user.IsAdmin;
             Login = user.Login;
 
-
             IsNew = false;
         }
 
@@ -25,15 +24,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         [Display(Name = "Login", Prompt = "Login")]
         public string Login { get; set; }
-
-        [Display(Name = "Password", Prompt = "Password")]
-        public string Password { get; set; }
-
-        [Display(Name = "Confirm Password", Prompt = "Confirm Password")]
-        public string ConfirmPassword { get; set; }
-
-        [Display(Name = "Display Name", Prompt = "Display Name")]
-        public string DisplayName { get; set; }
 
         [Display(Name = "User administrator")]
         public bool IsAdmin { get; set; }
@@ -55,8 +45,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             user.IsAdmin = IsAdmin;
             user.Login = Login;
-            user.Password = Password;
-            user.DisplayName = DisplayName;
         }
     }
 }

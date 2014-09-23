@@ -2,7 +2,6 @@
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using Codestellation.Emisstar.CastleWindsor.Facility;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Infrastructure;
@@ -10,12 +9,9 @@ using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd;
 using Codestellation.Galaxy.WebEnd.Misc;
 using Nancy;
-using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Windsor;
 using Nancy.ErrorHandling;
-using Nancy.Session;
-using Nancy.TinyIoc;
 using Nancy.ViewEngines;
 using Nancy.ViewEngines.Razor;
 using Nejdb;
@@ -66,11 +62,6 @@ namespace Codestellation.Galaxy
                     .LifestyleSingleton(),
 
                 Component
-                    .For<IUserMapper, UserDatabase>()
-                    .ImplementedBy<UserDatabase>()
-                    .LifestyleSingleton(),
-
-                Component
                     .For<DashBoard>()
                     .LifestyleSingleton(),
                 Component.
@@ -97,13 +88,10 @@ namespace Codestellation.Galaxy
 
         protected override void ApplicationStartup(IWindsorContainer container, IPipelines pipelines)
         {
-            var formsAuthConfiguration = new FormsAuthenticationConfiguration { RedirectUrl = "~/login", UserMapper = container.Resolve<IUserMapper>() };
-            FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
-
-            CookieBasedSessions.Enable(pipelines);
-
             var repository = container.Resolve<Repository>();
             repository.Start();
+
+            EnableAuthorization(container, pipelines);
 
             CreateDefaultUser(repository);
             LoadOptions(container, repository);
@@ -113,6 +101,12 @@ namespace Codestellation.Galaxy
 
             base.ApplicationStartup(container, pipelines);
         }
+
+        private void EnableAuthorization(IWindsorContainer container, IPipelines pipelines)
+        {
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(context => NancyHooks.AuthorizeUser(container, context));
+        }
+
 
         private void LoadOptions(IWindsorContainer container, Repository repository)
         {
@@ -178,8 +172,6 @@ namespace Codestellation.Galaxy
                 {
                     IsAdmin = true,
                     Login = "admin",
-                    Password = "admin",
-                    DisplayName = "Temp Admin"
                 };
                 users.Save(user, false);
                 tx.Commit();

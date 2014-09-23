@@ -8,10 +8,8 @@ namespace Codestellation.Galaxy.Domain
 
         public string Login { get; set; }
 
-        public string Password { get; set; }
-
-        public string DisplayName { get; set; }
-
         public bool IsAdmin { get; set; }
+
+        public bool IsDomain { get; set; }
     }
 }

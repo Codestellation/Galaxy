@@ -11,9 +11,6 @@
 <div class="row">
     <form class="form-horizontal" role="form" method="POST">
         @Html.LabeledTextBox(x => x.Login)
-        @Html.LabeledPasswordBox(x => x.Password)
-        @Html.LabeledPasswordBox(x => x.ConfirmPassword)
-        @Html.LabeledTextBox(x => x.DisplayName)
         @Html.LabeledCheckBox(x => x.IsAdmin)
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
@@ -37,19 +34,6 @@
                             @Html.Raw("remote: \"check-login\"")
                         }
                     },
-                    Password: {
-                        required: true,
-                        minlength: 5,
-                        maxlength: 50
-                    },
-                    ConfirmPassword: {
-                        required: true,
-                        equalTo: "[name=Password]"
-                    },
-                    DisplayName: {
-                        required: true,
-                        maxlength: 50
-                    }
                 }
             });
         });

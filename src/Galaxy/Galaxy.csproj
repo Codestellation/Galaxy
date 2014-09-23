@@ -107,10 +107,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.0.23.0\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Authentication.Forms, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.Authentication.Forms.0.23.0\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="Nancy.Bootstrappers.Windsor">
       <HintPath>..\packages\Nancy.Bootstrappers.Windsor.0.23.0\lib\net40\Nancy.Bootstrappers.Windsor.dll</HintPath>
     </Reference>
@@ -181,10 +177,8 @@
     <Compile Include="Infrastructure\FileResponse.cs" />
     <Compile Include="Infrastructure\Emisstar\SynchronizedAttribute.cs" />
     <Compile Include="Infrastructure\Emisstar\SynchronizedDispatcher.cs" />
-    <Compile Include="Infrastructure\UserIdentity.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
-    <Compile Include="Infrastructure\UserDatabase.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedNotifier.cs" />
@@ -214,6 +208,11 @@
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
     <Compile Include="WebEnd\FileModule.cs" />
+    <Compile Include="WebEnd\Misc\NancyContextExtensions.cs" />
+    <Compile Include="WebEnd\Misc\NancyHooks.cs" />
+    <Compile Include="WebEnd\Misc\Security\Authorization.cs" />
+    <Compile Include="WebEnd\Misc\Security\Claims.cs" />
+    <Compile Include="WebEnd\Misc\Security\UserIdentity.cs" />
     <Compile Include="WebEnd\Models\BuildLogsModel.cs" />
     <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\Converters\ObjectIdTypeConverter.cs" />
@@ -244,7 +243,6 @@
     <Compile Include="WebEnd\Misc\ForbidenResponse.cs" />
     <Compile Include="WebEnd\HomepageModule.cs" />
     <Compile Include="WebEnd\Misc\HttpExtensions.cs" />
-    <Compile Include="WebEnd\LoginModule.cs" />
     <Compile Include="WebEnd\Models\HomepageModel.cs" />
     <Compile Include="WebEnd\Models\LoginModel.cs" />
     <Compile Include="WebEnd\Models\RequestDelay.cs" />
