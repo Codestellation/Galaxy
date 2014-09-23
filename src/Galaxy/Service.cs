@@ -12,7 +12,7 @@ namespace Codestellation.Galaxy
         public Service()
         {
             var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
-            _uriString = string.Format("http://localhost:{0}", port);
+            _uriString = string.Format("http://*:{0}", port);
         }
 
         public void Start()
