@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Owin;
 
 namespace Codestellation.Galaxy
@@ -21,7 +22,19 @@ namespace Codestellation.Galaxy
         private void UseWindowsAuthentication(IAppBuilder app)
         {
             var listener = (HttpListener)app.Properties["System.Net.HttpListener"];
-            listener.AuthenticationSchemes = AuthenticationSchemes.IntegratedWindowsAuthentication;
+            listener.AuthenticationSchemeSelectorDelegate = AuthenticationSchemeSelectorDelegate;
+        }
+
+        private AuthenticationSchemes AuthenticationSchemeSelectorDelegate(HttpListenerRequest httpRequest)
+        {
+            var originalString = httpRequest.Url.OriginalString;
+
+            if (originalString.EndsWith("js", StringComparison.InvariantCultureIgnoreCase) ||
+                originalString.EndsWith("css", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return AuthenticationSchemes.Anonymous;
+            }
+            return AuthenticationSchemes.Ntlm;
         }
 
     }
