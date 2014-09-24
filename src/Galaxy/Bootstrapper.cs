@@ -34,7 +34,6 @@ namespace Codestellation.Galaxy
         protected override void ConfigureConventions(Nancy.Conventions.NancyConventions nancyConventions)
         {
             nancyConventions.ViewLocationConventions.Add((viewName, model, context) => string.Concat(ViewsNamespace, "/", viewName));
-            nancyConventions.StaticContentsConventions.Add(EmbeddedFileContentResponse.TryGetContent);
 
             base.ConfigureConventions(nancyConventions);
         }

@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using Codestellation.Galaxy.WebEnd.Misc;
 using Owin;
 
 namespace Codestellation.Galaxy
@@ -9,6 +11,7 @@ namespace Codestellation.Galaxy
 
         public void Configuration(IAppBuilder app)
         {
+            app.Use<StaticContentModule>();
             UseWindowsAuthentication(app);
 
             // TODO: May throw such exception (at least on my windows 8.1 pro). Investigation needed.
@@ -32,7 +35,7 @@ namespace Codestellation.Galaxy
 
             for (int index = 0; index < AllowedToAnonymous.Length; index++)
             {
-                if (originalString.EndsWith(AllowedToAnonymous[index]))
+                if (originalString.EndsWith(AllowedToAnonymous[index], StringComparison.InvariantCultureIgnoreCase))
                 {
                     return AuthenticationSchemes.Anonymous;
                 }

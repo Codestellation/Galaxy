@@ -1,23 +1,29 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using Nancy;
 
 namespace Codestellation.Galaxy.WebEnd.Misc
 {
-    internal struct EmbeddedResource
+    public struct EmbeddedResource
     {
         public readonly string Etag;
+        public readonly Assembly Assembly;
         public readonly string ResourcePath;
+        public readonly string ContentType;
 
-        public EmbeddedResource(string resourcePath) : this()
+        public EmbeddedResource(Assembly assembly, string resourcePath) : this()
         {
+            Assembly = assembly;
             ResourcePath = resourcePath;
             Etag = GenerateETag();
+            ContentType = MimeTypes.GetMimeType(resourcePath);
         }
 
         public Stream GetContent()
         {
-            return EmbeddedFileContentResponse.Assembly.GetManifestResourceStream(ResourcePath);
+            return Assembly.GetManifestResourceStream(ResourcePath);
         }
 
         private string GenerateETag()
