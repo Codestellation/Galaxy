@@ -1,11 +1,12 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using Owin;
 
 namespace Codestellation.Galaxy
 {
     public class OwinStartup
     {
+        public static readonly string[] AllowedToAnonymous = { ".js", ".css", ".woff" };
+
         public void Configuration(IAppBuilder app)
         {
             UseWindowsAuthentication(app);
@@ -29,11 +30,14 @@ namespace Codestellation.Galaxy
         {
             var originalString = httpRequest.Url.OriginalString;
 
-            if (originalString.EndsWith("js", StringComparison.InvariantCultureIgnoreCase) ||
-                originalString.EndsWith("css", StringComparison.InvariantCultureIgnoreCase))
+            for (int index = 0; index < AllowedToAnonymous.Length; index++)
             {
-                return AuthenticationSchemes.Anonymous;
+                if (originalString.EndsWith(AllowedToAnonymous[index]))
+                {
+                    return AuthenticationSchemes.Anonymous;
+                }
             }
+
             return AuthenticationSchemes.Ntlm;
         }
 
