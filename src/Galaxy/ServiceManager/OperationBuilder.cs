@@ -49,10 +49,10 @@ namespace Codestellation.Galaxy.ServiceManager
             return new StartService(serviceName);
         }
 
-        public IOperation StopService(Deployment deployment)
+        public IOperation StopService(Deployment deployment, bool skipIfNotFound)
         {
             var serviceName = deployment.GetServiceName();
-            return new StopService(serviceName);
+            return new StopService(serviceName){SkipIfNotFound = skipIfNotFound};
         }
 
         public IOperation InstallService(Deployment deployment)

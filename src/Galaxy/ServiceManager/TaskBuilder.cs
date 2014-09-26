@@ -28,7 +28,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public DeploymentTask UpdateServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return CreateDeployTask("UpdateService", deployment)
-                .Add(_operations.StopService(deployment))
+                .Add(_operations.StopService(deployment, true))
                 .Add(_operations.BackupService(deployment))
                 .Add(_operations.ClearBinaries(deployment))
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
@@ -44,7 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return CreateDeployTask("UninstallService", deployment)
-                .Add(_operations.StopService(deployment))
+                .Add(_operations.StopService(deployment, true))
                 .Add(_operations.UninstallService(deployment));
         }
 
@@ -57,7 +57,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
             return CreateDeployTask("StopService", deployment)
-                .Add(_operations.StopService(deployment));
+                .Add(_operations.StopService(deployment, false));
         }
 
         private DeploymentTask CreateDeployTask(string name, Deployment deployment)

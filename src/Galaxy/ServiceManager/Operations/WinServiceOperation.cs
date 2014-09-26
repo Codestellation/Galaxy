@@ -22,11 +22,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             return _controller != null;
         }
 
+        public bool SkipIfNotFound { get; set; }
+
         protected void Execute(Action<ServiceController> controllerAction)
         {
             if (_controller == null)
             {
                 var message = string.Format("Service '{0}' not found", ServiceName);
+
+                if (SkipIfNotFound)
+                {
+                    return;
+                }
                 throw new InvalidOperationException(message);
             }
             controllerAction(_controller);
