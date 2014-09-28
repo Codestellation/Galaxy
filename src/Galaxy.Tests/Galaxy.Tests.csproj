@@ -99,9 +99,6 @@
     <Compile Include="..\..\subtree\quarks\src\Quarks\Resources\EmbeddedResource.cs">
       <Link>Quarks\EmbeddedResource.cs</Link>
     </Compile>
-    <Compile Include="..\..\subtree\quarks\src\Quarks\Streams\StreamExtensions.cs">
-      <Link>Quarks\StreamExtensions.cs</Link>
-    </Compile>
     <Compile Include="Content\TestPackages.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\ClearBinariesTests.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\InstallPackageTests.cs" />
