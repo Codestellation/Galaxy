@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
+using Codestellation.Quarks.IO;
 using Codestellation.Quarks.Resources;
-using Codestellation.Quarks.Streams;
 using NUnit.Framework;
 
-namespace Codestellation.Quarks.Tests.Streams
+namespace Codestellation.Quarks.Tests.IO
 {
     [TestFixture]
     public class StreamExtensionsTests

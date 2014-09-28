@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Codestellation.Quarks.Streams
+namespace Codestellation.Quarks.IO
 {
     /// <summary>
     /// Encapsulates functionality for pooling streams. 

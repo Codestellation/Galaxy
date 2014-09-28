@@ -51,10 +51,10 @@
     <Compile Include="Collections\EnumerableExtensionsTests.cs" />
     <Compile Include="IO\FolderTests.cs" />
     <Compile Include="ScratchPad.cs" />
-    <Compile Include="Streams\ReusableStreamTests.cs" />
+    <Compile Include="IO\ReusableStreamTests.cs" />
     <Compile Include="StringUtils\StringExtensionsTests.cs" />
     <Compile Include="Resources\EmbeddedResourceTests.cs" />
-    <Compile Include="Streams\StreamExtensionsTests.cs" />
+    <Compile Include="IO\StreamExtensionsTests.cs" />
     <Compile Include="StringUtils\TemplateExpanderTests.cs" />
   </ItemGroup>
   <ItemGroup>

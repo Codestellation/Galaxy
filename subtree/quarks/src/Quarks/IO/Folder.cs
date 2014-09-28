@@ -41,6 +41,14 @@ namespace Codestellation.Quarks.IO
                 .ToArray();
         }
 
+        public static DirectoryInfo[] EnumerateFolders(string folder)
+        {
+            var fullPath = ToFullPath(folder);
+            return Directory.EnumerateDirectories(fullPath)
+                .Select(x => new DirectoryInfo(x))
+                .ToArray();
+        }
+
         public static bool Exists(string folder)
         {
             var fullPath = ToFullPath(folder);
@@ -80,5 +88,7 @@ namespace Codestellation.Quarks.IO
                 Copy(sourceSubdirectory.FullName, targetSubdirectory);
             }
         }
+
+        
     }
 }

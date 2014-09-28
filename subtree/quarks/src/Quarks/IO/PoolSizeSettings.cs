@@ -1,4 +1,4 @@
-﻿namespace Codestellation.Quarks.Streams
+﻿namespace Codestellation.Quarks.IO
 {
     /// <summary>
     /// Contains settings for thread-pool

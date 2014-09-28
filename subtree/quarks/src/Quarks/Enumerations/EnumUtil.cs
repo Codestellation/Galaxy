@@ -9,19 +9,50 @@ namespace Codestellation.Quarks.Enumerations
         {
             return EnumUtil<TEnum>.AsString(value);
         }
+        public static string AsString<TEnum>(this TEnum? value) where TEnum : struct
+        {
+            return EnumUtil<TEnum>.AsString(value);
+        }
+
+        public static string AsUpperString<TEnum>(this TEnum value) where TEnum : struct
+        {
+            return EnumUtil<TEnum>.AsUpperString(value);
+        }
+
+        public static string AsUpperString<TEnum>(this TEnum? value) where TEnum : struct
+        {
+            return EnumUtil<TEnum>.AsUpperString(value);
+        }
+
+        public static string AsLowerString<TEnum>(this TEnum value) where TEnum : struct
+        {
+            return EnumUtil<TEnum>.AsLowerString(value);
+        }
+
+        public static string AsLowerString<TEnum>(this TEnum? value) where TEnum : struct
+        {
+            return EnumUtil<TEnum>.AsLowerString(value);
+        }
     }
 
     internal static class EnumUtil<TEnum> where TEnum : struct
     {
-        public static readonly EnumIndexer<TEnum, string> ToStringCache;
+        private static readonly EnumIndexer<TEnum, string> ToStringCache;
+        private static readonly EnumIndexer<TEnum, string> ToUpperStringCache;
+        private static readonly EnumIndexer<TEnum, string> ToLowerStringCache;
 
         static EnumUtil()
         {
             ToStringCache = new EnumIndexer<TEnum, string>();
+            ToUpperStringCache = new EnumIndexer<TEnum, string>();
+            ToLowerStringCache = new EnumIndexer<TEnum, string>();
 
             foreach (var value in Enum.GetValues(typeof(TEnum)).Cast<TEnum>())
             {
-                ToStringCache[value] = value.ToString();
+                var valueAsString = value.ToString();
+                ToStringCache[value] = valueAsString;
+                ToUpperStringCache[value] = valueAsString.ToUpperInvariant();
+                ToLowerStringCache[value] = valueAsString.ToLowerInvariant();
             }
         }
 
@@ -38,6 +69,36 @@ namespace Codestellation.Quarks.Enumerations
         public static string AsString(TEnum value)
         {
             return ToStringCache[value];
+        }
+
+        public static string AsUpperString(TEnum? value)
+        {
+            if (value.HasValue)
+            {
+                return AsString(value.Value);
+            }
+
+            return null;
+        }
+
+        public static string AsUpperString(TEnum value)
+        {
+            return ToUpperStringCache[value];
+        }
+
+        public static string AsLowerString(TEnum? value)
+        {
+            if (value.HasValue)
+            {
+                return AsString(value.Value);
+            }
+
+            return null;
+        }
+
+        public static string AsLowerString(TEnum value)
+        {
+            return ToLowerStringCache[value];
         }
 
         public static TEnum Parse(string value)
