@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Codestellation.Quarks.Streams;
+using Codestellation.Quarks.IO;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Codestellation.Quarks.Tests.Streams
+namespace Codestellation.Quarks.Tests.IO
 {
     [TestFixture]
     public class ReusableStreamTests

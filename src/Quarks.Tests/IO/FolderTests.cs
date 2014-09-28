@@ -82,6 +82,16 @@ namespace Codestellation.Quarks.Tests.IO
             Assert.That(path, Is.EqualTo(@"C:\Foo\Bar"));
         }
 
+        [Test]
+        public void Should_enumerate_folders()
+        {
+            //when
+            var folders = Folder.EnumerateFolders(@"C:\");
+            //then
+            Assert.That(folders, Is.Not.Null.And.Not.Empty);
+        }
+        
+
         //It takes some time to delete directory after Directory.Delete called. We have to wait,IOException is thrown otherwise.
         private void WaitUntilDeleted()
         {
