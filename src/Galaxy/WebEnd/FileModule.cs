@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
@@ -15,16 +17,22 @@ namespace Codestellation.Galaxy.WebEnd
         public const string Path = DeploymentModule.Path + "/file";
 
         private readonly DashBoard _dashBoard;
+        private readonly TaskBuilder _taskBuilder;
 
-        public FileModule(DashBoard dashBoard)
+        public FileModule(DashBoard dashBoard, TaskBuilder taskBuilder)
             : base(Path)
         {
             _dashBoard = dashBoard;
+            _taskBuilder = taskBuilder;
 
             this.RequiresAuthentication();
 
             Get["/{id}", true] = (parameters, token) => ProcessRequest(() => GetFiles(parameters), token);
             Get["/{id}/{filename}", true] = (parameters, token) => ProcessRequest(() => GetFile(parameters), token);
+
+            Get["backup/{id}", true] = (parameters, token) => ProcessRequest(() => ShowBackups(parameters), token);
+            Post["backup/{id}", true] = (parameters, token) => ProcessRequest(() => RestoreBackup(parameters), token);
+
             Post["/{id}", true] = (parameters, token) => ProcessRequest(() => PostFiles(parameters), token);
             Post["delete/{id}", true] = (parameters, token) => ProcessRequest(() => DeleteFile(parameters), token);
         }
@@ -82,6 +90,35 @@ namespace Codestellation.Galaxy.WebEnd
                 File.Delete(fullpath);
             }
 
+            return string.Empty;
+        }
+
+        private object ShowBackups(dynamic parameters)
+        {
+            Deployment deployment = GetDeployment(parameters);
+
+            var backupFolder = deployment.GetBackupFolder();
+
+            var folders = Folder
+                .EnumerateFolders(backupFolder)
+                .SortAscending(x => x.CreationTime);
+
+            return new BackupListModel(deployment.Id, folders);
+        }
+
+        private object RestoreBackup(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var deployment = _dashBoard.GetDeployment(id);
+            string name = Request.Query.name;
+
+            var backupFolder = deployment.GetBackupFolder();
+            var folder = Folder.Combine(backupFolder, name);
+
+            var task = _taskBuilder.RestoreFromBackup(deployment, folder);
+
+            task.Process();
+            
             return string.Empty;
         }
 

@@ -71,5 +71,15 @@ namespace Codestellation.Galaxy.ServiceManager
             
             return new DeploymentTask(name, deployment.Id, logStream, _publisher);
         }
+
+        public DeploymentTask RestoreFromBackup(Deployment deployment, string backupFolder)
+        {
+            return CreateDeployTask("Restore From Backup", deployment)
+                .Add(_operations.StopService(deployment, true))
+                .Add(_operations.BackupService(deployment))
+                .Add(_operations.ClearBinaries(deployment, FileList.Empty))
+                .Add(_operations.RestoreFrom(deployment, backupFolder))
+                .Add(_operations.OverrideFiles(deployment));
+        }
     }
 }

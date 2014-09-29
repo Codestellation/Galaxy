@@ -73,6 +73,7 @@
     <EmbeddedResource Include="WebEnd\Views\Options\Options.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\BuildLogs.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\File\DeploymentFiles.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\File\BackupList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
@@ -185,6 +186,7 @@
     <Compile Include="ServiceManager\OperationBuilder.cs" />
     <Compile Include="ServiceManager\Operations\BackupService.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
+    <Compile Include="ServiceManager\Operations\RestoreFromBackup.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedEvent.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebEnd\Models\BackupListModel.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
     <Compile Include="WebEnd\FileModule.cs" />

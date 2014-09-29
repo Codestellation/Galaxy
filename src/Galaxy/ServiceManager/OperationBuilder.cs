@@ -20,10 +20,10 @@ namespace Codestellation.Galaxy.ServiceManager
             return new BackupService(serviceName, serviceFolder, backupFolder);
         }
 
-        public IOperation ClearBinaries(Deployment deployment)
+        public IOperation ClearBinaries(Deployment deployment, FileList keepOnUpdate = null)
         {
             var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
-            var keepOnUpdate = deployment.KeepOnUpdate.Clone();
+            keepOnUpdate = keepOnUpdate ??  deployment.KeepOnUpdate.Clone();
             return new ClearBinaries(serviceFolder, keepOnUpdate);
         }
 
@@ -77,6 +77,12 @@ namespace Codestellation.Galaxy.ServiceManager
             var serviceFilesFolder = deployment.GetFilesFolder();
             var keepOnUpdate = deployment.KeepOnUpdate.Clone();
             return new OverrideFiles(serviceFolder, serviceFilesFolder, keepOnUpdate);
+        }
+
+        public IOperation RestoreFrom(Deployment deployment, string backupFolder)
+        {
+            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            return new RestoreFromBackup(serviceFolder, backupFolder);
         }
     }
 }

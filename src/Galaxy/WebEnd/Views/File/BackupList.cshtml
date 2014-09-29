@@ -1,0 +1,39 @@
+﻿@using System.Linq
+@using Codestellation.Galaxy.WebEnd
+@using Nancy.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.BackupListModel>
+@{ Layout = "Master";}
+
+<div class="row">
+    <div class="container  col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Available backups
+            </div>
+            <ul class="list-group">
+                @foreach (var folder in Model.Folders)
+                {
+                    <li class="list-group-item">
+                        @folder.Name
+                        <button type="button" class="btn btn-danger btn-xs pull-right" value="@HttpUtility.HtmlEncode(folder.Name)">
+                            <span class="glyphicon glyphicon-flash"></span>
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[type=button]')
+            .click(function () {
+                var button = $(this);
+                $.ajax({
+                    url: '/@FileModule.Path/backup/@Model.DeploymentId?name=' + encodeURIComponent(button.val()),
+                    type: 'POST',
+                });
+            });
+    });
+</script>
