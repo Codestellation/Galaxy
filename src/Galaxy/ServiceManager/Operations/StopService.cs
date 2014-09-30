@@ -13,9 +13,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         }
 
-        public override void Execute(TextWriter buildLog)
+        public override void Execute(DeploymentTaskContext context)
         {
-            _buildLog = buildLog;
+            _buildLog = context.BuildLog;
 
             Execute(StopServiceAction);
         }

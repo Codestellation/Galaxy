@@ -1,9 +1,7 @@
-﻿using System.IO;
-
-namespace Codestellation.Galaxy.ServiceManager.Operations
+﻿namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public interface IOperation
     {
-        void Execute(TextWriter buildLog);
+        void Execute(DeploymentTaskContext context);
     }
 }

@@ -25,9 +25,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
-            _buildLog = buildLog;
+            _buildLog = context.BuildLog;
             foreach (var order in _orders)
             {
                 Install(order);

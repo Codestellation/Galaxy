@@ -18,7 +18,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _baseFolderInfo = new DirectoryInfo(basePath);
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
             var entries = Directory
                 .EnumerateFileSystemEntries(_baseFolderInfo.FullName, "*.*", SearchOption.AllDirectories)

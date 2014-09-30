@@ -12,9 +12,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _serviceFolder = serviceFolder;
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
-            buildLog.WriteLine("Delete folder {0}", _serviceFolder);
+            context.BuildLog.WriteLine("Delete folder {0}", _serviceFolder);
             Folder.EnsureDeleted(_serviceFolder);
         }
     }

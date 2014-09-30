@@ -18,9 +18,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _backupFolder = backupFolder;
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
-            _buildLog = buildLog;
+            _buildLog = context.BuildLog;
 
             // TODO: create base operation class and move all the necessary folder creation there
             Folder.EnsureExists(_backupFolder);

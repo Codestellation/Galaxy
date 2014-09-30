@@ -17,22 +17,22 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _instance = instance;
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
             var exePath = Path.Combine(_serviceFolder, _hostFileName);
 
             var exeParams = string.Format("uninstall -instance:{0}", _instance);
-            
-            buildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
+
+            context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
 
             string error;
             var result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
 
-            buildLog.WriteLine("Exe output:");
-            buildLog.WriteLine(result);
+            context.BuildLog.WriteLine("Exe output:");
+            context.BuildLog.WriteLine(result);
 
-            buildLog.WriteLine("Exe error:");
-            buildLog.WriteLine(error);
+            context.BuildLog.WriteLine("Exe error:");
+            context.BuildLog.WriteLine(error);
         }
     }
 }

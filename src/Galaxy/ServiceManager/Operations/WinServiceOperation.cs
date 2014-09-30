@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -39,6 +38,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             controllerAction(_controller);
         }
 
-        public abstract void Execute(TextWriter buildLog);
+        public abstract void Execute(DeploymentTaskContext context);
     }
 }

@@ -39,7 +39,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 new InstallPackageOrder("Codestellation.Galaxy.Host", _nugetFeedFolder, version10),
             };
             var op = new InstallPackage(_targetPath, order);
-            var buildLog = new StringWriter();
+            var stringWriter = new StringWriter();
+            var buildLog = new DeploymentTaskContext(stringWriter);
 
             //when
             op.Execute(buildLog);

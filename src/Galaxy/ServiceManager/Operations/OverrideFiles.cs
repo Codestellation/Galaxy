@@ -19,9 +19,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             _skipList = skipList;
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
-            _buildLog = buildLog;
+            _buildLog = context.BuildLog;
 
             if (Folder.Exists(_deploymentFilesFolder))
             {

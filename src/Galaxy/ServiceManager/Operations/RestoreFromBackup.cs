@@ -1,4 +1,3 @@
-using System.IO;
 using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -15,9 +14,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
          
         }
 
-        public void Execute(TextWriter buildLog)
+        public void Execute(DeploymentTaskContext context)
         {
-            buildLog.WriteLine("Restore from {0} to {1}", _backupFolder, _serviceFolder);
+            context.BuildLog.WriteLine("Restore from {0} to {1}", _backupFolder, _serviceFolder);
 
             Folder.Copy(_backupFolder, _serviceFolder);
         }

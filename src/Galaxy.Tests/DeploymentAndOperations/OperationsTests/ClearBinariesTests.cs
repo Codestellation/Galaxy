@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         private string _nugetFeedFolder;
         private string _basePath;
 
-        private StringWriter _buildLog;
+        private DeploymentTaskContext _context;
 
         [SetUp]
         public void Init()
@@ -39,8 +39,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var installPackage = new InstallPackage(_basePath, orders, FileList.Empty);
 
 
-            _buildLog = new StringWriter();
-            installPackage.Execute(_buildLog);
+            var stringWriter = new StringWriter();
+            _context = new DeploymentTaskContext(stringWriter);
+            installPackage.Execute(_context);
         }
 
         [Test]
@@ -54,7 +55,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var operation = new ClearBinaries(_basePath, keepOnUpdate);
 
             //when
-            operation.Execute(_buildLog);
+            operation.Execute(_context);
 
             //then
             var file = Directory
@@ -86,7 +87,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var operation = new ClearBinaries(_basePath, keepOnUpdate);
 
             //when
-            operation.Execute(_buildLog);
+            operation.Execute(_context);
 
             //then
             Assert.That(Directory.Exists(folderPath), Is.True, "Directory was removed");

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.ServiceProcess;
+﻿using System.ServiceProcess;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -11,9 +10,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         }
 
-        public override void Execute(TextWriter buildLog)
+        public override void Execute(DeploymentTaskContext context)
         {
-            buildLog.WriteLine("Starting service {0}", ServiceName);
+            context.BuildLog.WriteLine("Starting service {0}", ServiceName);
 
             Execute(sc =>
             {
