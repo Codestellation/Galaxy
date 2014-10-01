@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
 
@@ -32,7 +33,8 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.BackupService(deployment))
                 .Add(_operations.ClearBinaries(deployment))
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
-                .Add(_operations.OverrideFiles(deployment));
+                .Add(_operations.OverrideFiles(deployment))
+                .Add(_operations.StartService(deployment));
         }
 
         public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -50,8 +52,10 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return CreateDeployTask("StartService", deployment)
+            var startServiceTask = CreateDeployTask("StartService", deployment)
                 .Add(_operations.StartService(deployment));
+            startServiceTask.Context.SetValue(DeploymentTaskContext.ForceStartService, true);
+            return startServiceTask;
         }
 
         public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)

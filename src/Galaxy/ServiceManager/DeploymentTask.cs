@@ -11,6 +11,8 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class DeploymentTask
     {
+        public readonly DeploymentTaskContext Context;
+
         private Task _task;
 
         private readonly List<IOperation> _operations;
@@ -21,7 +23,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly IPublisher _publisher;
 
         private OperationResult[] _operationResults;
-        private DeploymentTaskContext _context;
+        
 
         public IReadOnlyList<IOperation> Operations
         {
@@ -53,7 +55,7 @@ namespace Codestellation.Galaxy.ServiceManager
             _logStream = logStream;
             _publisher = publisher;
             var streamWriter = new StreamWriter(logStream);
-            _context = new DeploymentTaskContext(streamWriter);
+            Context = new DeploymentTaskContext(streamWriter);
             
         }
 
@@ -72,13 +74,13 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             try
             {
-                _context.BuildLog.WriteLine("Task '{0}' started", _name);
+                Context.BuildLog.WriteLine("Task '{0}' started", _name);
                 ExecuteOperations();
-                _context.BuildLog.WriteLine("Task '{0}' finished", _name);
+                Context.BuildLog.WriteLine("Task '{0}' finished", _name);
             }
             finally
             {
-                _context.BuildLog.Dispose();
+                Context.BuildLog.Dispose();
             }
 
             var deploymentResult = new OperationResult(Name, _operationResults);
@@ -98,7 +100,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
                 var operationIndex = index + 1;
 
-                _context.BuildLog.WriteLine("Operation '{0}' started. ({1}/{2})", operationName, operationIndex, Operations.Count);
+                Context.BuildLog.WriteLine("Operation '{0}' started. ({1}/{2})", operationName, operationIndex, Operations.Count);
 
                 var operationResult = _operationResults[index] = 
                     failureDetected 
@@ -118,13 +120,13 @@ namespace Codestellation.Galaxy.ServiceManager
             try
             {
                 
-                operation.Execute(_context);
+                operation.Execute(Context);
                 return new OperationResult(operationName, ResultCode.Succeed);
 
             }
             catch (Exception ex)
             {
-                _context.BuildLog.WriteLine(ex.ToString());
+                Context.BuildLog.WriteLine(ex.ToString());
                 return new OperationResult(operationName, ResultCode.Failed, ex.Message);
             }
         }
@@ -135,7 +137,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             string result = DefineResult(operationResult);
 
-            _context.BuildLog.WriteLine("Operation '{0}' {1}. ({2}/{3})", operationName, result, operationIndex, Operations.Count);
+            Context.BuildLog.WriteLine("Operation '{0}' {1}. ({2}/{3})", operationName, result, operationIndex, Operations.Count);
         }
 
         private string DefineResult(OperationResult operationResult)
