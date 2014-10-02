@@ -101,7 +101,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             var folders = Folder
                 .EnumerateFolders(backupFolder)
-                .SortAscending(x => x.CreationTime);
+                .SortDescending(x => x.CreationTime);
 
             return new BackupListModel(deployment.Id, folders);
         }
