@@ -15,9 +15,26 @@
                 {
                     <li class="list-group-item">
                         @folder.Name
-                        <button type="button" class="btn btn-danger btn-xs pull-right" value="@HttpUtility.HtmlEncode(folder.Name)">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" value="@HttpUtility.HtmlEncode(folder.Name)" data-toggle="modal" data-target="#delete-confirmation">
                             <span class="glyphicon glyphicon-flash"></span>
                         </button>
+                        <div class="modal fade" id="delete-confirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Do you really want to restore backup @folder.Name ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-danger" type="button" data-dismiss="modal" value="Restore">Restore!</button>
+                                        <button class="btn btn-default" type="button" data-dismiss="modal">Cancel!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 }
             </ul>
@@ -27,8 +44,8 @@
 
 <script>
     $(document).ready(function () {
-        $('[type=button]')
-            .click(function () {
+        $('[value=Restore]')
+            .bind('click', function () {
                 var button = $(this);
                 $.ajax({
                     url: '/@FileModule.Path/backup/@Model.DeploymentId?name=' + encodeURIComponent(button.val()),
