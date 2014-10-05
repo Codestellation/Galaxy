@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Codestellation.Emisstar;
@@ -17,11 +16,6 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private readonly List<IOperation> _operations;
 
-        private readonly string _name;
-        private readonly ObjectId _deploymentId;
-        private readonly Stream _logStream;
-        private readonly IPublisher _publisher;
-
         private OperationResult[] _operationResults;
         
 
@@ -38,25 +32,23 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public ObjectId DeploymentId
         {
-            get { return _deploymentId; }
+            get { return Context.GetValue<ObjectId>(DeploymentTaskContext.TaskName); }
         }
 
         public string Name
         {
-            get { return _name; }
+            get { return Context.GetValue<string>(DeploymentTaskContext.TaskName); }
         }
 
-        public DeploymentTask(string name, ObjectId deploymentId, Stream logStream, IPublisher publisher)
+        public IPublisher Publisher
+        {
+            get { return Context.GetValue<IPublisher>(DeploymentTaskContext.Publisher); }
+        }
+
+        public DeploymentTask(DeploymentTaskContext context)
         {
             _operations = new List<IOperation>();
-
-            _name = name;
-            _deploymentId = deploymentId;
-            _logStream = logStream;
-            _publisher = publisher;
-            var streamWriter = new StreamWriter(logStream);
-            Context = new DeploymentTaskContext(streamWriter);
-            
+            Context = context;
         }
 
         public void Process()
@@ -74,9 +66,9 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             try
             {
-                Context.BuildLog.WriteLine("Task '{0}' started", _name);
+                Context.BuildLog.WriteLine("Task '{0}' started", Name);
                 ExecuteOperations();
-                Context.BuildLog.WriteLine("Task '{0}' finished", _name);
+                Context.BuildLog.WriteLine("Task '{0}' finished", Name);
             }
             finally
             {
@@ -85,7 +77,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             var deploymentResult = new OperationResult(Name, _operationResults);
             var anEvent =  new DeploymentTaskCompletedEvent(this, deploymentResult);
-            _publisher.Publish(anEvent);
+            Publisher.Publish(anEvent);
         }
 
         private void ExecuteOperations()
@@ -156,7 +148,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public override string ToString()
         {
-            return _name;
+            return Name;
         }
     }
 }

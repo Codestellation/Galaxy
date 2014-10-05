@@ -72,8 +72,17 @@ namespace Codestellation.Galaxy.ServiceManager
             var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, Clock.UtcNow.ToLocalTime());
             var fullPath = Path.Combine(deployLogFolder, filename);
             var logStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
-            
-            return new DeploymentTask(name, deployment.Id, logStream, _publisher);
+
+            var streamWriter = new StreamWriter(logStream);
+
+            var context = new DeploymentTaskContext(streamWriter);
+            context
+                .SetValue(DeploymentTaskContext.TaskName, name)
+                .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
+                .SetValue(DeploymentTaskContext.Publisher, _publisher)
+                .SetValue(DeploymentTaskContext.LogStream, logStream);
+
+            return new DeploymentTask(context);
         }
 
         public DeploymentTask RestoreFromBackup(Deployment deployment, string backupFolder)

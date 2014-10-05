@@ -5,11 +5,16 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class DeploymentTaskContext
     {
+        public const string TaskName = "TaskName";
+        
         public const string ServiceStatus = "ServiceStatus";
         public const string ForceStartService = "ForceStartService";
+        public const string DeploymentId = "DeploymentId";
+        public const string Publisher = "Publisher";
+        public const string LogStream = "LogStream";
 
         public readonly TextWriter BuildLog;
-        private Dictionary<object, object> _data;
+        private readonly Dictionary<object, object> _data;
 
         public DeploymentTaskContext(TextWriter buildLog)
         {
@@ -17,9 +22,10 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             BuildLog = buildLog;
         }
 
-        public void SetValue<TValue>(object key, TValue value)
+        public DeploymentTaskContext SetValue<TValue>(object key, TValue value)
         {
             _data.Add(key, value);
+            return this;
         }
 
         public TValue GetValue<TValue>(object key)
