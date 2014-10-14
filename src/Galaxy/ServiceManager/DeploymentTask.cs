@@ -32,7 +32,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public ObjectId DeploymentId
         {
-            get { return Context.GetValue<ObjectId>(DeploymentTaskContext.TaskName); }
+            get { return Context.GetValue<ObjectId>(DeploymentTaskContext.DeploymentId); }
         }
 
         public string Name
