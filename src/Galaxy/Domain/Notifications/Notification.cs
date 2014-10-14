@@ -6,10 +6,10 @@ namespace Codestellation.Galaxy.Domain.Notifications
 {
     public class Notification
     {
-        public readonly DateTime CreatedAt;
-        public readonly ObjectId? DeploymentId;
-        public readonly string Message;
-        public readonly Severity Severity;
+        public DateTime CreatedAt { get; private set; }
+        public ObjectId? DeploymentId { get; private set; }
+        public string Message { get; private set; }
+        public Severity Severity { get; private set; }
 
         public string Url;
 

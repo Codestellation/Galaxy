@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Notifications;
 using Nejdb;
 using NLog;
 
@@ -29,6 +30,7 @@ namespace Codestellation.Galaxy.Infrastructure
             CreateCollection("feeds", typeof(NugetFeed));
             CreateCollection("deployments", typeof(Deployment));
             CreateCollection("options", typeof(Options));
+            CreateCollection("notification", typeof(Notification));
         }
 
         private void CreateCollection(string collectionName, Type entityType)

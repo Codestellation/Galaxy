@@ -1,21 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using Codestellation.Galaxy.Infrastructure;
+using Nejdb;
 
 namespace Codestellation.Galaxy.Domain.Notifications
 {
     public class Notifier
     {
         private readonly List<Notification> _notifications;
+        private Collection _notificationCollection;
 
-        public Notifier()
+        public Notifier(Repository repository)
         {
             _notifications = new List<Notification>();
+            _notificationCollection = repository.GetCollection<Notification>();
+            LoadNotifications();
+        }
+
+        private void LoadNotifications()
+        {
+            lock (_notifications)
+            {
+                _notifications.AddRange(_notificationCollection.PerformQuery<Notification>());
+                _notifications.Sort((x, y) => x.CreatedAt.CompareTo(y.CreatedAt));
+            }
         }
 
         public void Notify(Notification notification)
         {
-            lock (notification)
+            lock (_notifications)
             {
+                _notificationCollection.Save(notification, false);
                 _notifications.Add(notification);
             }
         }
