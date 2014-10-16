@@ -11,6 +11,7 @@
 <div class="row">
     <form class="form-horizontal" role="form" method="POST">
         @Html.LabeledTextBox(x => x.DeployFolder)
+        @Html.LabeledTextBox(x => x.PurgeLogsOlderThan)
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="submit" class="btn btn-success" value="Submit" />
