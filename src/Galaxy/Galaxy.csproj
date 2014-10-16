@@ -185,6 +185,7 @@
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
+    <Compile Include="Maintenance\CleanUpLog.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedNotifier.cs" />
     <Compile Include="ServiceManager\OperationBuilder.cs" />
