@@ -10,6 +10,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 {
     public static class ViewExtensions
     {
+        private static readonly  NonEncodedHtmlString ClassActive = new  NonEncodedHtmlString(@"class=""active""");
+
         public static IHtmlString LabeledTextBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
             Tag input = Tags.Input.Text();
@@ -37,8 +39,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         }
 
         public static IHtmlString LabeledDropDown<TModel, TProperty, TDisplayValue>(
-            this HtmlHelpers<TModel> htmlHelper, 
-            Expression<Func<TModel, TProperty>> property, 
+            this HtmlHelpers<TModel> htmlHelper,
+            Expression<Func<TModel, TProperty>> property,
             IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
             var selectTag = BuildSelectTag(htmlHelper, property, values);
@@ -61,7 +63,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         private static Tag BuildSelectTag<TModel, TProperty, TDisplayValue>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property,
             IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
-            
+
             var currentValue = htmlHelper.Model.Read(property);
             var inputProperties = InputProperties.Get(property);
 
@@ -81,7 +83,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
                 //TODO: Instead of hardcoded string use placeholder from display attribute
                 var placeholderOption =
                     Tags.Input.Option().Disabled().Selected(true).Content(HttpUtility.HtmlEncode(inputProperties.Placeholder));
-                options = new[] {placeholderOption}.Union(options);
+                options = new[] { placeholderOption }.Union(options);
             }
 
             var finalOption = options.ToArray();
@@ -112,7 +114,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         private static IHtmlString BuildFormControlInput<TModel, TProperty>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, Tag input)
         {
             var inputProperties = InputProperties.Get(property);
-            
+
             TProperty value = htmlHelper.Model.Read(property);
 
             input.Classes(BootstrapClass.FormControl)
@@ -137,6 +139,23 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return new NonEncodedHtmlString(formGroup.ToHtmlString());
         }
 
-        
+        public static IHtmlString HighLightActive<TModel>(this HtmlHelpers<TModel> htmlHelper, string menuPath = null)
+        {
+            var path = htmlHelper.RenderContext.Context.Request.Url.Path;
+
+            if (string.IsNullOrWhiteSpace(menuPath))
+            {
+                if (path.Length == 1)
+                {
+                    return ClassActive;
+                }
+            }
+            else if (path.IndexOf(menuPath, StringComparison.OrdinalIgnoreCase) == 1)
+            {
+                return ClassActive;
+            }
+
+            return NonEncodedHtmlString.Empty;
+        }
     }
 }

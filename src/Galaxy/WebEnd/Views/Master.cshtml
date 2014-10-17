@@ -1,4 +1,5 @@
 ﻿@using Codestellation.Galaxy.WebEnd
+@using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 <!DOCTYPE html>
 <html>
@@ -46,10 +47,10 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="/">Dashboard</a></li>
-                        <li><a href="/@FeedModule.Path">Feeds</a></li>
-                        <li><a href="/@DeploymentModule.Path">Deployments</a></li>
-                        <li><a href="/@OptionsModule.Path">Options</a></li>
+                        <li @Html.HighLightActive()><a href="/">Dashboard</a></li>
+                        <li @Html.HighLightActive(FeedModule.Path)><a href="/@FeedModule.Path">Feeds</a></li>
+                        <li @Html.HighLightActive(DeploymentModule.Path)><a href="/@DeploymentModule.Path">Deployments</a></li>
+                        <li @Html.HighLightActive(OptionsModule.Path)><a href="/@OptionsModule.Path">Options</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
