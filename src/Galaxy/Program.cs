@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Codestellation.Galaxy.Configuration;
 using Codestellation.Quarks.IO;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using Topshelf;
@@ -16,10 +18,7 @@ namespace Codestellation.Galaxy
 
         private static int Main()
         {
-            var nlogPath = Folder.Combine("data", "nlog.config");
-            LogManager.Configuration = new XmlLoggingConfiguration(nlogPath);
-            
-            var configuration = ServiceConfig.Read();
+            var configuration = ReadConfigurations();
 
             TopshelfExitCode code = HostFactory.Run(x =>
             {
@@ -44,7 +43,7 @@ namespace Codestellation.Galaxy
 
                 string instanceName = configuration.InstanceName;
 
-                if (!string.IsNullOrEmpty(instanceName))
+                if (!string.IsNullOrWhiteSpace(instanceName))
                 {
                     x.SetInstanceName(instanceName);
                 }
@@ -52,6 +51,20 @@ namespace Codestellation.Galaxy
 
             HostLogger.Shutdown();
             return (int) code;
+        }
+
+        private static ServiceConfig ReadConfigurations()
+        {
+            if (!File.Exists(ServiceConfig.DefaultFilePath))
+            {
+                Console.WriteLine("Please configure service at '{0}'", ServiceConfig.DefaultFilePath);
+                new ServiceConfig().Save();
+                Environment.Exit(-1);
+            }
+            var configuration = ServiceConfig.Read();
+            var nlogPath = Folder.Combine("data", "nlog.config");
+            LogManager.Configuration = new XmlLoggingConfiguration(nlogPath);
+            return configuration;
         }
 
         private static bool StartService(Service service, HostControl hostControl)
