@@ -46,7 +46,10 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="NLog.config">
+    <None Include="data\config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="data\NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="NLog.xsd">
@@ -143,7 +146,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -169,6 +171,7 @@
     <Compile Include="..\..\subtree\quarks\src\Quarks\IO\Folder.cs">
       <Link>Quarks\Folder.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\DashBoard.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\Notifications\Severity.cs" />

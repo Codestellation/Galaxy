@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Notifications;
+using Codestellation.Quarks.IO;
 using Nejdb;
 using NLog;
 
@@ -60,17 +61,11 @@ namespace Codestellation.Galaxy.Infrastructure
         {
             const string databaseName = "galaxy.db";
 
-            var domainFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var databaseFolder = Path.Combine(domainFolder, "database");
+            var databaseFolder = Folder.Combine("data", "database");
             var dbPath = Path.Combine(databaseFolder, databaseName);
 
             Logger.Debug("Path to database: {0}", dbPath);
-            
-            if (!Directory.Exists(databaseFolder))
-            {
-                Directory.CreateDirectory(databaseFolder);
-            }
-
+            Folder.EnsureExists(databaseFolder);
             return dbPath;
         }
     }

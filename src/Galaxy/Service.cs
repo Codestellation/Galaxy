@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Configuration;
+using Codestellation.Galaxy.Configuration;
 using Microsoft.Owin.Hosting;
 
 namespace Codestellation.Galaxy
@@ -9,10 +9,9 @@ namespace Codestellation.Galaxy
         private IDisposable _owinHost;
         private string _uriString;
 
-        public Service()
+        public Service(ServiceConfig configuration)
         {
-            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
-            _uriString = string.Format("http://*:{0}", port);
+            _uriString = string.Format("http://*:{0}", configuration.WebPort);
         }
 
         public void Start()

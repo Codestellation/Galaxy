@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Configuration;
 using System.Threading;
+using Codestellation.Galaxy.Configuration;
+using Codestellation.Quarks.IO;
+using NLog;
+using NLog.Config;
 using Topshelf;
 using Topshelf.Logging;
 
@@ -13,13 +16,18 @@ namespace Codestellation.Galaxy
 
         private static int Main()
         {
+            var nlogPath = Folder.Combine("data", "nlog.config");
+            LogManager.Configuration = new XmlLoggingConfiguration(nlogPath);
+            
+            var configuration = ServiceConfig.Read();
+
             TopshelfExitCode code = HostFactory.Run(x =>
             {
                 x.UseNLog();
 
                 x.Service<Service>(s =>
                 {
-                    s.ConstructUsing(name => new Service());
+                    s.ConstructUsing(name => new Service(configuration));
                     s.WhenStarted(StartService);
                     s.WhenStopped(tc => tc.Stop());
                     s.WhenShutdown(tc => tc.Stop());
@@ -34,7 +42,7 @@ namespace Codestellation.Galaxy
                 x.SetDisplayName(ServiceName);
                 x.SetServiceName(ServiceName);
 
-                string instanceName = ConfigurationManager.AppSettings["InstanceName"];
+                string instanceName = configuration.InstanceName;
 
                 if (!string.IsNullOrEmpty(instanceName))
                 {
