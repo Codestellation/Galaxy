@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace Codestellation.Quarks.IO
 {
@@ -25,13 +26,25 @@ namespace Codestellation.Quarks.IO
             return new DirectoryInfo(fullPath);
         }
 
-        public static void EnsureDeleted(string folder)
+        public static void EnsureDeleted(string folder, int maxRetries = 100)
         {
             var fullPath = ToFullPath(folder);
             if (Directory.Exists(fullPath))
             {
                 Directory.Delete(fullPath, true);
             }
+
+            var totalRetries = Math.Max(maxRetries, 10000);
+            for (int retries = 0; retries < totalRetries; retries++)
+            {
+                if (!Directory.Exists(fullPath))
+                {
+                    return;
+                }
+                Thread.Sleep(10);
+            }
+            var message = string.Format("Could not delete folder {0}", fullPath);
+            throw new IOException(message);
         }
 
         public static FileInfo[] EnumerateFiles(string folder)
