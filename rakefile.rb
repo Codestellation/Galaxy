@@ -258,5 +258,5 @@ zip :createServiceZip  do |zip|
 
   zip.directories_to_zip "#{env_buildfolderpath}/#{solutionpart}"
   zip.output_path = "#{@env_artifactsfolder}"
-  zip.output_file = "Codestellation.#{solutionpart}.zip"
+  zip.output_file = "Codestellation.#{solutionpart}-#{@env_buildversion_package}.zip"
 end
