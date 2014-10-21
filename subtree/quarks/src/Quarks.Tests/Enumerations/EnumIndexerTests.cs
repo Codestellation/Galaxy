@@ -7,7 +7,7 @@ namespace Codestellation.Quarks.Tests.Enumerations
     [TestFixture]
     public class EnumIndexerTests
     {
-        public enum YesNo
+        public enum YesNo : byte
         {
             Yes,
             No

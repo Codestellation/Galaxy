@@ -17,12 +17,12 @@ namespace Codestellation.Quarks.Enumerations
                 throw new InvalidOperationException("Type parameter TEnum must be an Enum");
             }
 
-            var maxValue = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Cast<int>().Max();
+            var maxValue = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Select(x => Convert.ToInt32(x)).Max();
 
             _arraySize = maxValue + 1;
 
-            var enumValue = Expression.Parameter(typeof (TEnum));
-            var castToInt = Expression.Convert(enumValue, typeof (int));
+            var enumValue = Expression.Parameter(typeof(TEnum));
+            var castToInt = Expression.Convert(enumValue, typeof(int));
             ConvertToInt = Expression.Lambda<Func<TEnum, int>>(castToInt, enumValue).Compile();
         }
 
@@ -33,7 +33,7 @@ namespace Codestellation.Quarks.Enumerations
 
         private void InitializeArray()
         {
-            
+
             _valueArray = new TValue[_arraySize];
         }
 
@@ -48,7 +48,12 @@ namespace Codestellation.Quarks.Enumerations
             {
                 int intIndex = ConvertToInt(index);
                 _valueArray[intIndex] = value;
-            } 
+            }
+        }
+
+        public TValue[] GetValues()
+        {
+            return _valueArray;
         }
     }
 }
