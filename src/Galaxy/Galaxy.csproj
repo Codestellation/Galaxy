@@ -306,9 +306,6 @@
   <ItemGroup>
     <EmbeddedResource Include="WebEnd\Content\jquery.validate.bootstrap.js" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\signin.css" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
