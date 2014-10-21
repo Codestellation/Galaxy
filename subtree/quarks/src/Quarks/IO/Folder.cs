@@ -29,22 +29,24 @@ namespace Codestellation.Quarks.IO
         public static void EnsureDeleted(string folder, int maxRetries = 100)
         {
             var fullPath = ToFullPath(folder);
-            if (Directory.Exists(fullPath))
-            {
-                Directory.Delete(fullPath, true);
-            }
 
-            var totalRetries = Math.Max(maxRetries, 10000);
-            for (int retries = 0; retries < totalRetries; retries++)
-            {
-                if (!Directory.Exists(fullPath))
-                {
-                    return;
-                }
-                Thread.Sleep(10);
-            }
-            var message = string.Format("Could not delete folder {0}", fullPath);
-            throw new IOException(message);
+            var retries = 0;
+             while(Directory.Exists(fullPath))
+             {
+                 try
+                 {
+                     Directory.Delete(fullPath, true);
+                 }
+                 catch(IOException)
+                 {
+                     if (retries >= maxRetries)
+                     {
+                         throw;
+                     }
+                     Thread.Sleep(10);
+                 }
+                 retries++;
+              }
         }
 
         public static FileInfo[] EnumerateFiles(string folder)
@@ -111,6 +113,6 @@ namespace Codestellation.Quarks.IO
             }
         }
 
-        
+
     }
 }
