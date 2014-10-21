@@ -1,5 +1,6 @@
 ﻿@using Codestellation.Galaxy.WebEnd
 @using Codestellation.Galaxy.WebEnd.Misc
+@using Codestellation.Quarks.Reflection
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 <!DOCTYPE html>
 <html>
@@ -70,5 +71,8 @@
         @RenderBody()
     </div>
     <!-- /container -->
+    <div class="container">
+        <p class="pull-right">@AssemblyVersion.InformationalVersion</p>
+    </div>
 </body>
 </html>

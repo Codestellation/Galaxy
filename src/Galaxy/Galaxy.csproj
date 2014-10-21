@@ -162,6 +162,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionVersion.cs">
+      <Link>Properties\SolutionVersion.cs</Link>
+    </Compile>
     <Compile Include="..\..\subtree\quarks\src\Quarks\Collections\CollectionExtensions.cs">
       <Link>Quarks\CollectionExtensions.cs</Link>
     </Compile>
@@ -170,6 +173,12 @@
     </Compile>
     <Compile Include="..\..\subtree\quarks\src\Quarks\IO\Folder.cs">
       <Link>Quarks\Folder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\Reflection\AssemblyVersion.cs">
+      <Link>Quarks\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\Reflection\TypeExtensions.cs">
+      <Link>Quarks\TypeExtensions.cs</Link>
     </Compile>
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\DashBoard.cs" />
@@ -189,6 +198,7 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\PackageVersionCache.cs" />
     <Compile Include="Maintenance\CleanUpLog.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedNotifier.cs" />
     <Compile Include="ServiceManager\OperationBuilder.cs" />
