@@ -15,13 +15,14 @@ namespace Codestellation.Quarks.IO
             return ToFullPath(combined);
         }
 
-        public static void EnsureExists(string folder)
+        public static DirectoryInfo EnsureExists(string folder)
         {
             var fullPath = ToFullPath(folder);
             if (!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);
             }
+            return new DirectoryInfo(fullPath);
         }
 
         public static void EnsureDeleted(string folder)
@@ -37,6 +38,14 @@ namespace Codestellation.Quarks.IO
         {
             var fullPath = ToFullPath(folder);
             return Directory.EnumerateFiles(fullPath)
+                .Select(x => new FileInfo(x))
+                .ToArray();
+        }
+
+        public static FileInfo[] EnumerateFilesRecursive(string folder)
+        {
+            var fullPath = ToFullPath(folder);
+            return Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories)
                 .Select(x => new FileInfo(x))
                 .ToArray();
         }
