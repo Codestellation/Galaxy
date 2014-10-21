@@ -12,7 +12,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private readonly FileList _skipList;
         private TextWriter _buildLog;
 
-        public OverrideFiles(string serviceFolder, string deploymentFilesFolder,  FileList skipList)
+        public OverrideFiles(string serviceFolder, string deploymentFilesFolder, FileList skipList)
         {
             _serviceFolder = serviceFolder;
             _deploymentFilesFolder = deploymentFilesFolder;
@@ -35,33 +35,44 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         private void CopyFiles()
         {
-            var files = Folder.EnumerateFiles(_deploymentFilesFolder);
+            var files = Folder.EnumerateFilesRecursive(_deploymentFilesFolder);
+
+            _buildLog.WriteLine("Found {0} files to override.", files.Length);
 
             foreach (var file in files)
             {
-                var destination = Path.Combine(_serviceFolder, file.Name);
-                CopyFileToDestination(file.FullName, destination);
+                var destination = BuildDestination(file);
+
+                CopyFileToDestination(file, destination);
             }
         }
 
-        private void CopyFileToDestination(string source, string destination)
+        private FileInfo BuildDestination(FileInfo file)
+        {
+            var relativePath = file.FullName.Substring(_deploymentFilesFolder.Length + 1);
+
+            var destinationPath = Folder.Combine(_serviceFolder, relativePath);
+
+            var destination = new FileInfo(destinationPath);
+            return destination;
+        }
+
+        private void CopyFileToDestination(FileInfo source, FileInfo destination)
         {
             try
             {
-                _buildLog.Write("Copy '{0}' to '{1}'. ", source, destination);
+                _buildLog.Write("Copy '{0}' to '{1}'. ", source.FullName, destination.FullName);
 
-                if (_skipList.IsMatched(destination))
+                Folder.EnsureExists(destination.DirectoryName);
+
+                if (_skipList.IsMatched(destination.Name))
                 {
                     _buildLog.WriteLine("Skipped.");
                     return;
                 }
 
-                if (File.Exists(destination))
-                {
-                    File.Delete(destination);
-                }
+                source.CopyTo(destination.FullName, overwrite: true);
 
-                File.Copy(source, destination, true);
                 _buildLog.WriteLine("Ok");
             }
             catch (Exception ex)

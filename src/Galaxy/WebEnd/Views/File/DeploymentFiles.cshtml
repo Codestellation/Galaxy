@@ -20,6 +20,11 @@
             <form enctype="multipart/form-data" method="POST" action="/@FileModule.Path/@Model.DeploymentId">
                 <table class="table">
                     <tr>
+                        <td colspan="2">
+                            @Html.LabeledTextBox(x => x.PutTo)
+                        </td>                        
+                    </tr>
+                    <tr>
                         <td>
                             <input type="file" name="configfile" title="Browse...">
                         </td>
@@ -40,11 +45,11 @@
                 Uploaded Files
             </div>
             <ul class="list-group">
-                @foreach (var file in Model.Files)
+                @foreach (var file in Model.FilePaths)
                 {
                     <li class="list-group-item">
-                            <a href="/@FileModule.Path/@Model.DeploymentId/@file.Name">@file.Name</a>
-                            <button type="button" class="btn btn-danger btn-xs pull-right" value="@file.Name">
+                            <a href="/@FileModule.Path/@Model.DeploymentId@file">@file</a>
+                            <button type="button" class="btn btn-danger btn-xs pull-right" value="@file">
                                 <span class="glyphicon glyphicon-trash"></span>
                             </button>
                     </li>

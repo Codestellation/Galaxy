@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
@@ -43,13 +42,13 @@ namespace Codestellation.Galaxy.WebEnd
 
             var filesFolder = deployment.GetFilesFolder();
 
-            Folder.EnsureExists(filesFolder);
+            var filesDirectory = Folder.EnsureExists(filesFolder);
 
             var files = Folder
-                .EnumerateFiles(filesFolder)
+                .EnumerateFilesRecursive(filesFolder)
                 .SortAscending(x => x.Name);
 
-            return new DeploymentFilesModel(deployment.Id, files);
+            return new DeploymentFilesModel(deployment.Id, filesDirectory, files);
         }
 
         private object GetFile(dynamic parameters)
@@ -68,7 +67,14 @@ namespace Codestellation.Galaxy.WebEnd
             var file = Request.Files.First();
             var filename = file.Name;
 
-            var fullPath = Folder.Combine(deployment.GetFilesFolder(), filename);
+            string folderName = Request.Form.PutTo;
+
+            folderName = string.IsNullOrWhiteSpace(folderName) ? string.Empty : folderName;
+
+            var folderPath = Folder.Combine(deployment.GetFilesFolder(), folderName);
+            Folder.EnsureExists(folderPath);
+
+            var fullPath = Folder.Combine(folderPath, filename);
 
             using (var stream = File.OpenWrite(fullPath))
             {
