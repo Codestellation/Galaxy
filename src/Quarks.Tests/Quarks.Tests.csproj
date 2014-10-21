@@ -46,6 +46,7 @@
     <Compile Include="AllInternalsTests.cs" />
     <Compile Include="Collections\CollectionExtensionsTests.cs" />
     <Compile Include="DateAndTime\ClockTests.cs" />
+    <Compile Include="DateAndTime\DateTimeExtensionsTests.cs" />
     <Compile Include="Enumerations\EnumIndexerTests.cs" />
     <Compile Include="Enumerations\EnumUtil.cs" />
     <Compile Include="Collections\EnumerableExtensionsTests.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Resources\EmbeddedResourceTests.cs" />
     <Compile Include="IO\StreamExtensionsTests.cs" />
     <Compile Include="StringUtils\TemplateExpanderTests.cs" />
+    <Compile Include="Threading\PriciseTimerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quarks\Quarks.csproj">

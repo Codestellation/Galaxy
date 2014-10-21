@@ -40,6 +40,8 @@
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="Collections\HashSetExtensions.cs" />
+    <Compile Include="Contracts\Require.cs" />
+    <Compile Include="DateAndTime\DateTimeExtensions.cs" />
     <Compile Include="Exceptions\ExceptionExtensions.cs" />
     <Compile Include="IO\Folder.cs" />
     <Compile Include="Properties\AssebmlyInfo.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="StringUtils\TemplateExpander.cs" />
     <Compile Include="DateAndTime\Clock.cs" />
     <Compile Include="Threading\PreciseTimer.cs" />
+    <Compile Include="Threading\ThreadExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

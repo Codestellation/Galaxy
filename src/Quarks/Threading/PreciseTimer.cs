@@ -10,6 +10,7 @@ namespace Codestellation.Quarks.Threading
 
         private readonly Timer _internalTimer;
         private DateTime _fireAt;
+        private TimeSpan? _interval;
         private readonly TimerCallback _callback;
         private readonly object _state;
         private bool _shouldFireCallback;
@@ -23,11 +24,26 @@ namespace Codestellation.Quarks.Threading
 
         public void FireAt(DateTime fireAt)
         {
+            SetupInternal(fireAt, null);
+        }
+
+        public void FireAndRepeat(DateTime fireAt, TimeSpan interval)
+        {
+            if (interval < TimeSpan.FromSeconds(0))
+            {
+                throw new ArgumentOutOfRangeException("interval", interval, "Value should be greater than zero.");
+            }
+            SetupInternal(fireAt, interval);
+        }
+
+        private void SetupInternal(DateTime fireAt, TimeSpan? interval)
+        {
             if (fireAt.Kind == DateTimeKind.Unspecified)
             {
                 throw new ArgumentException("DateTimeKind must be Local or Utc, but was Unspecified", "fireAt");
             }
 
+            _interval = interval;
             _fireAt = fireAt.ToUniversalTime();
             _shouldFireCallback = false;
             SetupTimer(false);
@@ -47,6 +63,8 @@ namespace Codestellation.Quarks.Threading
                 {
                     ThreadPool.UnsafeQueueUserWorkItem(state => _callback(state), _state);
                 }
+
+                SetupFireSinceInterval();
             }
             else if (fireAfter > MaxTime)
             {
@@ -64,9 +82,20 @@ namespace Codestellation.Quarks.Threading
             if (_shouldFireCallback)
             {
                 _callback(_state);
+
+                SetupFireSinceInterval();
             }
             else
             {
+                SetupTimer(true);
+            }
+        }
+
+        private void SetupFireSinceInterval()
+        {
+            if (_interval.HasValue)
+            {
+                _fireAt = _fireAt + _interval.Value;
                 SetupTimer(true);
             }
         }
