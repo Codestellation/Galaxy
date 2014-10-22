@@ -25,13 +25,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var deployment in Model.Deployments)
+                        @foreach (var group in Model.Groups)
                         {
                             <tr>
-                                <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.ServiceFullName</a></td>
-                                <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == deployment.FeedId).Value</td>
-                                <td>@deployment.Status</td>
+                                <td colspan="3">
+                                    <h4>@group</h4>
+                                </td>
                             </tr>
+                            foreach (var deployment in Model.GetModelsByGroup(group))
+                             {
+                                 <tr>
+                                     <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.ServiceFullName</a></td>
+                                     <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == deployment.FeedId).Value</td>
+                                     <td>@deployment.Status</td>
+                                 </tr>
+                             }
                         }
                     </tbody>
                 </table>

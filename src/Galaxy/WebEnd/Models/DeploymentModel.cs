@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using Nejdb.Bson;
 using Codestellation.Galaxy.Domain;
 
@@ -21,6 +22,9 @@ namespace Codestellation.Galaxy.WebEnd.Models
                     : string.Format("{0} ({1})", PackageId, InstanceName);
             }
         }
+
+        [Display(Name = "Service group", Prompt = "Service group")]
+        public string Group { get; set; }
 
         [Display(Name = "Instance name", Prompt = "Instance name")]
         public string InstanceName { get; set; }
@@ -88,8 +92,12 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
             State = deployment.GetServiceState();
 
+            Group = deployment.Group;
+
             IsNew = false;
         }
+
+        
 
         public DeploymentModel(Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds):
             this(deployment)
@@ -112,7 +120,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             deployment.InstanceName = InstanceName;
             deployment.FeedId = FeedId;
             deployment.PackageId = PackageId;
-
+            deployment.Group = Group;
             deployment.KeepOnUpdate = ParseKeepOnUpdate();
         }
 
