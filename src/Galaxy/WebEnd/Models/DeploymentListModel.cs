@@ -16,7 +16,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             AllFeeds = dashBoard.Feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), dashBoard.Feeds.Count);
             Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentModel(x, AllFeeds), dashBoard.Deployments.Count);
-            Groups = Deployments.Select(GetGroup).Distinct().ToArray();
+            Groups = Deployments.Select(GetGroup).Distinct().OrderBy(x => x).ToArray();
         }
 
         public string[] Groups { get; set; }
