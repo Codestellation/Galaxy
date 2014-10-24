@@ -112,7 +112,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             this(deployment)
         {
             _allFeeds = allFeeds;
-            _packageVersions = packageVersions.Select(item => new KeyValuePair<Version, string>(item, item.ToString()));
+            _packageVersions = packageVersions.OrderByDescending(x => x).Select(item => new KeyValuePair<Version, string>(item, item.ToString()));
         }
 
         public void Update(Deployment deployment)
