@@ -189,6 +189,7 @@
     </Compile>
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\DashBoard.cs" />
+    <Compile Include="Domain\SpecialFolderDictionary.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\Notifications\Severity.cs" />
     <Compile Include="Domain\Notifications\Notification.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\Options.cs" />
+    <Compile Include="Domain\SpecialFolder.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Infrastructure\Emisstar\EmisstarInstaller.cs" />
     <Compile Include="Infrastructure\FileResponse.cs" />
