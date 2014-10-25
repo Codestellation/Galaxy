@@ -163,6 +163,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\Enumerations\EnumIndexer.cs">
+      <Link>Quarks\EnumIndexer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\Enumerations\EnumUtil.cs">
+      <Link>Quarks\EnumUtil.cs</Link>
+    </Compile>
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using System.ServiceProcess;
+using Codestellation.Quarks.Enumerations;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -34,7 +35,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             if (status == ServiceControllerStatus.Stopped || status == ServiceControllerStatus.StopPending)
             {
-                _context.BuildLog.WriteLine("Service '{0}' at state '{1}'. Stop skipped.", ServiceName, status.ToString());
+                _context.BuildLog.WriteLine("Service '{0}' at state '{1}'. Stop skipped.", ServiceName, status.AsString());
             }
             else
             {
