@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.ServiceProcess;
-using Codestellation.Quarks.IO;
 using Nejdb.Bson;
 using System;
 
@@ -8,10 +7,6 @@ namespace Codestellation.Galaxy.Domain
 {
     public class Deployment
     {
-        private string _deployLogFolder;
-        private string _fileOverridesFolder;
-        private string _backupFolder;
-
         public ObjectId Id { get; internal set; }
         
         public string Group { get; set; }
@@ -22,11 +17,18 @@ namespace Codestellation.Galaxy.Domain
         public string Status { get; set; }
         public string PackageId { get; set; }
         public Version PackageVersion { get; set; }
-
         public FileList KeepOnUpdate { get; set; }
+
+        public Deployment()
+        {
+            ServiceFolders = new SpecialFolderDictionary();
+        }
+
+        public SpecialFolderDictionary ServiceFolders { get; private set; }
 
         public string GetServiceName()
         {
+            //NOTE: instance name may change. Do not cache it
             if (string.IsNullOrWhiteSpace(InstanceName))
             {
                 return PackageId;
@@ -35,34 +37,24 @@ namespace Codestellation.Galaxy.Domain
             return string.Format("{0}${1}", PackageId, InstanceName);
         }
 
-        public string GetDeployFolder(string baseFolder)
+        public string GetDeployFolder()
         {
-            if (string.IsNullOrWhiteSpace(InstanceName))
-            {
-                return Folder.Combine(baseFolder, PackageId);
-            }
-
-            return Folder.Combine(baseFolder, string.Format("{0}-{1}", PackageId, InstanceName));
+            return ServiceFolders[SpecialFolderDictionary.DeployFolder].FullPath;
         }
 
         public string GetDeployLogFolder()
         {
-            return _deployLogFolder ?? (_deployLogFolder = BuildServiceFolder("BuildLogs"));
+            return ServiceFolders[SpecialFolderDictionary.DeployLogsFolder].FullPath;
         }
 
         public string GetFilesFolder()
         {
-            return _fileOverridesFolder ?? (_fileOverridesFolder = BuildServiceFolder("FileOverrides"));
+            return ServiceFolders[SpecialFolderDictionary.FileOverrides].FullPath;
         }
 
         public string GetBackupFolder()
         {
-            return _backupFolder ?? (_backupFolder = BuildServiceFolder("Backups"));
-        }
-
-        private string BuildServiceFolder(string subfolder)
-        {
-            return Folder.Combine(Folder.BasePath, Id.ToString() , subfolder);
+            return ServiceFolders[SpecialFolderDictionary.BackupFolder].FullPath;
         }
 
         public string GetServiceState()

@@ -5,31 +5,24 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class OperationBuilder
     {
-        private readonly Options _options;
-
-        public OperationBuilder(Options options)
-        {
-            _options = options;
-        }
-        
         public IOperation BackupService(Deployment deployment)
         {
             var serviceName = deployment.GetServiceName();
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             var backupFolder = deployment.GetBackupFolder();
             return new BackupService(serviceName, serviceFolder, backupFolder);
         }
 
         public IOperation ClearBinaries(Deployment deployment, FileList keepOnUpdate = null)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             keepOnUpdate = keepOnUpdate ??  deployment.KeepOnUpdate.Clone();
             return new ClearBinaries(serviceFolder, keepOnUpdate);
         }
 
         public IOperation InstallPackage(Deployment deployment, NugetFeed deploymentFeed, FileList keepOnUpdate)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             var packageId = deployment.PackageId;
             var feedUri = deploymentFeed.Uri;
             var packageVersion = deployment.PackageVersion;
@@ -39,7 +32,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation UninstallPackage(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             return new UninstallPackage(serviceFolder);
         }
 
@@ -57,7 +50,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation InstallService(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             var hostFileName = deployment.GetServiceHostFileName();
             var instanceName = deployment.InstanceName;
             return new InstallService(serviceFolder, hostFileName, instanceName);
@@ -65,7 +58,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation UninstallService(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             var hostFileName = deployment.GetServiceHostFileName();
             var instanceName = deployment.InstanceName;
             return new UninstallService(serviceFolder, hostFileName, instanceName);
@@ -73,7 +66,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation OverrideFiles(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             var serviceFilesFolder = deployment.GetFilesFolder();
             var keepOnUpdate = deployment.KeepOnUpdate.Clone();
             return new OverrideFiles(serviceFolder, serviceFilesFolder, keepOnUpdate);
@@ -81,7 +74,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation RestoreFrom(Deployment deployment, string backupFolder)
         {
-            var serviceFolder = deployment.GetDeployFolder(_options.GetDeployFolder());
+            var serviceFolder = deployment.GetDeployFolder();
             return new RestoreFromBackup(serviceFolder, backupFolder);
         }
     }
