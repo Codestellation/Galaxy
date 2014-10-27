@@ -12,7 +12,7 @@ require 'albacore'
 @env_solutionfolder = "./src"
 
 @env_nugetpackagesfolder = "#{@env_solutionfolder}/packages"
-@env_nugetexefolder = "#{@env_solutionfolder}/.nuget"
+@env_nugetexefolder = "tools"
 @env_authors = "Codestellation Team"
 @env_description = "Windows hosting service"
 
@@ -201,11 +201,8 @@ task :copyServiceBinaries do |msb|
   files_to_copy.exclude(/vshost/)
 
   Dir.glob(service_source).select {|f| File.directory?(f) }.each do |dir|
-    puts "exclude #{dir}"
     files_to_copy.exclude(dir)
   end
-    
-  puts files_to_copy
 
   FileUtils.cp_r(files_to_copy, "#{env_buildfolderpath}/#{solutionpart}")
 end
