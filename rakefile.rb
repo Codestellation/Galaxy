@@ -28,8 +28,6 @@ require 'albacore'
 @env_buildsfolder = "build"
 @env_artifactsfolder = "#{@env_buildsfolder}/artifacts"
 
-@env_is_x64 = true
-
 @env_debug_output = true
 
 
@@ -129,10 +127,10 @@ task :presentResults do
   puts "Solution binaries in #{env_buildfolderpath}"
 end
 
-desc "Install NUnit.Runners package"
+desc "Restore packages"
 exec :installNUnitRunners do |cmd|
   cmd.command = "./#{@env_nugetexefolder}/NuGet.exe"
-  cmd.parameters = "install NUnit.Runners -o #{@env_nugetpackagesfolder} -ExcludeVersion"
+  cmd.parameters = "restore #{@env_solutionfolder}/#{@env_projectname}.sln"
 end
 
 desc "Generate solution version"
@@ -187,16 +185,29 @@ task :copyHostBinaries do
 end
 
 desc "Copy Galaxy service binaries to output"
-task :copyServiceBinaries do
+task :copyServiceBinaries do |msb|
+  
   solutionpart = "Galaxy"
   if @env_debug_output
     puts "Copying output for Galaxy service..."
     puts "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname} -> #{env_buildfolderpath}/#{solutionpart}"
   end
+  FileUtils.rm_rf("#{env_buildfolderpath}/#{solutionpart}")
   FileUtils.mkdir_p("#{env_buildfolderpath}/#{solutionpart}")
-  FileUtils.cp_r(
-      FileList["#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname}/*.*"].exclude(/vshost/).exclude("*.xml"), 
-      "#{env_buildfolderpath}/#{solutionpart}")
+  
+  service_source = "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname}/*";
+  files_to_copy = FileList.new(service_source)
+  files_to_copy.exclude(/.xml/)
+  files_to_copy.exclude(/vshost/)
+
+  Dir.glob(service_source).select {|f| File.directory?(f) }.each do |dir|
+    puts "exclude #{dir}"
+    files_to_copy.exclude(dir)
+  end
+    
+  puts files_to_copy
+
+  FileUtils.cp_r(files_to_copy, "#{env_buildfolderpath}/#{solutionpart}")
 end
 
 desc "Create nuspec file for Galaxy.Host"
@@ -225,11 +236,9 @@ nunit :runUnitTests do |nunit|
       puts pathitem
     end
   end
-  if @env_is_x64
-    nunit.command = "#{@env_nugetpackagesfolder}/NUnit.Runners/tools/nunit-console.exe"
-  elsif 
-    nunit.command = "#{@env_nugetpackagesfolder}/NUnit.Runners/tools/nunit-console-x86.exe"
-  end
+
+  nunit.command = Dir.glob("#{@env_nugetpackagesfolder}/**/nunit-console.exe").first;
+
   nunit.options "/framework=v4.0.30319","/xml=#{env_buildfolderpath}/NUnit-results-#{@env_projectname}-UnitTests.xml","/nologo"
   nunit.assemblies = FileList["#{@env_solutionfolder}/**.Tests/bin/#{@env_buildconfigname}/*.Tests.dll"].exclude(@env_testsexceptions)
 end
