@@ -114,7 +114,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             SaveDeployment(deployment);
 
-            return new RedirectResponse("/" + Path);
+            return RedirectToDetails(id);
         }
 
         protected override object PostDelete(dynamic parameters)
@@ -124,7 +124,7 @@ namespace Codestellation.Galaxy.WebEnd
             _deployments.Delete(id);
             _dashBoard.RemoveDeployment(id);
 
-            return new RedirectResponse("/" + Path);
+            return RedirectToList();
         }
 
         protected override object GetDetails(dynamic parameters)
