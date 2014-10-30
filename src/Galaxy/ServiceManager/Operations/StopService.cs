@@ -28,7 +28,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private void StopServiceAction(ServiceController sc)
         {
             var status = sc.Status;
-            
+
             TryFindProcess();
 
             _context.SetValue(DeploymentTaskContext.ServiceStatus, status);
@@ -65,7 +65,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 return;
             }
+
             var processId = Convert.ToInt32(managementObject["ProcessId"]);
+            if (processId == 0)
+            {
+                return;
+            }
 
             _process = Process.GetProcessById(processId);
         }
