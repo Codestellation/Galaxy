@@ -73,7 +73,7 @@
       <Link>Quarks\TypeExtensions.cs</Link>
     </Compile>
     <Compile Include="..\SolutionVersion.cs">
-      <Link>SolutionVersion.cs</Link>
+      <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="AgentService.cs" />
     <Compile Include="RootController.cs" />
