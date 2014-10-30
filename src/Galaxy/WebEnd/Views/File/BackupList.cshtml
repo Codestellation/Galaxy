@@ -1,4 +1,5 @@
-﻿@using System.Linq
+﻿@using System.IO
+@using System.Linq
 @using Codestellation.Galaxy.WebEnd
 @using Nancy.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.BackupListModel>
@@ -11,14 +12,16 @@
                 Available backups
             </div>
             <ul class="list-group">
-                @foreach (var folder in Model.Folders)
+                @for (int index = 0; index < Model.Folders.Length; index++)
                 {
+                    @{ var folder = Model.Folders[index]; }
+
                     <li class="list-group-item">
                         @folder.Name
-                        <button type="button" class="btn btn-danger btn-xs pull-right" value="@HttpUtility.HtmlEncode(folder.Name)" data-toggle="modal" data-target="#delete-confirmation">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" data-toggle="modal" data-target="#delete-confirmation-@index">
                             <span class="glyphicon glyphicon-flash"></span>
                         </button>
-                        <div class="modal fade" id="delete-confirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="delete-confirmation-@index" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -29,7 +32,7 @@
                                         Do you really want to restore backup @folder.Name ?
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-danger" type="button" data-dismiss="modal" value="Restore">Restore!</button>
+                                        <button class="btn btn-danger" type="button" data-dismiss="modal" data-path="@HttpUtility.HtmlEncode(folder.Name)">Restore!</button>
                                         <button class="btn btn-default" type="button" data-dismiss="modal">Cancel!</button>
                                     </div>
                                 </div>
@@ -44,13 +47,13 @@
 
 <script>
     $(document).ready(function () {
-        $('[value=Restore]')
-            .bind('click', function () {
-                var button = $(this);
+        $('button[data-path]').each(function () {
+            $(this).bind('click', function () {
                 $.ajax({
-                    url: '/@FileModule.Path/backup/@Model.DeploymentId?name=' + encodeURIComponent(button.val()),
+                    url: '/@FileModule.Path/backup/@Model.DeploymentId?name=' + encodeURIComponent($(this).attr("data-path")),
                     type: 'POST',
                 });
             });
+        });
     });
 </script>
