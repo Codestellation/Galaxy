@@ -28,6 +28,11 @@
                         <td>Status</td>
                         <td>@Model.Status</td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a href="/@FileModule.Path/@Model.Id">Manage File Overrides</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="panel-footer">
@@ -66,10 +71,6 @@
 
             <ul class="list-group">
                 <li class="list-group-item">
-                    <a href="/@FileModule.Path/@Model.Id">Upload or view files</a>
-                </li>
-                <li class="list-group-item">
-
                     <div class="row">
                         <div class="container col-lg-6">
                             @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
@@ -79,49 +80,20 @@
                             <button id="btn-update" type="button" class="btn btn-primary">Update</button>
                         </div>
                     </div>
-
+                </li>
+                <li class="list-group-item">
+                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/start/@Model.Id">Start</button>
+                </li>
+                <li class="list-group-item">
+                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/stop/@Model.Id">Stop</button>
+                </li>
+                <li class="list-group-item">
+                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/install/@Model.Id">Install</button>
+                </li>
+                <li class="list-group-item">
+                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/uninstall/@Model.Id">Uninstall</button>
                 </li>
             </ul>
-        </div>
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Tasks
-            </div>
-            <table class="table">
-                <tr>
-                    <td>
-                        <form action="/@DeploymentModule.Path/install/@Model.Id" method="POST">
-                            <input type="submit" class="btn btn-primary btn-sm" value="Install" />
-                        </form>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <form action="/@DeploymentModule.Path/start/@Model.Id" method="POST">
-                            <input type="submit" class="btn btn-primary btn-sm" value="Start" />
-                        </form>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <form action="/@DeploymentModule.Path/stop/@Model.Id" method="POST">
-                            <input type="submit" class="btn btn-primary btn-sm" value="Stop" />
-                        </form>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <form action="/@DeploymentModule.Path/uninstall/@Model.Id" method="POST">
-                            <input type="submit" class="btn btn-primary btn-sm" value="Uninstall" />
-                        </form>
-                    </td>
-                </tr>
-            </table>
-            <div class="panel-footer">
-            </div>
         </div>
     </div>
 </div>
@@ -145,5 +117,14 @@
                     type: 'POST'
                 });
             });
+
+        $('button[value]').each(function () {
+            $(this).bind('click', function () {
+                $.ajax({
+                    url: $(this).val(),
+                    type: 'POST',
+                });
+            });
+        });
     });
 </script>
