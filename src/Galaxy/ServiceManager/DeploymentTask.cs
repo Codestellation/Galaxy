@@ -54,7 +54,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public void Process()
         {
             //All exceptions are catched. No need to prevent task finalizers faults.
-            _task = Task.Factory.StartNew(ProcessInternal);
+            _task = Task.Factory.StartNew(ProcessInternal, TaskCreationOptions.LongRunning);
         }
 
         public void Wait()
