@@ -235,6 +235,8 @@
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebEnd\AgentModule.cs" />
+    <Compile Include="WebEnd\JobModule.cs" />
     <Compile Include="WebEnd\Models\BackupListModel.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />

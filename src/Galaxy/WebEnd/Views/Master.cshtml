@@ -6,15 +6,15 @@
 <html>
 <head>
     <title>Codestellation.Galaxy</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/content/bootstrap.min.css" rel="stylesheet" />
     <link href="/content/bootstrap-theme.min.css" rel="stylesheet" />
-    
+
     <script src="/content/jquery-2.1.0.min.js"></script>
     <script src="/content/bootstrap.min.js"></script>
-    <script src="/content/bootstrap.file-input.js"></script>    
+    <script src="/content/bootstrap.file-input.js"></script>
     <script src="/content/jquery.validate-1.11.1.min.js"></script>
     <script src="/content/additional-methods-1.11.1.min.js"></script>
     <script src="/content/jquery.validate.bootstrap.js"></script>
@@ -47,6 +47,8 @@
                         <li @Html.HighLightActive()><a href="/">Dashboard</a></li>
                         <li @Html.HighLightActive(FeedModule.Path)><a href="/@FeedModule.Path">Feeds</a></li>
                         <li @Html.HighLightActive(DeploymentModule.Path)><a href="/@DeploymentModule.Path">Deployments</a></li>
+                        <li @Html.HighLightActive(JobModule.Path)><a href="/@JobModule.Path">Jobs</a></li>
+                        <li @Html.HighLightActive(AgentModule.Path)><a href="/@AgentModule.Path">Agents</a></li>
                         <li @Html.HighLightActive(OptionsModule.Path)><a href="/@OptionsModule.Path">Options</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
