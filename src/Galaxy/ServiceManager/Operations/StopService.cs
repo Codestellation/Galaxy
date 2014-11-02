@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management;
 using System.ServiceProcess;
 using Codestellation.Quarks.Enumerations;
+using TimeoutException = System.TimeoutException;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -50,10 +51,20 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         private void WaitForProcessExit()
         {
-            if (_process != null)
+            if (_process == null)
             {
-                _process.WaitForExit();
+                return;
             }
+            var timeout = TimeSpan.FromMinutes(3);
+            var hasExited = _process.WaitForExit((int) timeout.TotalMilliseconds);
+
+            if (hasExited)
+            {
+                return;
+            }
+            var message = string.Format(
+                "Process {0}-{1} did not exit after period {2}. Possible hang up?.", _process.Id, _process.ProcessName, timeout);
+            throw new TimeoutException(message);
         }
 
         private void TryFindProcess()
