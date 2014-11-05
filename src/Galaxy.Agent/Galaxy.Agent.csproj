@@ -76,7 +76,8 @@
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="AgentService.cs" />
-    <Compile Include="RootController.cs" />
+    <Compile Include="Controllers\TasksController.cs" />
+    <Compile Include="Controllers\RootController.cs" />
     <Compile Include="OwinStartup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
