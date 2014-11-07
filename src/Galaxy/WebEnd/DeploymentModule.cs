@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
 using Nejdb;
@@ -12,7 +11,6 @@ using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using System;
-using System.Threading;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -21,15 +19,17 @@ namespace Codestellation.Galaxy.WebEnd
         private readonly DashBoard _dashBoard;
         private readonly PackageVersionCache _versionCache;
         private readonly TaskBuilder _taskBuilder;
+        private readonly Options _options;
         private readonly Collection _deployments;
         public const string Path = "deployment";
 
-        public DeploymentModule(Repository repository, DashBoard dashBoard, PackageVersionCache versionCache, TaskBuilder taskBuilder)
+        public DeploymentModule(Repository repository, DashBoard dashBoard, PackageVersionCache versionCache, TaskBuilder taskBuilder, Options options)
             : base(Path)
         {
             _dashBoard = dashBoard;
             _versionCache = versionCache;
             _taskBuilder = taskBuilder;
+            _options = options;
             _deployments = repository.GetCollection<Deployment>();
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
@@ -41,7 +41,7 @@ namespace Codestellation.Galaxy.WebEnd
 
             Get["/build-log/{id}", true] = (parameters, token) => ProcessRequest(() => GetBuildLogs(parameters), token);
             Get["/build-log/{id}/{filename}", true] = (parameters, token) => ProcessRequest(() => GetBuildLog(parameters), token);
-            
+
         }
 
         private object GetBuildLog(dynamic parameters)
@@ -89,11 +89,36 @@ namespace Codestellation.Galaxy.WebEnd
             var item = this.Bind<DeploymentModel>();
             var deployment = item.ToDeployment();
 
+            FillServiceFolders(deployment);
+
             SaveDeployment(deployment);
 
             _dashBoard.AddDeployment(deployment);
 
             return RedirectToList();
+        }
+
+        private void FillServiceFolders(Deployment deployment)
+        {
+            var serviceFolders = deployment.ServiceFolders;
+
+            var fullPath = string.IsNullOrWhiteSpace(deployment.InstanceName)
+                ? Folder.Combine(_options.GetDeployFolder(), deployment.PackageId)
+                : Folder.Combine(_options.GetDeployFolder(), string.Format("{0}-{1}", deployment.PackageId, deployment.InstanceName));
+            var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, fullPath);
+            serviceFolders.Add(specialFolder);
+
+
+            BuildServiceFolder(deployment, SpecialFolderDictionary.DeployLogsFolder, "BuildLogs");
+            BuildServiceFolder(deployment, SpecialFolderDictionary.FileOverrides, "FileOverrides");
+            BuildServiceFolder(deployment, SpecialFolderDictionary.BackupFolder, "Backups");
+        }
+
+        private void BuildServiceFolder(Deployment deployment, string purpose, string subfolder)
+        {
+            var fullPath = Folder.Combine(Folder.BasePath, deployment.Id.ToString(), subfolder);
+            var folder = new SpecialFolder(purpose, fullPath);
+            deployment.ServiceFolders.Add(folder);
         }
 
         protected override object GetEdit(dynamic parameters)
@@ -143,7 +168,7 @@ namespace Codestellation.Galaxy.WebEnd
                 _dashBoard
                 .Feeds
                 .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _dashBoard.Feeds.Count);
-                
+
             return allFeeds;
         }
 
@@ -151,7 +176,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.InstallServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.InstallServiceTask);
 
             return RedirectToDetails(id);
         }
@@ -160,7 +185,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.StartServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.StartServiceTask);
 
             return RedirectToDetails(id);
         }
@@ -169,7 +194,7 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.StopServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.StopServiceTask);
 
             return RedirectToDetails(id);
         }
@@ -178,18 +203,16 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.UninstallServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.UninstallServiceTask);
 
             return RedirectToDetails(id);
         }
-
-        //TODO: three following methods are not eligible for web-module
 
         private void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFactory)
         {
             var deployment = _dashBoard.GetDeployment(deploymentId);
 
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));            
+            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
 
             //TODO: What else? Ignore silently? 
             if (targetFeed != null)
@@ -203,13 +226,13 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             var version = new Version(parameters.version);
-            
+
             var deployment = _dashBoard.GetDeployment(id);
             deployment.PackageVersion = version;
 
             SaveDeployment(deployment);
 
-            ExecuteServiceControlAction(id, _taskBuilder.DeployServiceTask);         
+            ExecuteServiceControlAction(id, _taskBuilder.DeployServiceTask);
 
             return RedirectToDetails(id);
         }

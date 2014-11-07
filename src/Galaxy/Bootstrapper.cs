@@ -8,7 +8,6 @@ using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd;
 using Codestellation.Galaxy.WebEnd.Misc;
-using Codestellation.Quarks.IO;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Windsor;
@@ -134,7 +133,6 @@ namespace Codestellation.Galaxy
                     dashBoard.AddFeed(feed);
                 }
             }
-            var options = container.Resolve<Options>();
 
             var collection = repository.GetCollection<Deployment>();
             using (var query = collection.CreateQuery<Deployment>())
@@ -143,49 +141,10 @@ namespace Codestellation.Galaxy
                 foreach (var deployment in cursor)
                 {
                     dashBoard.AddDeployment(deployment);
-                    var foldersCount = deployment.ServiceFolders.Count;
-                    FillServiceFolders(deployment, options);
-
-                    var anyFoldersAdded = foldersCount != deployment.ServiceFolders.Count;
-                    if (anyFoldersAdded)
-                    {
-                        collection.Save(deployment, false);
-                    }
                 }
             }
         }
         
-        //TODO: this is special migration method. Remove it after service update
-        private void FillServiceFolders(Deployment deployment, Options options)
-        {
-            var serviceFolders = deployment.ServiceFolders;
-            
-            if (!serviceFolders.ContainsKey(SpecialFolderDictionary.DeployFolder))
-            {
-                var fullPath = string.IsNullOrWhiteSpace(deployment.InstanceName)
-                    ? Folder.Combine(options.GetDeployFolder(), deployment.PackageId)
-                    : Folder.Combine(options.GetDeployFolder(), string.Format("{0}-{1}", deployment.PackageId, deployment.InstanceName));
-                var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, fullPath);
-                serviceFolders.Add(specialFolder);
-            }
-
-            BuildServiceFolder(deployment, SpecialFolderDictionary.DeployLogsFolder, "BuildLogs");
-            BuildServiceFolder(deployment, SpecialFolderDictionary.FileOverrides, "FileOverrides");
-            BuildServiceFolder(deployment, SpecialFolderDictionary.BackupFolder, "Backups");
-        }
-
-        private void BuildServiceFolder(Deployment deployment, string purpose, string subfolder)
-        {
-            if (deployment.ServiceFolders.ContainsKey(purpose))
-            {
-                return;
-            }
-            
-            var fullPath = Folder.Combine(Folder.BasePath, deployment.Id.ToString(), subfolder);
-            var folder = new SpecialFolder(purpose, fullPath);
-            deployment.ServiceFolders.Add(folder);
-        }
-
         protected override NancyInternalConfiguration InternalConfiguration
         {
             get { return NancyInternalConfiguration.WithOverrides(OnConfigurationBuilder); }
