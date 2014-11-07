@@ -95,8 +95,12 @@
     </Compile>
     <Compile Include="AgentConfig.cs" />
     <Compile Include="AgentService.cs" />
-    <Compile Include="Controllers\TasksController.cs" />
-    <Compile Include="Controllers\RootController.cs" />
+    <Compile Include="Web\Error.cs" />
+    <Compile Include="Web\Response.cs" />
+    <Compile Include="Web\ServiceControl\ServiceStatus.cs" />
+    <Compile Include="Web\ServiceControl\SystemInfo.cs" />
+    <Compile Include="Web\Tasks\TasksController.cs" />
+    <Compile Include="Web\ServiceControl\RootController.cs" />
     <Compile Include="OwinStartup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -117,6 +121,7 @@
       <Name>Galaxy.Host</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

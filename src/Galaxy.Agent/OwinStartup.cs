@@ -13,6 +13,10 @@ namespace Galaxy.Agent
                 routeTemplate: "{controller}/{id}",
                 defaults: new { controller = "root", id = RouteParameter.Optional }
             );
+            config.Routes.MapHttpRoute(
+                name: "controlleraction",
+                routeTemplate: "{controller}/{action}"
+            );
 
             appBuilder.UseWebApi(config);
         } 
