@@ -1,4 +1,8 @@
-﻿using Codestellation.Galaxy.Host;
+﻿using System.IO;
+using Codestellation.Galaxy.Host;
+using Codestellation.Quarks.IO;
+using NLog;
+using NLog.Config;
 
 namespace Galaxy.Agent
 {
@@ -6,6 +10,13 @@ namespace Galaxy.Agent
     {
         private static void Main()
         {
+            var nlogPath = Folder.Combine("data", "nlog.config");
+
+            if (File.Exists(nlogPath))
+            {
+                LogManager.Configuration = new XmlLoggingConfiguration(nlogPath);
+            }
+
             Run.Service<AgentService>();
         }
     }
