@@ -1,4 +1,4 @@
-﻿namespace Galaxy.Agent
+﻿namespace Codestellation.Galaxy.Agent.Web.ServiceControl
 {
     public class ServiceStatus
     {

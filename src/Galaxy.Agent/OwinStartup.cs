@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Owin;
 
-namespace Galaxy.Agent
+namespace Codestellation.Galaxy.Agent
 {
     public class OwinStartup
     {

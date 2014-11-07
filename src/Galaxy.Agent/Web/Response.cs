@@ -1,4 +1,4 @@
-﻿namespace Galaxy.Agent.Controllers
+﻿namespace Codestellation.Galaxy.Agent.Web
 {
     public static class Response
     {

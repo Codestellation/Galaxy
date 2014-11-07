@@ -4,7 +4,7 @@ using Codestellation.Quarks.IO;
 using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
 
-namespace Galaxy.Agent
+namespace Codestellation.Galaxy.Agent
 {
     public class AgentService
     {

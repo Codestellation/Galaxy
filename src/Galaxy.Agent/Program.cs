@@ -4,7 +4,7 @@ using Codestellation.Quarks.IO;
 using NLog;
 using NLog.Config;
 
-namespace Galaxy.Agent
+namespace Codestellation.Galaxy.Agent
 {
     internal class Program
     {

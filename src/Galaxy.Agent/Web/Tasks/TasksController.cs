@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Http;
 
-namespace Galaxy.Agent.Controllers
+namespace Codestellation.Galaxy.Agent.Web.Tasks
 {
     /*  To be done
      *  GET /tasks - current queued tasks

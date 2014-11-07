@@ -7,8 +7,8 @@
     <ProjectGuid>{1E9531B5-F840-4FEC-B408-9D006D481026}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Galaxy.Agent</RootNamespace>
-    <AssemblyName>Galaxy.Agent</AssemblyName>
+    <RootNamespace>Codestellation.Galaxy.Agent</RootNamespace>
+    <AssemblyName>Codestellation.Galaxy.Agent</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
