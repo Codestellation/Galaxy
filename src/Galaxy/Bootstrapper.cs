@@ -3,6 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Agents;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
@@ -77,6 +78,10 @@ namespace Codestellation.Galaxy
 
                 Component
                     .For<Notifier>()
+                    .LifestyleSingleton(),
+
+                Component
+                    .For<AgentBoard>()
                     .LifestyleSingleton()
                 );
             base.ConfigureApplicationContainer(container);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Agents;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Quarks.IO;
 using Nejdb;
@@ -32,6 +33,7 @@ namespace Codestellation.Galaxy.Infrastructure
             CreateCollection("deployments", typeof(Deployment));
             CreateCollection("options", typeof(Options));
             CreateCollection("notification", typeof(Notification));
+            CreateCollection("agents", typeof(Agent));
         }
 
         private void CreateCollection(string collectionName, Type entityType)

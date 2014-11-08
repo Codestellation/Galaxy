@@ -1,10 +1,19 @@
-﻿using Nejdb.Bson;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Codestellation.Galaxy.Domain.Agents;
+using Codestellation.Quarks.Collections;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd.Models
 {
     public class AgentListModel
     {
         private AgentItemModel[] _agents;
+
+        public AgentListModel(IReadOnlyCollection<Agent> agents)
+        {
+            _agents = agents.ConvertToArray(x => new AgentItemModel(x), agents.Count);
+        }
 
         public AgentItemModel[] Agents
         {
@@ -15,6 +24,13 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
     public class AgentItemModel
     {
+        public AgentItemModel(Agent agent)
+        {
+            Id = agent.Id;
+            Host = agent.Endpoint.Host;
+            Port = agent.Endpoint.Port;
+        }
+
         public ObjectId Id { get; set; }
         
         public string Host { get; set; }
