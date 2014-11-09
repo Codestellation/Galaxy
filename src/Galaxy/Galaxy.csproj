@@ -73,6 +73,7 @@
     <EmbeddedResource Include="WebEnd\Views\Deployment\Edit.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\Details.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\Agent\AgentDetails.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Options\Options.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\BuildLogs.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\File\DeploymentFiles.cshtml" />
@@ -242,6 +243,7 @@
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebEnd\Models\AgentDetailsModel.cs" />
     <Compile Include="WebEnd\Models\CreateAgentModel.cs" />
     <Compile Include="WebEnd\AgentModule.cs" />
     <Compile Include="WebEnd\JobModule.cs" />

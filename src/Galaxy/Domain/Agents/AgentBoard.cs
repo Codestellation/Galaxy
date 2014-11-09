@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Codestellation.Galaxy.Infrastructure;
 using Nejdb;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.Domain.Agents
 {
@@ -35,6 +36,11 @@ namespace Codestellation.Galaxy.Domain.Agents
 
             _cache.Add(result);
             return result;
+        }
+
+        public Agent GetAgent(ObjectId id)
+        {
+            return _cache.Find(x => x.Id.Equals(id));
         }
     }
 }
