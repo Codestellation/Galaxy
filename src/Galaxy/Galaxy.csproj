@@ -263,6 +263,7 @@
     <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\Converters\ObjectIdTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\InputProperties.cs" />
+    <Compile Include="WebEnd\Models\DeploymentListItemModel.cs" />
     <Compile Include="WebEnd\Models\DeploymentListModel.cs" />
     <Compile Include="WebEnd\Models\FeedListModel.cs" />
     <Compile Include="WebEnd\Misc\EmbeddedResource.cs" />

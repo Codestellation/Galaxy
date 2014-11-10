@@ -37,6 +37,16 @@ namespace Codestellation.Galaxy.Domain
             return string.Format("{0}${1}", PackageId, InstanceName);
         }
 
+        public string GetDisplayName()
+        {
+            var result = PackageId;
+            if (!string.IsNullOrWhiteSpace(InstanceName))
+            {
+                result += string.Format("{0} (Instance: {1})", result, InstanceName);
+            }
+            return result;
+        }
+
         public string GetDeployFolder()
         {
             return ServiceFolders[SpecialFolderDictionary.DeployFolder].FullPath;

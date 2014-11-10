@@ -35,8 +35,8 @@
                             foreach (var deployment in Model.GetModelsByGroup(group))
                              {
                                  <tr>
-                                     <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.ServiceFullName</a></td>
-                                     <td>@Model.AllFeeds.SingleOrDefault(x => x.Key == deployment.FeedId).Value</td>
+                                     <td><a href="/@DeploymentModule.Path/details/@deployment.Id">@deployment.DisplayName</a></td>
+                                     <td>@deployment.FeedName</td>
                                      <td>@deployment.Status</td>
                                  </tr>
                              }

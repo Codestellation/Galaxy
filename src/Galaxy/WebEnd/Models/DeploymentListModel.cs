@@ -9,13 +9,13 @@ namespace Codestellation.Galaxy.WebEnd.Models
 {
     public class DeploymentListModel 
     {
-        public readonly DeploymentModel[] Deployments;
+        public readonly DeploymentListItemModel[] Deployments;
         public readonly KeyValuePair<ObjectId, string>[] AllFeeds;
 
         public DeploymentListModel(DashBoard dashBoard)
         {
             AllFeeds = dashBoard.Feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), dashBoard.Feeds.Count);
-            Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentModel(x, AllFeeds), dashBoard.Deployments.Count);
+            Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentListItemModel(x, AllFeeds), dashBoard.Deployments.Count);
             Groups = Deployments.Select(GetGroup).Distinct().OrderBy(x => x).ToArray();
         }
 
@@ -26,15 +26,15 @@ namespace Codestellation.Galaxy.WebEnd.Models
             get { return Deployments.Length; }
         }
 
-        public IEnumerable<DeploymentModel> GetModelsByGroup(string serviceGroup)
+        public IEnumerable<DeploymentListItemModel> GetModelsByGroup(string serviceGroup)
         {
             var modelsByGroup = Deployments
                 .Where(model => serviceGroup.Equals(GetGroup(model), StringComparison.Ordinal))
-                .OrderBy(x => x.ServiceFullName);
+                .OrderBy(x => x.DisplayName);
             return modelsByGroup;
         }
 
-        private static string GetGroup(DeploymentModel model)
+        private static string GetGroup(DeploymentListItemModel model)
         {
             return string.IsNullOrWhiteSpace(model.Group) ? "Everything Else" : model.Group;
         }

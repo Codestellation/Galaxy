@@ -13,15 +13,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public ObjectId Id { get; set; }
         public bool IsNew { get; set; }
 
-        public string ServiceFullName
-        {
-            get
-            {
-                return string.IsNullOrEmpty(InstanceName)
-                    ? PackageId
-                    : string.Format("{0} ({1})", PackageId, InstanceName);
-            }
-        }
+        public string DisplayName { get; set; }
 
         [Display(Name = "Service group", Prompt = "Service group")]
         public string Group { get; set; }
@@ -81,6 +73,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             Id = deployment.Id;
 
+            DisplayName = deployment.GetDisplayName();
             InstanceName = deployment.InstanceName;
 
             FeedId = deployment.FeedId;
