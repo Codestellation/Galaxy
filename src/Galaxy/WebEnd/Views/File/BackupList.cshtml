@@ -14,7 +14,7 @@
             <ul class="list-group">
                 @for (int index = 0; index < Model.Folders.Length; index++)
                 {
-                    @{ var folder = Model.Folders[index]; }
+                    var folder = Model.Folders[index]; 
 
                     <li class="list-group-item">
                         @folder.Name
