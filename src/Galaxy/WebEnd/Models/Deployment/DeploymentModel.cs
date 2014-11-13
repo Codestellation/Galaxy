@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
-using Nejdb.Bson;
+using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Models
+namespace Codestellation.Galaxy.WebEnd.Models.Deployment
 {
     public class DeploymentModel
     {
@@ -69,7 +68,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             _packageVersions = null;
         }
 
-        private DeploymentModel(Deployment deployment)
+        private DeploymentModel(Domain.Deployment deployment)
         {
             Id = deployment.Id;
 
@@ -92,14 +91,14 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         
 
-        public DeploymentModel(Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds):
+        public DeploymentModel(Domain.Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds):
             this(deployment)
         {
             _allFeeds = allFeeds;
             _packageVersions = null;
         }
 
-        public DeploymentModel(Deployment deployment, 
+        public DeploymentModel(Domain.Deployment deployment, 
             IEnumerable<KeyValuePair<ObjectId, string>> allFeeds,
             IEnumerable<Version> packageVersions):
             this(deployment)
@@ -108,7 +107,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
             _packageVersions = packageVersions.OrderByDescending(x => x).Select(item => new KeyValuePair<Version, string>(item, item.ToString()));
         }
 
-        public void Update(Deployment deployment)
+        public void Update(Domain.Deployment deployment)
         {
             deployment.InstanceName = InstanceName;
             deployment.FeedId = FeedId;
@@ -132,9 +131,9 @@ namespace Codestellation.Galaxy.WebEnd.Models
             return new FileList(patterns);
         }
 
-        public Deployment ToDeployment()
+        public Domain.Deployment ToDeployment()
         {
-            var deployment = new Deployment
+            var deployment = new Domain.Deployment
             {
                 Id = Id
             };

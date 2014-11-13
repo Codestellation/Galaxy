@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Codestellation.Galaxy.Domain;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Models
+namespace Codestellation.Galaxy.WebEnd.Models.Deployment
 {
     public class DeploymentListItemModel
     {
-        public DeploymentListItemModel(Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
+        public DeploymentListItemModel(Domain.Deployment deployment, IEnumerable<KeyValuePair<ObjectId, string>> allFeeds)
         {
             Id = deployment.Id;
             Group = deployment.Group;

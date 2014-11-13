@@ -4,6 +4,7 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd.Models;
+using Codestellation.Galaxy.WebEnd.Models.Deployment;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
 using Nancy.Security;

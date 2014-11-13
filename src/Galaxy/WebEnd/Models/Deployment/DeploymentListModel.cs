@@ -5,7 +5,7 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Quarks.Collections;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Models
+namespace Codestellation.Galaxy.WebEnd.Models.Deployment
 {
     public class DeploymentListModel 
     {
