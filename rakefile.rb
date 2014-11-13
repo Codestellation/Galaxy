@@ -3,7 +3,7 @@ require 'albacore'
 # --------------------------------------------------------------------------------------------------------------------
 # build variables
 
-@env_projectname = "Codestellation.Galaxy"
+@env_projectname = "Galaxy"
 
 @script_description = "rake automated build script for #{@env_projectname}"
 @script_version = "script version 1.0"
