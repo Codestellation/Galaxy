@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.Domain
@@ -40,6 +41,21 @@ namespace Codestellation.Galaxy.Domain
                 }
             }
             return false;
+        }
+
+        public static explicit operator FileList(string candidate)
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+            {
+                return new FileList(new string[0]);
+            }
+
+            var patterns = candidate
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToArray();
+
+            return new FileList(patterns);
         }
     }
 }

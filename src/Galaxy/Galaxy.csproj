@@ -193,6 +193,7 @@
     <Compile Include="..\..\subtree\quarks\src\Quarks\Reflection\TypeExtensions.cs">
       <Link>Quarks\TypeExtensions.cs</Link>
     </Compile>
+    <Compile Include="WebEnd\Models\Deployment\DeploymentEditModel.cs" />
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\Agents\Agent.cs" />
     <Compile Include="Domain\Agents\AgentBoard.cs" />

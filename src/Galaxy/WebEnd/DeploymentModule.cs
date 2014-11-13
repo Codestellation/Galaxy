@@ -82,12 +82,12 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var allFeeds = GetAvailableFeeds();
 
-            return View["edit", new DeploymentModel(allFeeds)];
+            return View["edit", new DeploymentEditModel { AllFeeds = allFeeds }];
         }
 
         protected override object PostCreate(dynamic parameters)
         {
-            var item = this.Bind<DeploymentModel>();
+            var item = this.Bind<DeploymentEditModel>();
             var deployment = item.ToDeployment();
 
             FillServiceFolders(deployment);
@@ -126,13 +126,17 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var deployment = GetDeployment(parameters);
 
-            return View["Edit", new DeploymentModel(deployment, GetAvailableFeeds())];
+            var deploymentEditModel = new DeploymentEditModel(deployment)
+            {
+                AllFeeds = GetAvailableFeeds()
+            };
+            return View["Edit", deploymentEditModel];
         }
 
         protected override object PostEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var updatedItem = this.Bind<DeploymentModel>();
+            var updatedItem = this.Bind<DeploymentEditModel>();
 
             var deployment = _dashBoard.GetDeployment(id);
 
