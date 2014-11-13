@@ -3,41 +3,41 @@ require 'albacore'
 # --------------------------------------------------------------------------------------------------------------------
 # build variables
 
-@env_projectname = "Galaxy"
+@projectname = "Galaxy"
 
-@script_description = "rake automated build script for #{@env_projectname}"
+@script_description = "rake automated build script for #{@projectname}"
 @script_version = "script version 1.0"
 
 # relative path to .sln file
-@env_solutionfolder = "./src"
+@solutionfolder = "./src"
 
-@env_nugetpackagesfolder = "#{@env_solutionfolder}/packages"
-@env_nugetexefolder = "tools"
-@env_authors = "Codestellation Team"
-@env_description = "Windows hosting service"
+@nugetpackagesfolder = "#{@solutionfolder}/packages"
+@nugetexefolder = "tools"
+@authors = "Codestellation Team"
+@description = "Windows hosting service"
 
 # default parameters, actual version is build using git describe command
-@env_buildversion_native = "1.0"
-@env_buildversion_package = "1.0.0"
-@env_buildversion_full = "1.0.0"
+@buildversion_native = "1.0"
+@buildversion_package = "1.0.0"
+@buildversion_full = "1.0.0"
 
-@env_buildconfigname = "Release"
+@buildconfigname = "Release"
 
-@env_testsexceptions = ""
+@testsexceptions = ""
 
-@env_buildsfolder = "build"
-@env_artifactsfolder = "#{@env_buildsfolder}/artifacts"
+@buildsfolder = "build"
+@artifactsfolder = "#{@buildsfolder}/artifacts"
 
-@env_debug_output = true
+@debug_output = true
 
 
 
-def env_projectfullname
-  "v#{@env_buildversion_full}__#{@env_buildconfigname}"
+def projectfullname
+  "v#{@buildversion_full}__#{@buildconfigname}"
 end
 
-def env_buildfolderpath
-  "#{@env_buildsfolder}/#{env_projectfullname}"
+def buildfolderpath
+  "#{@buildsfolder}/#{projectfullname}"
 end
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -124,13 +124,13 @@ task :presentYourself do
 end
 
 task :presentResults do
-  puts "Solution binaries in #{env_buildfolderpath}"
+  puts "Solution binaries in #{buildfolderpath}"
 end
 
 desc "Restore packages"
 exec :installNUnitRunners do |cmd|
-  cmd.command = "./#{@env_nugetexefolder}/NuGet.exe"
-  cmd.parameters = "restore #{@env_solutionfolder}/#{@env_projectname}.sln"
+  cmd.command = "./#{@nugetexefolder}/NuGet.exe"
+  cmd.parameters = "restore #{@solutionfolder}/#{@projectname}.sln"
 end
 
 desc "Generate solution version"
@@ -146,10 +146,10 @@ assemblyinfo :versionIt do |asm|
   asm.custom_attributes :AssemblyInformationalVersionAttribute => version.full
   asm.output_file = "src/SolutionVersion.cs"
 
-  @env_buildversion_native = version.native
-  @env_buildversion_package = version.package
-  @env_buildversion_full = version.full
-  puts "Build version detected as #{@env_buildversion_full}"
+  @buildversion_native = version.native
+  @buildversion_package = version.package
+  @buildversion_full = version.full
+  puts "Build version detected as #{@buildversion_full}"
 end
 
 task :buildAll do
@@ -158,44 +158,44 @@ end
 
 desc "Clean and build the solution"
 msbuild :buildSolution do |msb|
-  msb.properties :configuration => @env_buildconfigname
+  msb.properties :configuration => @buildconfigname
   msb.targets :Clean, :Build
-  msb.solution = "#{@env_solutionfolder}/#{@env_projectname}.sln"
+  msb.solution = "#{@solutionfolder}/#{@projectname}.sln"
   msb.verbosity = "quiet"
   msb.parameters = "/nologo"
 end
 
 desc "Creates clean build folder structure"
 task :createCleanBuildFolder do
-  FileUtils.rm_rf(@env_buildsfolder)
-  FileUtils.mkdir_p("#{@env_buildsfolder}")
+  FileUtils.rm_rf(@buildsfolder)
+  FileUtils.mkdir_p("#{@buildsfolder}")
 end
 
 desc "Copy Galaxy.Host binaries to output"
 task :copyHostBinaries do
   solutionpart = "Galaxy.Host"
-  if @env_debug_output
+  if @debug_output
     puts "Copying output for Galaxy.Host..."
-    puts "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname} -> #{env_buildfolderpath}/#{solutionpart}/lib"
+    puts "#{@solutionfolder}/#{solutionpart}/bin/#{@buildconfigname} -> #{buildfolderpath}/#{solutionpart}/lib"
   end
-  FileUtils.mkdir_p("#{env_buildfolderpath}/#{solutionpart}/lib")
+  FileUtils.mkdir_p("#{buildfolderpath}/#{solutionpart}/lib")
   FileUtils.cp_r(
-      FileList["#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname}/*.#{solutionpart}.*"], 
-      "#{env_buildfolderpath}/#{solutionpart}/lib")
+      FileList["#{@solutionfolder}/#{solutionpart}/bin/#{@buildconfigname}/*.#{solutionpart}.*"], 
+      "#{buildfolderpath}/#{solutionpart}/lib")
 end
 
 desc "Copy Galaxy service binaries to output"
 task :copyServiceBinaries do |msb|
   
   solutionpart = "Galaxy"
-  if @env_debug_output
+  if @debug_output
     puts "Copying output for Galaxy service..."
-    puts "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname} -> #{env_buildfolderpath}/#{solutionpart}"
+    puts "#{@solutionfolder}/#{solutionpart}/bin/#{@buildconfigname} -> #{buildfolderpath}/#{solutionpart}"
   end
-  FileUtils.rm_rf("#{env_buildfolderpath}/#{solutionpart}")
-  FileUtils.mkdir_p("#{env_buildfolderpath}/#{solutionpart}")
+  FileUtils.rm_rf("#{buildfolderpath}/#{solutionpart}")
+  FileUtils.mkdir_p("#{buildfolderpath}/#{solutionpart}")
   
-  service_source = "#{@env_solutionfolder}/#{solutionpart}/bin/#{@env_buildconfigname}/*";
+  service_source = "#{@solutionfolder}/#{solutionpart}/bin/#{@buildconfigname}/*";
   files_to_copy = FileList.new(service_source)
   files_to_copy.exclude(/.xml/)
   files_to_copy.exclude(/vshost/)
@@ -204,7 +204,7 @@ task :copyServiceBinaries do |msb|
     files_to_copy.exclude(dir)
   end
 
-  FileUtils.cp_r(files_to_copy, "#{env_buildfolderpath}/#{solutionpart}")
+  FileUtils.cp_r(files_to_copy, "#{buildfolderpath}/#{solutionpart}")
 end
 
 desc "Create nuspec file for Galaxy.Host"
@@ -213,37 +213,37 @@ nuspec :createHostNuspec do |nuspec|
 
   puts "Creating .nuspec file for #{solutionpart}..."
   nuspec.id="Codestellation.#{solutionpart}"
-  nuspec.version = "#{@env_buildversion_package}"
-  nuspec.authors = @env_authors
-  nuspec.description = @env_description
+  nuspec.version = "#{@buildversion_package}"
+  nuspec.authors = @authors
+  nuspec.description = @description
   nuspec.title = "#{solutionpart}"
-  nuspec.working_directory = "#{env_buildfolderpath}/#{solutionpart}"
+  nuspec.working_directory = "#{buildfolderpath}/#{solutionpart}"
   nuspec.output_file = "Codestellation.#{solutionpart}.nuspec"
 
-  get_nuget_dependencies("#{@env_solutionfolder}/#{solutionpart}").each do |dep|
+  get_nuget_dependencies("#{@solutionfolder}/#{solutionpart}").each do |dep|
     nuspec.dependency dep.Name, dep.Version
   end
 end
 
 desc "Run unit tests"
 nunit :runUnitTests do |nunit|
-  if @env_debug_output
+  if @debug_output
     puts "Test libs:"
-    FileList["#{@env_solutionfolder}/**.Tests/bin/#{@env_buildconfigname}/*.Tests.dll"].exclude(@env_testsexceptions).each do |pathitem|
+    FileList["#{@solutionfolder}/**.Tests/bin/#{@buildconfigname}/*.Tests.dll"].exclude(@testsexceptions).each do |pathitem|
       puts pathitem
     end
   end
 
-  nunit.command = Dir.glob("#{@env_nugetpackagesfolder}/**/nunit-console.exe").first;
+  nunit.command = Dir.glob("#{@nugetpackagesfolder}/**/nunit-console.exe").first;
 
-  nunit.options "/framework=v4.0.30319","/xml=#{env_buildfolderpath}/NUnit-results-#{@env_projectname}-UnitTests.xml","/nologo"
-  nunit.assemblies = FileList["#{@env_solutionfolder}/**.Tests/bin/#{@env_buildconfigname}/*.Tests.dll"].exclude(@env_testsexceptions)
+  nunit.options "/framework=v4.0.30319","/xml=#{buildfolderpath}/NUnit-results-#{@projectname}-UnitTests.xml","/nologo"
+  nunit.assemblies = FileList["#{@solutionfolder}/**.Tests/bin/#{@buildconfigname}/*.Tests.dll"].exclude(@testsexceptions)
 end
 
 desc "Creates artifacts folder"
 task :createArtifactsFolder do
-  FileUtils.rm_rf(@env_artifactsfolder)
-  FileUtils.mkdir_p(@env_artifactsfolder)
+  FileUtils.rm_rf(@artifactsfolder)
+  FileUtils.mkdir_p(@artifactsfolder)
 end
 
 desc "Create the nuget package for Galaxy.Host"
@@ -251,10 +251,10 @@ nugetpack :createHostNuget do |nuget|
     solutionpart = "Galaxy.Host"
     puts "Creating .nuget file for #{solutionpart}..."
 
-    nuget.command     = "#{@env_nugetexefolder}/nuget.exe"
-    nuget.nuspec      = "#{env_buildfolderpath}/#{solutionpart}/Codestellation.#{solutionpart}.nuspec"
-    nuget.base_folder = "#{env_buildfolderpath}/#{solutionpart}/"
-    nuget.output      = "#{@env_artifactsfolder}"
+    nuget.command     = "#{@nugetexefolder}/nuget.exe"
+    nuget.nuspec      = "#{buildfolderpath}/#{solutionpart}/Codestellation.#{solutionpart}.nuspec"
+    nuget.base_folder = "#{buildfolderpath}/#{solutionpart}/"
+    nuget.output      = "#{@artifactsfolder}"
 end
 
 desc "Create ZIPs package Galaxy service"
@@ -262,7 +262,7 @@ zip :createServiceZip  do |zip|
   solutionpart = "Galaxy"
   puts "Creating .zip file for #{solutionpart}..."
 
-  zip.directories_to_zip "#{env_buildfolderpath}/#{solutionpart}"
-  zip.output_path = "#{@env_artifactsfolder}"
-  zip.output_file = "Codestellation.#{solutionpart}-#{@env_buildversion_package}.zip"
+  zip.directories_to_zip "#{buildfolderpath}/#{solutionpart}"
+  zip.output_path = "#{@artifactsfolder}"
+  zip.output_file = "Codestellation.#{solutionpart}-#{@buildversion_package}.zip"
 end
