@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -51,6 +52,16 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 _skippedFolders.Add(info);
                 return;
             }
+
+            foreach (var skippedFolder in _skippedFolders)
+            {
+                if (info.Parent != null &&  info.Parent.FullName.Equals(skippedFolder.FullName, StringComparison.OrdinalIgnoreCase))
+                {
+                    _skippedFolders.Add(info);
+                    return;
+                }
+            }
+
             Directory.Delete(path, true);
         }
 
