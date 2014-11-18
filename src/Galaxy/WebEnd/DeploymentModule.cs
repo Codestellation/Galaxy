@@ -90,10 +90,9 @@ namespace Codestellation.Galaxy.WebEnd
             var item = this.Bind<DeploymentEditModel>();
             var deployment = item.ToDeployment();
 
-            FillServiceFolders(deployment);
-
             SaveDeployment(deployment);
 
+            FillServiceFolders(deployment);
             _dashBoard.AddDeployment(deployment);
 
             return RedirectToList();
