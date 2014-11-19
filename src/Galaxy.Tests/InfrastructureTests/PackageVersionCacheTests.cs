@@ -1,4 +1,5 @@
 ﻿using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.Tests.Content;
 using Codestellation.Quarks.IO;
@@ -23,7 +24,7 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
 
             Folder.EnsureDeleted(_nugetFeedFolder);
             Folder.EnsureExists(_nugetFeedFolder);
-            
+
             TestPackages.CopyTest10To(_nugetFeedFolder);
             TestPackages.CopyTest11To(_nugetFeedFolder);
         }
@@ -34,14 +35,15 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
             //given
             var refreshCompleted = new ManualResetEventSlim(false);
 
-            var  dashBoard = new DashBoard();
-            var nugetFeed = new NugetFeed(){Uri = _nugetFeedFolder};
+            var feedBoard = new FeedBoard();
+            var deploymentBoard = new DeploymentBoard(new Repository(), new Options());
+            var nugetFeed = new NugetFeed() { Uri = _nugetFeedFolder };
 
-            dashBoard.AddFeed(nugetFeed);
-            dashBoard.AddDeployment(new Deployment{FeedId = nugetFeed.Id, PackageId = TestPackageId});
-            var versionCache = new PackageVersionCache(dashBoard);
+            feedBoard.AddFeed(nugetFeed);
+            deploymentBoard.AddDeployment(new Deployment { FeedId = nugetFeed.Id, PackageId = TestPackageId });
+            var versionCache = new PackageVersionBoard(feedBoard, deploymentBoard);
 
-            
+
             //when
             versionCache.Start();
             versionCache.Refreshed += refreshCompleted.Set;
@@ -49,7 +51,7 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
 
             //then
             var packageVersions = versionCache.GetPackageVersions(nugetFeed.Id, TestPackageId);
-            var sampleVesrions = new[] { new Version(1,1,0,0), new Version(1,0,0,0) };
+            var sampleVesrions = new[] { new Version(1, 1, 0, 0), new Version(1, 0, 0, 0) };
             Assert.That(packageVersions, Is.EquivalentTo(sampleVesrions));
         }
 

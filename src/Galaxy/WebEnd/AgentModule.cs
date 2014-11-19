@@ -1,5 +1,4 @@
-﻿using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Domain.Agents;
+﻿using Codestellation.Galaxy.Domain.Agents;
 using Codestellation.Galaxy.WebEnd.Models;
 using Nancy.ModelBinding;
 using Nancy.Responses;

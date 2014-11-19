@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd.Models;
@@ -16,13 +17,13 @@ namespace Codestellation.Galaxy.WebEnd
     {
         public const string Path = DeploymentModule.Path + "/file";
 
-        private readonly DashBoard _dashBoard;
+        private readonly DeploymentBoard _deploymentBoard;
         private readonly TaskBuilder _taskBuilder;
 
-        public FileModule(DashBoard dashBoard, TaskBuilder taskBuilder)
+        public FileModule(DeploymentBoard deploymentBoard, TaskBuilder taskBuilder)
             : base(Path)
         {
-            _dashBoard = dashBoard;
+            _deploymentBoard = deploymentBoard;
             _taskBuilder = taskBuilder;
 
             this.RequiresAuthentication();
@@ -116,7 +117,7 @@ namespace Codestellation.Galaxy.WebEnd
         private object RestoreBackup(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = _deploymentBoard.GetDeployment(id);
             string name = Request.Query.name;
 
             var backupFolder = deployment.GetBackupFolder();
@@ -132,7 +133,7 @@ namespace Codestellation.Galaxy.WebEnd
         private Deployment GetDeployment(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = _deploymentBoard.GetDeployment(id);
             return deployment;
         }
     }

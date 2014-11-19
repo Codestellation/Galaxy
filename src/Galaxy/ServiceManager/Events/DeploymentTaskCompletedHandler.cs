@@ -1,25 +1,26 @@
 ﻿using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
     public class DeploymentTaskCompletedHandler : IHandler<DeploymentTaskCompletedEvent>
     {
-        private readonly DashBoard _dashBoard;
+        private readonly DeploymentBoard _board;
         private readonly Repository _repository;
-        private readonly PackageVersionCache _versionCache;
+        private readonly PackageVersionBoard _versionCache;
 
-        public DeploymentTaskCompletedHandler(DashBoard dashBoard, Repository repository, PackageVersionCache versionCache)
+        public DeploymentTaskCompletedHandler(DeploymentBoard board, Repository repository, PackageVersionBoard versionCache)
         {
-            _dashBoard = dashBoard;
+            _board = board;
             _repository = repository;
             _versionCache = versionCache;
         }
 
         public void Handle(DeploymentTaskCompletedEvent message)
         {
-            var deployment = _dashBoard.GetDeployment(message.Task.DeploymentId);
+            var deployment = _board.GetDeployment(message.Task.DeploymentId);
             deployment.Status = message.Result.Details;
             SaveDeployment(deployment);
         }

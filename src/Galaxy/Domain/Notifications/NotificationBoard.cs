@@ -5,12 +5,12 @@ using Nejdb;
 
 namespace Codestellation.Galaxy.Domain.Notifications
 {
-    public class Notifier
+    public class NotificationBoard
     {
         private readonly List<Notification> _notifications;
         private Collection _notificationCollection;
 
-        public Notifier(Repository repository)
+        public NotificationBoard(Repository repository)
         {
             _notifications = new List<Notification>();
             _notificationCollection = repository.GetCollection<Notification>();

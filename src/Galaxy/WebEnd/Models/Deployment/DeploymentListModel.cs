@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Quarks.Collections;
 using Nejdb.Bson;
 
@@ -12,11 +13,16 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
         public readonly DeploymentListItemModel[] Deployments;
         public readonly KeyValuePair<ObjectId, string>[] AllFeeds;
 
-        public DeploymentListModel(DashBoard dashBoard)
+        public DeploymentListModel(FeedBoard feedBoard, DeploymentBoard deploymentBoard)
         {
-            AllFeeds = dashBoard.Feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), dashBoard.Feeds.Count);
-            Deployments = dashBoard.Deployments.ConvertToArray(x => new DeploymentListItemModel(x, AllFeeds), dashBoard.Deployments.Count);
-            Groups = Deployments.Select(GetGroup).Distinct().OrderBy(x => x).ToArray();
+            AllFeeds = feedBoard.Feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), feedBoard.Feeds.Count);
+            Deployments = deploymentBoard.Deployments.ConvertToArray(x => new DeploymentListItemModel(x, AllFeeds), deploymentBoard.Deployments.Count);
+            
+            Groups = Deployments
+                .Select(GetGroup)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
         }
 
         public string[] Groups { get; set; }

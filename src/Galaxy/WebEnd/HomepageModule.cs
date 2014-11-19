@@ -7,20 +7,20 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class HomepageModule : ModuleBase
     {
-        private readonly DashBoard _dashBoard;
-        private readonly Notifier _notifier;
+        private readonly FeedBoard _feedBoard;
+        private readonly NotificationBoard _notificationBoard;
 
-        public HomepageModule(DashBoard dashBoard, Notifier notifier)
+        public HomepageModule(FeedBoard feedBoard, NotificationBoard notificationBoard)
         {
-            _dashBoard = dashBoard;
-            _notifier = notifier;
+            _feedBoard = feedBoard;
+            _notificationBoard = notificationBoard;
             this.RequiresAuthentication();
             
             Get["/", true] = (parameters, token) => ProcessRequest(OnRoot, token);
         }
         private object OnRoot()
         {
-            var model = new HomepageModel(_dashBoard, _notifier);
+            var model = new HomepageModel(_feedBoard, _notificationBoard);
             return View["Homepage", model];
         }
     }

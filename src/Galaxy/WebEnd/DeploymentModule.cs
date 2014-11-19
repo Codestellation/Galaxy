@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.WebEnd.Models.Deployment;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
-using Nejdb;
 using Nejdb.Bson;
 using Nancy.Responses;
 using Nancy.ModelBinding;
@@ -17,21 +17,20 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class DeploymentModule : CrudModule
     {
-        private readonly DashBoard _dashBoard;
-        private readonly PackageVersionCache _versionCache;
+        private readonly FeedBoard _feedBoard;
+        private readonly PackageVersionBoard _versionCache;
         private readonly TaskBuilder _taskBuilder;
-        private readonly Options _options;
-        private readonly Collection _deployments;
+        
+        private readonly DeploymentBoard _deploymentBoard;
         public const string Path = "deployment";
 
-        public DeploymentModule(Repository repository, DashBoard dashBoard, PackageVersionCache versionCache, TaskBuilder taskBuilder, Options options)
+        public DeploymentModule(FeedBoard feedBoard, PackageVersionBoard versionCache, TaskBuilder taskBuilder, DeploymentBoard deploymentBoard)
             : base(Path)
         {
-            _dashBoard = dashBoard;
+            _feedBoard = feedBoard;
             _versionCache = versionCache;
             _taskBuilder = taskBuilder;
-            _options = options;
-            _deployments = repository.GetCollection<Deployment>();
+            _deploymentBoard = deploymentBoard;
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
@@ -75,7 +74,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetList(dynamic parameters)
         {
-            return View["list", new DeploymentListModel(_dashBoard)];
+            return View["list", new DeploymentListModel(_feedBoard, _deploymentBoard)];
         }
 
         protected override object GetCreate(dynamic parameters)
@@ -90,35 +89,11 @@ namespace Codestellation.Galaxy.WebEnd
             var item = this.Bind<DeploymentEditModel>();
             var deployment = item.ToDeployment();
 
-            SaveDeployment(deployment);
+            _deploymentBoard.AddDeployment(deployment);
 
-            FillServiceFolders(deployment);
-            _dashBoard.AddDeployment(deployment);
+            _versionCache.ForceRefresh();
 
             return RedirectToList();
-        }
-
-        private void FillServiceFolders(Deployment deployment)
-        {
-            var serviceFolders = deployment.ServiceFolders;
-
-            var fullPath = string.IsNullOrWhiteSpace(deployment.InstanceName)
-                ? Folder.Combine(_options.GetDeployFolder(), deployment.PackageId)
-                : Folder.Combine(_options.GetDeployFolder(), string.Format("{0}-{1}", deployment.PackageId, deployment.InstanceName));
-            var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, fullPath);
-            serviceFolders.Add(specialFolder);
-
-
-            BuildServiceFolder(deployment, SpecialFolderDictionary.DeployLogsFolder, "BuildLogs");
-            BuildServiceFolder(deployment, SpecialFolderDictionary.FileOverrides, "FileOverrides");
-            BuildServiceFolder(deployment, SpecialFolderDictionary.BackupFolder, "Backups");
-        }
-
-        private void BuildServiceFolder(Deployment deployment, string purpose, string subfolder)
-        {
-            var fullPath = Folder.Combine(Folder.BasePath, deployment.Id.ToString(), subfolder);
-            var folder = new SpecialFolder(purpose, fullPath);
-            deployment.ServiceFolders.Add(folder);
         }
 
         protected override object GetEdit(dynamic parameters)
@@ -135,13 +110,15 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object PostEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var updatedItem = this.Bind<DeploymentEditModel>();
+            var model = this.Bind<DeploymentEditModel>();
 
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = _deploymentBoard.GetDeployment(id);
 
-            updatedItem.Update(deployment);
+            model.Update(deployment);
 
-            SaveDeployment(deployment);
+            _deploymentBoard.SaveDeployment(deployment);
+
+            _versionCache.ForceRefresh();
 
             return RedirectToDetails(id);
         }
@@ -149,9 +126,7 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object PostDelete(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-
-            _deployments.Delete(id);
-            _dashBoard.RemoveDeployment(id);
+            _deploymentBoard.RemoveDeployment(id);
 
             return RedirectToList();
         }
@@ -159,7 +134,7 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetDetails(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = _deploymentBoard.GetDeployment(id);
 
             var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageId);
 
@@ -169,9 +144,9 @@ namespace Codestellation.Galaxy.WebEnd
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
             var allFeeds =
-                _dashBoard
+                _feedBoard
                 .Feeds
-                .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _dashBoard.Feeds.Count);
+                .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _feedBoard.Feeds.Count);
 
             return allFeeds;
         }
@@ -214,9 +189,9 @@ namespace Codestellation.Galaxy.WebEnd
 
         private void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFactory)
         {
-            var deployment = _dashBoard.GetDeployment(deploymentId);
+            var deployment = _deploymentBoard.GetDeployment(deploymentId);
 
-            var targetFeed = _dashBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
+            var targetFeed = _feedBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
 
             //TODO: What else? Ignore silently? 
             if (targetFeed != null)
@@ -228,43 +203,30 @@ namespace Codestellation.Galaxy.WebEnd
 
         private object PostDeploy(dynamic parameters)
         {
-            var id = new ObjectId(parameters.id);
-            var version = new Version(parameters.version);
-
-            var deployment = _dashBoard.GetDeployment(id);
-            deployment.PackageVersion = version;
-
-            SaveDeployment(deployment);
-
-            ExecuteServiceControlAction(id, _taskBuilder.DeployServiceTask);
-
-            return RedirectToDetails(id);
+            return PerformUpdateOrDeploy((Func<Deployment, NugetFeed, DeploymentTask>) _taskBuilder.DeployServiceTask, parameters);
         }
 
         private object PostUpdate(dynamic parameters)
         {
+            return PerformUpdateOrDeploy((Func<Deployment, NugetFeed, DeploymentTask>)_taskBuilder.UpdateServiceTask, parameters);
+        }
+
+        private object PerformUpdateOrDeploy(Func<Deployment, NugetFeed, DeploymentTask> deployServiceTask, dynamic parameters)
+        {
             var id = new ObjectId(parameters.id);
             var version = new Version(parameters.version);
 
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = _deploymentBoard.GetDeployment(id);
             deployment.PackageVersion = version;
 
-            SaveDeployment(deployment);
+            _deploymentBoard.SaveDeployment(deployment);
 
-            ExecuteServiceControlAction(id, _taskBuilder.UpdateServiceTask);
+
+            ExecuteServiceControlAction(id, deployServiceTask);
 
             return RedirectToDetails(id);
         }
 
-        private void SaveDeployment(Deployment deployment)
-        {
-            using (var tx = _deployments.BeginTransaction())
-            {
-                _deployments.Save(deployment, false);
-                tx.Commit();
-            }
-            _versionCache.ForceRefresh();
-        }
 
         private static object RedirectToList()
         {
@@ -280,7 +242,7 @@ namespace Codestellation.Galaxy.WebEnd
         private Deployment GetDeployment(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var deployment = _dashBoard.GetDeployment(id);
+            var deployment = _deploymentBoard.GetDeployment(id);
             return deployment;
         }
     }

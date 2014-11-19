@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Nejdb.Bson;
 using NuGet;
 using System;
@@ -12,9 +13,11 @@ using NLog;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
-    public class PackageVersionCache : IDisposable
+    public class PackageVersionBoard : IDisposable
     {
-        private readonly DashBoard _dashBoard;
+        private readonly FeedBoard _feedBoard;
+        private readonly DeploymentBoard _deploymentBoard;
+
         private struct FeedPackageTuple : IEquatable<FeedPackageTuple>
         {
             public readonly ObjectId FeedId;
@@ -55,9 +58,10 @@ namespace Codestellation.Galaxy.Infrastructure
 
         public event Action Refreshed;
 
-        public PackageVersionCache(DashBoard dashBoard)
+        public PackageVersionBoard(FeedBoard feedBoard, DeploymentBoard deploymentBoard)
         {
-            _dashBoard = dashBoard;
+            _feedBoard = feedBoard;
+            _deploymentBoard = deploymentBoard;
             _cache = new ConcurrentDictionary<FeedPackageTuple, SemanticVersion[]>();
             _refreshTimer = new Timer(OnTimerRefresh, null, Timeout.Infinite, Timeout.Infinite);
 
@@ -73,7 +77,7 @@ namespace Codestellation.Galaxy.Infrastructure
             }
 
             //this method is thread safe because it use concurrent dictionary. 
-            var feed = _dashBoard.GetFeed(feedId);
+            var feed = _feedBoard.GetFeed(feedId);
             var tuple = new FeedPackageTuple(feed, packageId);
 
             SemanticVersion[] versions;
@@ -93,6 +97,7 @@ namespace Codestellation.Galaxy.Infrastructure
             ForceRefresh();
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ForceRefresh()
         {
             _timerStarted = true;
@@ -155,10 +160,10 @@ namespace Codestellation.Galaxy.Infrastructure
         private FeedPackageTuple[] GetTuples()
         {
             //this method should run via single thread scheduler because it uses non-thread safe structures of dashboard.
-            var results = _dashBoard
+            var results = _deploymentBoard
                 .Deployments
-                .Where(x => !string.IsNullOrWhiteSpace(_dashBoard.GetFeed(x.FeedId).Uri) && !string.IsNullOrWhiteSpace(x.PackageId))
-                .Select(x => new FeedPackageTuple(_dashBoard.GetFeed(x.FeedId), x.PackageId))
+                .Where(x => !string.IsNullOrWhiteSpace(_feedBoard.GetFeed(x.FeedId).Uri) && !string.IsNullOrWhiteSpace(x.PackageId))
+                .Select(x => new FeedPackageTuple(_feedBoard.GetFeed(x.FeedId), x.PackageId))
                 .Distinct()
                 .ToArray();
 

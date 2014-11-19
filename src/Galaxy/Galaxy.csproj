@@ -193,16 +193,18 @@
     <Compile Include="..\..\subtree\quarks\src\Quarks\Reflection\TypeExtensions.cs">
       <Link>Quarks\TypeExtensions.cs</Link>
     </Compile>
+    <Compile Include="Domain\Deployments\DeploymentBoard.cs" />
+    <Compile Include="Infrastructure\BoardInstaller.cs" />
     <Compile Include="WebEnd\Models\Deployment\DeploymentEditModel.cs" />
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\Agents\Agent.cs" />
     <Compile Include="Domain\Agents\AgentBoard.cs" />
-    <Compile Include="Domain\DashBoard.cs" />
+    <Compile Include="Domain\FeedBoard.cs" />
     <Compile Include="Domain\SpecialFolderDictionary.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\Notifications\Severity.cs" />
     <Compile Include="Domain\Notifications\Notification.cs" />
-    <Compile Include="Domain\Notifications\Notifier.cs" />
+    <Compile Include="Domain\Notifications\NotificationBoard.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\Options.cs" />
@@ -214,7 +216,7 @@
     <Compile Include="Infrastructure\Emisstar\SynchronizedDispatcher.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
-    <Compile Include="Infrastructure\PackageVersionCache.cs" />
+    <Compile Include="Infrastructure\PackageVersionBoard.cs" />
     <Compile Include="Maintenance\CleanUpLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />

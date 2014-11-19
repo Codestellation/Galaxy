@@ -4,6 +4,7 @@ using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Agents;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
@@ -42,7 +43,7 @@ namespace Codestellation.Galaxy
         protected override void ConfigureApplicationContainer(IWindsorContainer container)
         {
             container.Install(FromAssembly.This());
-            
+
             container.Register(
                 Component
                     .For<Repository>()
@@ -62,27 +63,12 @@ namespace Codestellation.Galaxy
                     .LifestyleSingleton(),
 
                 Component
-                    .For<DashBoard>()
-                    .LifestyleSingleton(),
-                Component.
-                    For<PackageVersionCache>()
-                    .LifestyleSingleton(),
-
-                Component
                     .For<TaskBuilder>()
                     .LifestyleTransient(),
 
                 Component
                     .For<OperationBuilder>()
-                    .LifestyleTransient(),
-
-                Component
-                    .For<Notifier>()
-                    .LifestyleSingleton(),
-
-                Component
-                    .For<AgentBoard>()
-                    .LifestyleSingleton()
+                    .LifestyleTransient()
                 );
             base.ConfigureApplicationContainer(container);
 
@@ -101,7 +87,7 @@ namespace Codestellation.Galaxy
             LoadOptions(container, repository);
             FillDashBoard(container, repository);
 
-            container.Resolve<PackageVersionCache>().Start();
+            container.Resolve<PackageVersionBoard>().Start();
 
             base.ApplicationStartup(container, pipelines);
         }
@@ -128,28 +114,18 @@ namespace Codestellation.Galaxy
 
         private void FillDashBoard(IWindsorContainer container, Repository repository)
         {
-            var dashBoard = container.Resolve<DashBoard>();
+            var feedBoard = container.Resolve<FeedBoard>();
 
             using (var query = repository.GetCollection<NugetFeed>().CreateQuery<NugetFeed>())
             using (var cursor = query.Execute())
             {
                 foreach (var feed in cursor)
                 {
-                    dashBoard.AddFeed(feed);
-                }
-            }
-
-            var collection = repository.GetCollection<Deployment>();
-            using (var query = collection.CreateQuery<Deployment>())
-            using (var cursor = query.Execute())
-            {
-                foreach (var deployment in cursor)
-                {
-                    dashBoard.AddDeployment(deployment);
+                    feedBoard.AddFeed(feed);
                 }
             }
         }
-        
+
         protected override NancyInternalConfiguration InternalConfiguration
         {
             get { return NancyInternalConfiguration.WithOverrides(OnConfigurationBuilder); }

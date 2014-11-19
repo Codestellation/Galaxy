@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.WebEnd.Models;
 using Nancy;
@@ -12,14 +13,16 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class FeedModule : CrudModule
     {
-        private readonly DashBoard _dashBoard;
+        private readonly FeedBoard _feedBoard;
+        private readonly DeploymentBoard _deploymentBoard;
         private readonly Collection _feeds;
         public const string Path = "feed";
 
-        public FeedModule(DashBoard dashBoard, Repository repository)
+        public FeedModule(FeedBoard feedBoard, Repository repository, DeploymentBoard deploymentBoard)
             : base(Path)
         {
-            _dashBoard = dashBoard;
+            _feedBoard = feedBoard;
+            _deploymentBoard = deploymentBoard;
             _feeds = repository.GetCollection<NugetFeed>();
         }
 
@@ -30,7 +33,7 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetList(dynamic parameters)
         {
-            return View["list", new FeedListModel(_dashBoard)];
+            return View["list", new FeedListModel(_feedBoard, _deploymentBoard)];
         }
 
         protected override object GetCreate(dynamic parameters)
@@ -44,7 +47,7 @@ namespace Codestellation.Galaxy.WebEnd
             var feed = model.ToFeed();
             _feeds.Save(feed, false);
 
-            _dashBoard.AddFeed(feed);
+            _feedBoard.AddFeed(feed);
 
             return new RedirectResponse("/feed");
         }
@@ -52,7 +55,7 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var feed = _dashBoard.GetFeed(id);
+            var feed = _feedBoard.GetFeed(id);
             var model = new FeedModel(feed, false);
             return View["Edit", model];
         }
@@ -62,7 +65,7 @@ namespace Codestellation.Galaxy.WebEnd
             var id = new ObjectId(parameters.id);
             FeedModel model = this.Bind();
 
-            var currentFeed = _dashBoard.GetFeed(id);
+            var currentFeed = _feedBoard.GetFeed(id);
             var updatedFeed = model.ToFeed();
 
             currentFeed.Merge(updatedFeed);
@@ -76,14 +79,14 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            var feedInUse = _dashBoard.Deployments.Any(x => x.FeedId.Equals(id));
+            var feedInUse = _deploymentBoard.Deployments.Any(x => x.FeedId.Equals(id));
 
             if (feedInUse)
             {
                 return new TextResponse(HttpStatusCode.BadRequest, "Feed use. Remove it from deployments to delete");
             }
         
-            _dashBoard.RemoveFeed(id);
+            _feedBoard.RemoveFeed(id);
             _feeds.Delete(id);
 
             return "Ok";

@@ -9,10 +9,10 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public readonly IList<Notification> Errors;
         public readonly IList<Notification> Events;
 
-        public HomepageModel(DashBoard dashBoard, Notifier notifier)
+        public HomepageModel(FeedBoard feedBoard, NotificationBoard notificationBoard)
         {
-            Errors = notifier.GetNotifications(x => x.Severity == Severity.Error, 10);
-            Events = notifier.GetNotifications(x => x.Severity < Severity.Error, 10);
+            Errors = notificationBoard.GetNotifications(x => x.Severity == Severity.Error, 10);
+            Events = notificationBoard.GetNotifications(x => x.Severity < Severity.Error, 10);
         }
     }
 }

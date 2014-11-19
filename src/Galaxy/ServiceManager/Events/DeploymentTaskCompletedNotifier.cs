@@ -7,11 +7,11 @@ namespace Codestellation.Galaxy.ServiceManager.Events
 {
     public class DeploymentTaskCompletedNotifier : IHandler<DeploymentTaskCompletedEvent>
     {
-        private readonly Notifier _notifier;
+        private readonly NotificationBoard _notificationBoard;
 
-        public DeploymentTaskCompletedNotifier(Notifier notifier)
+        public DeploymentTaskCompletedNotifier(NotificationBoard notificationBoard)
         {
-            _notifier = notifier;
+            _notificationBoard = notificationBoard;
         }
 
         public void Handle(DeploymentTaskCompletedEvent message)
@@ -23,7 +23,7 @@ namespace Codestellation.Galaxy.ServiceManager.Events
             {
                 Url = url
             };
-            _notifier.Notify(notification);
+            _notificationBoard.Notify(notification);
         }
     }
 }

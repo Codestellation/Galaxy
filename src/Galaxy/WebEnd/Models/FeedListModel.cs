@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Quarks.Collections;
 
 namespace Codestellation.Galaxy.WebEnd.Models
@@ -8,13 +9,13 @@ namespace Codestellation.Galaxy.WebEnd.Models
     {
         private FeedModel[] _feeds;
 
-        public FeedListModel(DashBoard dashBoard)
+        public FeedListModel(FeedBoard feedBoard, DeploymentBoard deploymentBoard)
         {
-            _feeds = dashBoard.Feeds.ConvertToArray(x =>
+            _feeds = feedBoard.Feeds.ConvertToArray(x =>
             {
-                var inUse = dashBoard.Deployments.Any(deployment => deployment.FeedId.Equals(x.Id));
+                var inUse = deploymentBoard.Deployments.Any(deployment => deployment.FeedId.Equals(x.Id));
                 return new FeedModel(x, inUse);
-            }, dashBoard.Feeds.Count);
+            }, feedBoard.Feeds.Count);
         }
 
         public FeedModel[] Feeds
