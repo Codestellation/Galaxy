@@ -17,6 +17,8 @@ namespace Codestellation.Galaxy.Host
             {
                 x.UseNLog();
 
+                LogVersions();
+
                 x.Service<ServiceProxy>(s =>
                 {
                     s.ConstructUsing(name => new ServiceProxy(serviceType));
@@ -38,6 +40,19 @@ namespace Codestellation.Galaxy.Host
 
             HostLogger.Shutdown();
             return (int)code;
+        }
+
+        private static void LogVersions()
+        {
+            var logWriter = HostLogger.Get(typeof (Run));
+            
+            var hostVersion = GetVersion(Assembly.GetExecutingAssembly());
+            var hostVersionMessage = string.Format("Host version: {0}", hostVersion);
+            logWriter.Info(hostVersionMessage);
+
+            var serviceVersion = GetVersion(Assembly.GetEntryAssembly());
+            var serviceVersionMessage = string.Format("Service version: {0}", serviceVersion);
+            logWriter.Info(serviceVersionMessage);
         }
 
         private static bool StartService(ServiceProxy service, HostControl hostControl)
@@ -77,12 +92,35 @@ namespace Codestellation.Galaxy.Host
 
         static string GetServiceDescription(Assembly assembly)
         {
-            AssemblyDescriptionAttribute description = assembly
-                .GetCustomAttributes(typeof (AssemblyDescriptionAttribute), false)
-                .Cast<AssemblyDescriptionAttribute>()
-                .FirstOrDefault();
+            var description = GetAttribute<AssemblyDescriptionAttribute>(assembly);
 
-            return description != null ? description.Description : null;
+            return description == null ? null : description.Description;
+        }
+
+        private static string GetVersion(Assembly assembly)
+        {
+            var info = GetAttribute<AssemblyInformationalVersionAttribute>(assembly);
+
+            if (info != null)
+            {
+                return info.InformationalVersion;
+            }
+
+            var version = GetAttribute<AssemblyVersionAttribute>(assembly);
+            if (version != null)
+            {
+                return version.Version;
+            }
+            return "Unknown";
+        }
+
+        private static T GetAttribute<T>(Assembly assembly)
+        {
+            return assembly
+                   .GetCustomAttributes(typeof(T), false)
+                   .Cast<T>()
+                   .FirstOrDefault();
+            
         }
     }
 }
