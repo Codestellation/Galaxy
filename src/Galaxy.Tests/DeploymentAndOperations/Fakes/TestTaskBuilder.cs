@@ -41,7 +41,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
             var context = new DeploymentTaskContext(streamWriter)
                 .SetValue(DeploymentTaskContext.TaskName, name)
                 .SetValue(DeploymentTaskContext.DeploymentId, new ObjectId())
-                .SetValue(DeploymentTaskContext.Publisher, publisher)
+                .SetValue(DeploymentTaskContext.PublisherKey, publisher)
                 .SetValue(DeploymentTaskContext.LogStream, stream);
             return context;
         }

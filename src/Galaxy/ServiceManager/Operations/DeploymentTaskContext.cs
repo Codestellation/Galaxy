@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Codestellation.Emisstar;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -10,7 +11,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public const string ServiceStatus = "ServiceStatus";
         public const string ForceStartService = "ForceStartService";
         public const string DeploymentId = "DeploymentId";
-        public const string Publisher = "Publisher";
+        public const string PublisherKey = "PublisherKey";
         public const string LogStream = "LogStream";
 
         public readonly TextWriter BuildLog;
@@ -44,6 +45,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             value = default(TValue);
             return false;
+        }
+
+        public IPublisher Publisher
+        {
+            get { return (IPublisher) _data[PublisherKey]; }
         }
     }
 }

@@ -64,25 +64,30 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.StopService(deployment, false));
         }
 
-        private DeploymentTask CreateDeployTask(string name, Deployment deployment)
+        private DeploymentTask CreateDeployTask(string name, Deployment deployment, Stream logStream = null)
         {
-            var deployLogFolder = deployment.GetDeployLogFolder();
-            Folder.EnsureExists(deployLogFolder);
-            
-            var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, Clock.UtcNow.ToLocalTime());
-            var fullPath = Path.Combine(deployLogFolder, filename);
-            var logStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
-
-            var streamWriter = new StreamWriter(logStream);
+            var actualLogStream = logStream ?? BuildDefaultLogStream(name, deployment);
+            var streamWriter = new StreamWriter(actualLogStream);
 
             var context = new DeploymentTaskContext(streamWriter);
             context
                 .SetValue(DeploymentTaskContext.TaskName, name)
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
-                .SetValue(DeploymentTaskContext.Publisher, _publisher)
-                .SetValue(DeploymentTaskContext.LogStream, logStream);
+                .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
+                .SetValue(DeploymentTaskContext.LogStream, actualLogStream);
 
             return new DeploymentTask(context);
+        }
+
+        private static FileStream BuildDefaultLogStream(string name, Deployment deployment)
+        {
+            var deployLogFolder = deployment.GetDeployLogFolder();
+            Folder.EnsureExists(deployLogFolder);
+
+            var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, Clock.UtcNow.ToLocalTime());
+            var fullPath = Path.Combine(deployLogFolder, filename);
+            var defaultStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
+            return defaultStream;
         }
 
         public DeploymentTask RestoreFromBackup(Deployment deployment, string backupFolder)
@@ -93,6 +98,16 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.ClearBinaries(deployment, FileList.Empty))
                 .Add(_operations.RestoreFrom(deployment, backupFolder))
                 .Add(_operations.OverrideFiles(deployment));
+        }
+
+        public DeploymentTask DeleteDeploymentTask(Deployment deployment, NugetFeed deploymentFeed)
+        {
+            return CreateDeployTask("DeleteDeployment", deployment, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it! 
+                .Add(_operations.StopService(deployment, skipIfNotFound: true))
+                .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
+                .Add(_operations.DeleteFolders(deployment))
+                .Add(_operations.UninstallPackage(deployment))
+                .Add(_operations.PublishDeletedEvent(deployment));
         }
     }
 }

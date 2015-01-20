@@ -42,7 +42,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IPublisher Publisher
         {
-            get { return Context.GetValue<IPublisher>(DeploymentTaskContext.Publisher); }
+            get { return Context.Publisher; }
         }
 
         public DeploymentTask(DeploymentTaskContext context)

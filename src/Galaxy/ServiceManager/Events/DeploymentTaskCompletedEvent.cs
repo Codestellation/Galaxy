@@ -1,5 +1,4 @@
-﻿using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.Infrastructure.Emisstar;
+﻿using Codestellation.Galaxy.Infrastructure.Emisstar;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager.Events

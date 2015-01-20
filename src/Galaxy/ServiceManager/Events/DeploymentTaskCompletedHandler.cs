@@ -20,9 +20,12 @@ namespace Codestellation.Galaxy.ServiceManager.Events
 
         public void Handle(DeploymentTaskCompletedEvent message)
         {
-            var deployment = _board.GetDeployment(message.Task.DeploymentId);
-            deployment.Status = message.Result.Details;
-            SaveDeployment(deployment);
+            Deployment deployment;
+            if (_board.TryGetDeployment(message.Task.DeploymentId, out deployment))
+            {
+                deployment.Status = message.Result.Details;
+                SaveDeployment(deployment);
+            }
         }
 
         private void SaveDeployment(Deployment deployment)

@@ -1,23 +1,25 @@
-﻿using Codestellation.Galaxy.ServiceManager.Helpers;
+﻿using System;
+using System.ComponentModel;
+using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class UninstallService : IOperation
+    public class UninstallService : WinServiceOperation
     {
         private readonly string _serviceFolder;
         private readonly string _hostFileName;
         private readonly string _instance;
 
         public UninstallService(string serviceFolder, string hostFileName, string instance)
-
+            : base(instance)
         {
             _serviceFolder = serviceFolder;
             _hostFileName = hostFileName;
             _instance = instance;
         }
 
-        public void Execute(DeploymentTaskContext context)
+        public override void Execute(DeploymentTaskContext context)
         {
             var exePath = Path.Combine(_serviceFolder, _hostFileName);
 
@@ -25,14 +27,38 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
 
-            string error;
-            var result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
+            string error = "";
+            string result = "";
+
+            try
+            {
+                result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
+            }
+            catch (Win32Exception ex)
+            {
+                if (!SkipIfNotFound)
+                    throw;
+
+                TryHandle(ex, out result);
+            }
 
             context.BuildLog.WriteLine("Exe output:");
             context.BuildLog.WriteLine(result);
 
             context.BuildLog.WriteLine("Exe error:");
             context.BuildLog.WriteLine(error);
+        }
+
+        private void TryHandle(Win32Exception ex, out string result)
+        {
+            switch (ex.NativeErrorCode)
+            {
+                case (int)WinErrors.FileNotFound:
+                    result = "Service executable wasn't found. Will be continued";
+                    break;
+                default:
+                    throw new InvalidOperationException("Unexpected exception", ex);
+            }
         }
     }
 }

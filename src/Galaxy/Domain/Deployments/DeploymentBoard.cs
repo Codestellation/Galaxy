@@ -56,6 +56,11 @@ namespace Codestellation.Galaxy.Domain.Deployments
             return _deployments[id];
         }
 
+        public bool TryGetDeployment(ObjectId id, out Deployment deployment)
+        {
+            return _deployments.TryGetValue(id, out deployment);
+        }
+
         public void RemoveDeployment(ObjectId id)
         {
             _deploymentCollection.Delete(id);

@@ -69,7 +69,15 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override CrudOperations SupportedOperations
         {
-            get { return CrudOperations.GetList | CrudOperations.GetCreate | CrudOperations.PostCreate | CrudOperations.GetEdit | CrudOperations.PostEdit | CrudOperations.PostDelete | CrudOperations.GetDetails; }
+            get 
+            { 
+                return CrudOperations.GetList | 
+                    CrudOperations.GetCreate | 
+                    CrudOperations.PostCreate | 
+                    CrudOperations.GetEdit | 
+                    CrudOperations.PostEdit |
+                    CrudOperations.PostDelete | 
+                    CrudOperations.GetDetails; }
         }
 
         protected override object GetList(dynamic parameters)
@@ -126,7 +134,8 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object PostDelete(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            _deploymentBoard.RemoveDeployment(id);
+
+            ExecuteServiceControlAction(id, _taskBuilder.DeleteDeploymentTask);
 
             return RedirectToList();
         }
@@ -134,11 +143,19 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object GetDetails(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var deployment = _deploymentBoard.GetDeployment(id);
 
-            var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageId);
+            Deployment deployment;
 
-            return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
+            if (_deploymentBoard.TryGetDeployment(id, out deployment))
+            {
+                deployment = _deploymentBoard.GetDeployment(id);
+                var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageId);
+                return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
+            }
+            else
+            {
+                return RedirectToList();
+            }
         }
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()

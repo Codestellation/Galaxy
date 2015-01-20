@@ -4,6 +4,11 @@ using System.ServiceProcess;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
+    public enum WinErrors
+    {
+        FileNotFound = 0x00000002
+    }
+
     public abstract class WinServiceOperation : IOperation
     {
         protected readonly string ServiceName;

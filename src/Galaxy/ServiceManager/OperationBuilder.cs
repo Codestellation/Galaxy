@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
@@ -56,12 +59,15 @@ namespace Codestellation.Galaxy.ServiceManager
             return new InstallService(serviceFolder, hostFileName, instanceName);
         }
 
-        public IOperation UninstallService(Deployment deployment)
+        public IOperation UninstallService(Deployment deployment, bool skipIfNotFound = false)
         {
             var serviceFolder = deployment.GetDeployFolder();
             var hostFileName = deployment.GetServiceHostFileName();
             var instanceName = deployment.InstanceName;
-            return new UninstallService(serviceFolder, hostFileName, instanceName);
+            return new UninstallService(serviceFolder, hostFileName, instanceName)
+            {
+                SkipIfNotFound = skipIfNotFound
+            };
         }
 
         public IOperation OverrideFiles(Deployment deployment)
@@ -76,6 +82,17 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             var serviceFolder = deployment.GetDeployFolder();
             return new RestoreFromBackup(serviceFolder, backupFolder);
+        }
+
+        public IOperation DeleteFolders(Deployment deployment)
+        {
+            var folders = deployment.ServiceFolders.Values.Select(x => x.FullPath).ToArray();
+            return new DeleteFolders(folders);
+        }
+
+        public IOperation PublishDeletedEvent(Deployment deployment)
+        {
+            return new PublishDeploymentDeletedEvent(deployment);
         }
     }
 }

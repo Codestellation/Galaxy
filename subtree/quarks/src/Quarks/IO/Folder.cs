@@ -31,22 +31,22 @@ namespace Codestellation.Quarks.IO
             var fullPath = ToFullPath(folder);
 
             var retries = 0;
-             while(Directory.Exists(fullPath))
-             {
-                 try
-                 {
-                     Directory.Delete(fullPath, true);
-                 }
-                 catch(IOException)
-                 {
-                     if (retries >= maxRetries)
-                     {
-                         throw;
-                     }
-                     Thread.Sleep(10);
-                 }
-                 retries++;
-              }
+            while (Directory.Exists(fullPath))
+            {
+                try
+                {
+                    Directory.Delete(fullPath, true);
+                }
+                catch (IOException)
+                {
+                    if (retries >= maxRetries)
+                    {
+                        throw;
+                    }
+                    Thread.Sleep(10);
+                }
+                retries++;
+            }
         }
 
         public static FileInfo[] EnumerateFiles(string folder)
