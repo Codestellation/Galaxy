@@ -44,6 +44,10 @@ namespace Codestellation.Galaxy.Infrastructure
 
         public Collection GetCollection<T>()
         {
+            if (_collections == null)
+            {
+                throw new InvalidOperationException("Please call start method before using repository");
+            }
             return _collections[typeof (T)];
         }
 
