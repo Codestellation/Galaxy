@@ -1,14 +1,14 @@
-using Codestellation.Galaxy.Infrastructure.Emisstar;
+﻿using Codestellation.Galaxy.Infrastructure.Emisstar;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
     [Synchronized]
-    public class DeploymentDeletedEvent 
+    public class DeleteDeploymentEvent 
     {
         public readonly ObjectId DeploymentId;
 
-        public DeploymentDeletedEvent(ObjectId deploymentId)
+        public DeleteDeploymentEvent(ObjectId deploymentId)
         {
             DeploymentId = deploymentId;
         }

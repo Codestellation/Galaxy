@@ -2,6 +2,7 @@
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
@@ -17,6 +18,11 @@ namespace Codestellation.Galaxy.Infrastructure
                     .WithServiceAllInterfaces()
                     .LifestyleSingleton()
                 );
+
+            container.Register(
+                Component
+                    .For<DeploymentTaskProcessor>()
+                    .LifestyleSingleton());
         }
     }
 }

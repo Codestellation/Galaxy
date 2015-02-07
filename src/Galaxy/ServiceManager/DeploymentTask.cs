@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.ServiceManager.Events;
@@ -11,8 +10,6 @@ namespace Codestellation.Galaxy.ServiceManager
     public class DeploymentTask
     {
         public readonly DeploymentTaskContext Context;
-
-        private Task _task;
 
         private readonly List<IOperation> _operations;
 
@@ -52,17 +49,6 @@ namespace Codestellation.Galaxy.ServiceManager
         }
 
         public void Process()
-        {
-            //All exceptions are catched. No need to prevent task finalizers faults.
-            _task = Task.Factory.StartNew(ProcessInternal, TaskCreationOptions.LongRunning);
-        }
-
-        public void Wait()
-        {
-            _task.Wait();
-        }
-
-        private void ProcessInternal()
         {
             try
             {

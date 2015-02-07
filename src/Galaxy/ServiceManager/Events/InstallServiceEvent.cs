@@ -4,11 +4,11 @@ using Nejdb.Bson;
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
     [Synchronized]
-    public class DeploymentDeletedEvent 
+    public class InstallServiceEvent
     {
         public readonly ObjectId DeploymentId;
 
-        public DeploymentDeletedEvent(ObjectId deploymentId)
+        public InstallServiceEvent(ObjectId deploymentId)
         {
             DeploymentId = deploymentId;
         }

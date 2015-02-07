@@ -1,4 +1,5 @@
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Nejdb.Bson;
 

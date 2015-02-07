@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.WebEnd.Models.Deployment;
 using Codestellation.Quarks.Collections;
@@ -12,6 +11,9 @@ using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using System;
+using System.Collections;
+using Codestellation.Emisstar;
+using Codestellation.Galaxy.ServiceManager.Events;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -19,18 +21,18 @@ namespace Codestellation.Galaxy.WebEnd
     {
         private readonly FeedBoard _feedBoard;
         private readonly PackageVersionBoard _versionCache;
-        private readonly TaskBuilder _taskBuilder;
-        
+
         private readonly DeploymentBoard _deploymentBoard;
+        private readonly IPublisher _publisher;
         public const string Path = "deployment";
 
-        public DeploymentModule(FeedBoard feedBoard, PackageVersionBoard versionCache, TaskBuilder taskBuilder, DeploymentBoard deploymentBoard)
+        public DeploymentModule(FeedBoard feedBoard, PackageVersionBoard versionCache, DeploymentBoard deploymentBoard, IPublisher publisher)
             : base(Path)
         {
             _feedBoard = feedBoard;
             _versionCache = versionCache;
-            _taskBuilder = taskBuilder;
             _deploymentBoard = deploymentBoard;
+            _publisher = publisher;
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
@@ -69,15 +71,16 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override CrudOperations SupportedOperations
         {
-            get 
-            { 
-                return CrudOperations.GetList | 
-                    CrudOperations.GetCreate | 
-                    CrudOperations.PostCreate | 
-                    CrudOperations.GetEdit | 
+            get
+            {
+                return CrudOperations.GetList |
+                    CrudOperations.GetCreate |
+                    CrudOperations.PostCreate |
+                    CrudOperations.GetEdit |
                     CrudOperations.PostEdit |
-                    CrudOperations.PostDelete | 
-                    CrudOperations.GetDetails; }
+                    CrudOperations.PostDelete |
+                    CrudOperations.GetDetails;
+            }
         }
 
         protected override object GetList(dynamic parameters)
@@ -134,8 +137,8 @@ namespace Codestellation.Galaxy.WebEnd
         protected override object PostDelete(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-
-            ExecuteServiceControlAction(id, _taskBuilder.DeleteDeploymentTask);
+            var anEvent = new DeleteDeploymentEvent(id);
+            _publisher.Publish(anEvent);
 
             return RedirectToList();
         }
@@ -170,9 +173,10 @@ namespace Codestellation.Galaxy.WebEnd
 
         private object PostInstall(dynamic parameters)
         {
+            
             var id = new ObjectId(parameters.id);
-
-            ExecuteServiceControlAction(id, _taskBuilder.InstallServiceTask);
+            var message = new InstallServiceEvent(id);
+            _publisher.Publish(message);
 
             return RedirectToDetails(id);
         }
@@ -181,7 +185,8 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.StartServiceTask);
+            var message = new StartServiceEvent(id);
+            _publisher.Publish(message);
 
             return RedirectToDetails(id);
         }
@@ -190,7 +195,8 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.StopServiceTask);
+            var message = new StopServiceEvent(id);
+            _publisher.Publish(message);
 
             return RedirectToDetails(id);
         }
@@ -199,51 +205,34 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            ExecuteServiceControlAction(id, _taskBuilder.UninstallServiceTask);
+            var message = new UninstallServiceEvent(id);
+            _publisher.Publish(message);
 
             return RedirectToDetails(id);
         }
 
-        private void ExecuteServiceControlAction(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> taskFactory)
-        {
-            var deployment = _deploymentBoard.GetDeployment(deploymentId);
-
-            var targetFeed = _feedBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
-
-            //TODO: What else? Ignore silently? 
-            if (targetFeed != null)
-            {
-                var task = taskFactory(deployment, targetFeed);
-                task.Process();
-            }
-        }
 
         private object PostDeploy(dynamic parameters)
-        {
-            return PerformUpdateOrDeploy((Func<Deployment, NugetFeed, DeploymentTask>) _taskBuilder.DeployServiceTask, parameters);
-        }
-
-        private object PostUpdate(dynamic parameters)
-        {
-            return PerformUpdateOrDeploy((Func<Deployment, NugetFeed, DeploymentTask>)_taskBuilder.UpdateServiceTask, parameters);
-        }
-
-        private object PerformUpdateOrDeploy(Func<Deployment, NugetFeed, DeploymentTask> deployServiceTask, dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
             var version = new Version(parameters.version);
 
-            var deployment = _deploymentBoard.GetDeployment(id);
-            deployment.PackageVersion = version;
-
-            _deploymentBoard.SaveDeployment(deployment);
-
-
-            ExecuteServiceControlAction(id, deployServiceTask);
-
+            var message = new DeployServiceEvent(id, version);
+            
+            _publisher.Publish(message);
             return RedirectToDetails(id);
         }
 
+        private object PostUpdate(dynamic parameters)
+        {
+            var id = new ObjectId(parameters.id);
+            var version = new Version(parameters.version);
+
+            var message = new UpdateServiceEvent(id, version);
+
+            _publisher.Publish(message);
+            return RedirectToDetails(id);
+        }
 
         private static object RedirectToList()
         {
