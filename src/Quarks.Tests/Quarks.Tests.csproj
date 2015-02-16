@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllInternalsTests.cs" />
+    <Compile Include="Collections\AlgorithmExtensionsTests.cs" />
     <Compile Include="Collections\CollectionExtensionsTests.cs" />
     <Compile Include="DateAndTime\ClockTests.cs" />
     <Compile Include="DateAndTime\DateTimeExtensionsTests.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="IO\FolderTests.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="IO\ReusableStreamTests.cs" />
+    <Compile Include="Serialization\SpecialSerializerTests.cs" />
     <Compile Include="StringUtils\StringExtensionsTests.cs" />
     <Compile Include="Resources\EmbeddedResourceTests.cs" />
     <Compile Include="IO\StreamExtensionsTests.cs" />

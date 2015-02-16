@@ -37,9 +37,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\AlgorithmExtensions.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="Collections\HashSetExtensions.cs" />
+    <Compile Include="Components\Optional.cs" />
     <Compile Include="Contracts\Require.cs" />
     <Compile Include="DateAndTime\DateTimeExtensions.cs" />
     <Compile Include="Exceptions\ExceptionExtensions.cs" />
@@ -49,6 +51,9 @@
     <Compile Include="Enumerations\EnumUtil.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="IO\ReusableStream.cs" />
+    <Compile Include="Reflection\AssemblyVersion.cs" />
+    <Compile Include="Reflection\TypeExtensions.cs" />
+    <Compile Include="Serialization\SpecialSerializer.cs" />
     <Compile Include="StringUtils\StringExtensions.cs" />
     <Compile Include="Native\LibraryHandle.cs" />
     <Compile Include="Native\MethodHandle.cs" />
