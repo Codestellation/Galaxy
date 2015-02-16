@@ -53,7 +53,10 @@
     <Compile Include="IO\ReusableStream.cs" />
     <Compile Include="Reflection\AssemblyVersion.cs" />
     <Compile Include="Reflection\TypeExtensions.cs" />
+<<<<<<< HEAD
+=======
     <Compile Include="Serialization\SpecialSerializer.cs" />
+>>>>>>> 5a95509744bfa17ff01238d673c51ca877695923
     <Compile Include="StringUtils\StringExtensions.cs" />
     <Compile Include="Native\LibraryHandle.cs" />
     <Compile Include="Native\MethodHandle.cs" />

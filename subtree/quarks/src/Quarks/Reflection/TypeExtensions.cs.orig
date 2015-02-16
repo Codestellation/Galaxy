@@ -4,7 +4,11 @@ using System.Reflection;
 
 namespace Codestellation.Quarks.Reflection
 {
+<<<<<<< HEAD
+    public static class TypeExtensions
+=======
     internal static class TypeExtensions
+>>>>>>> 5a95509744bfa17ff01238d673c51ca877695923
     {
         public static TAttribute GetAttribute<TAttribute>(this ICustomAttributeProvider self, bool inherited = false)
             where TAttribute : Attribute
