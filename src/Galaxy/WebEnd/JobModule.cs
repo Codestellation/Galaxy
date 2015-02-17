@@ -12,12 +12,17 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override CrudOperations SupportedOperations
         {
-            get { return CrudOperations.GetList;}
+            get { return CrudOperations.GetList | CrudOperations.GetCreate;}
         }
 
         protected override object GetList(dynamic parameters)
         {
             return new JobListModel();
+        }
+
+        protected override object GetCreate(dynamic parameters)
+        {
+            return new CreateJobModel();
         }
     }
 }
