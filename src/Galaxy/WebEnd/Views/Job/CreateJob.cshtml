@@ -1,4 +1,5 @@
-﻿@using Codestellation.Galaxy.WebEnd
+﻿@using Codestellation.Galaxy.Infrastructure
+@using Codestellation.Galaxy.WebEnd
 @using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.Jobs.CreateJobModel>
 @{ Layout = "Master";}
@@ -10,6 +11,7 @@
 
 <div class="row">
     <form class="form-horizontal" role="form" method="POST">
+        @Html.LabeledDropDown(x => x.TimeZoneId, TimeZoneCollection.AvailableTimeZones)
         @Html.LabeledTextBox(x => x.Schedule)
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">

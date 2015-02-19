@@ -197,6 +197,7 @@
     <Compile Include="Domain\Deployments\DeploymentBoard.cs" />
     <Compile Include="Domain\DeploymentTaskProcessor.cs" />
     <Compile Include="Infrastructure\ServiceVersion.cs" />
+    <Compile Include="Infrastructure\TimeZoneCollection.cs" />
     <Compile Include="ServiceManager\Events\ServiceEventsHandler.cs" />
     <Compile Include="Infrastructure\BoardInstaller.cs" />
     <Compile Include="ServiceManager\Operations\DeleteFolders.cs" />
