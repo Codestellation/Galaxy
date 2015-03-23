@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading;
 using Codestellation.Galaxy.Configuration;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Quarks.IO;
-using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using Topshelf;
@@ -23,6 +23,11 @@ namespace Codestellation.Galaxy
             TopshelfExitCode code = HostFactory.Run(x =>
             {
                 x.UseNLog();
+                
+                x.AddCommandLineSwitch("clearUsers", clearUsers =>
+                {
+                    Repository.ClearUsersOnStart = clearUsers;
+                });
 
                 x.Service<Service>(s =>
                 {

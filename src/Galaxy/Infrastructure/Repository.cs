@@ -13,10 +13,14 @@ namespace Codestellation.Galaxy.Infrastructure
     public class Repository : IDisposable
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly CollectionOptions Options = new CollectionOptions(false, false, 32, 32);
+
         private Library _library;
         private Database _database;
 
         private Dictionary<Type, Collection> _collections;
+
+        public static bool ClearUsersOnStart;
 
         public void Start()
         {
@@ -28,7 +32,7 @@ namespace Codestellation.Galaxy.Infrastructure
             var dbPath = GetDatabasePath();
             
             _database.Open(dbPath, Database.DefaultOpenMode | OpenMode.SyncTransactionToStorage);
-            CreateCollection("users", typeof(User));
+            CreateCollection("users", typeof(User), ClearUsersOnStart);
             CreateCollection("feeds", typeof(NugetFeed));
             CreateCollection("deployments", typeof(Deployment));
             CreateCollection("options", typeof(Options));
@@ -36,9 +40,15 @@ namespace Codestellation.Galaxy.Infrastructure
             CreateCollection("agents", typeof(Agent));
         }
 
-        private void CreateCollection(string collectionName, Type entityType)
+        private void CreateCollection(string collectionName, Type entityType, bool clear = false)
         {
-            var collection = _database.CreateCollection(collectionName, new CollectionOptions(false, false, 32, 32));
+            var collection = _database.CreateCollection(collectionName, Options);
+            if (clear)
+            {
+                collection.Drop();
+                collection = _database.CreateCollection(collectionName, Options);
+                Logger.Warn("Collection '{0}' was dropped", collectionName);
+            }
             _collections.Add(entityType, collection);
         }
 
