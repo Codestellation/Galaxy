@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.ServiceProcess;
 using Nejdb.Bson;
-using System;
 
 namespace Codestellation.Galaxy.Domain
 {
     public class Deployment
     {
         public ObjectId Id { get; internal set; }
-        
+
         public string Group { get; set; }
 
         public string InstanceName { get; set; }
@@ -55,11 +55,6 @@ namespace Codestellation.Galaxy.Domain
         public string GetDeployLogFolder()
         {
             return ServiceFolders[SpecialFolderDictionary.DeployLogsFolder].FullPath;
-        }
-
-        public string GetFilesFolder()
-        {
-            return ServiceFolders[SpecialFolderDictionary.FileOverrides].FullPath;
         }
 
         public string GetBackupFolder()

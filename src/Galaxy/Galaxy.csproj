@@ -76,7 +76,6 @@
     <EmbeddedResource Include="WebEnd\Views\Agent\AgentDetails.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Options\Options.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\BuildLogs.cshtml" />
-    <EmbeddedResource Include="WebEnd\Views\File\DeploymentFiles.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\File\BackupList.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Agent\AgentList.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Agent\CreateAgent.cshtml" />
@@ -246,7 +245,6 @@
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedEvent.cs" />
     <Compile Include="ServiceManager\Helpers\ProcessStarter.cs" />
     <Compile Include="ServiceManager\DeploymentTask.cs" />
-    <Compile Include="ServiceManager\Operations\OverrideFiles.cs" />
     <Compile Include="ServiceManager\Operations\InstallPackage.cs" />
     <Compile Include="ServiceManager\Operations\InstallService.cs" />
     <Compile Include="ServiceManager\Operations\IOperation.cs" />

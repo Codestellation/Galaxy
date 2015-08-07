@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
@@ -19,7 +17,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public IOperation ClearBinaries(Deployment deployment, FileList keepOnUpdate = null)
         {
             var serviceFolder = deployment.GetDeployFolder();
-            keepOnUpdate = keepOnUpdate ??  deployment.KeepOnUpdate.Clone();
+            keepOnUpdate = keepOnUpdate ?? deployment.KeepOnUpdate.Clone();
             return new ClearBinaries(serviceFolder, keepOnUpdate);
         }
 
@@ -48,7 +46,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public IOperation StopService(Deployment deployment, bool skipIfNotFound)
         {
             var serviceName = deployment.GetServiceName();
-            return new StopService(serviceName){SkipIfNotFound = skipIfNotFound};
+            return new StopService(serviceName) { SkipIfNotFound = skipIfNotFound };
         }
 
         public IOperation InstallService(Deployment deployment)
@@ -68,14 +66,6 @@ namespace Codestellation.Galaxy.ServiceManager
             {
                 SkipIfNotFound = skipIfNotFound
             };
-        }
-
-        public IOperation OverrideFiles(Deployment deployment)
-        {
-            var serviceFolder = deployment.GetDeployFolder();
-            var serviceFilesFolder = deployment.GetFilesFolder();
-            var keepOnUpdate = deployment.KeepOnUpdate.Clone();
-            return new OverrideFiles(serviceFolder, serviceFilesFolder, keepOnUpdate);
         }
 
         public IOperation RestoreFrom(Deployment deployment, string backupFolder)

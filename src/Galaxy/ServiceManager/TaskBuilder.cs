@@ -22,8 +22,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             return CreateDeployTask("DeployService", deployment)
                 .Add(_operations.BackupService(deployment))
-                .Add(_operations.InstallPackage(deployment, deploymentFeed, FileList.Empty))
-                .Add(_operations.OverrideFiles(deployment));
+                .Add(_operations.InstallPackage(deployment, deploymentFeed, FileList.Empty));
         }
 
         public DeploymentTask UpdateServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -33,7 +32,6 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.BackupService(deployment))
                 .Add(_operations.ClearBinaries(deployment))
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
-                .Add(_operations.OverrideFiles(deployment))
                 .Add(_operations.StartService(deployment));
         }
 
@@ -96,8 +94,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.StopService(deployment, true))
                 .Add(_operations.BackupService(deployment))
                 .Add(_operations.ClearBinaries(deployment, FileList.Empty))
-                .Add(_operations.RestoreFrom(deployment, backupFolder))
-                .Add(_operations.OverrideFiles(deployment));
+                .Add(_operations.RestoreFrom(deployment, backupFolder));
         }
 
         public DeploymentTask DeleteDeploymentTask(Deployment deployment, NugetFeed deploymentFeed)
