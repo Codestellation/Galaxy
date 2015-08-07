@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Nejdb.Bson;
 
@@ -18,12 +17,15 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
         public string PackageId { get; set; }
         public Version PackageVersion { get; set; }
 
+        public string ConsulName { get; set; }
+
         public string Status { get; set; }
 
         private readonly IEnumerable<KeyValuePair<Version, string>> _packageVersions;
-        public IEnumerable<KeyValuePair<Version, string>> PackageVersions 
+
+        public IEnumerable<KeyValuePair<Version, string>> PackageVersions
         {
-            get { return _packageVersions; } 
+            get { return _packageVersions; }
         }
 
         private readonly IEnumerable<KeyValuePair<ObjectId, string>> _allFeeds;
@@ -55,12 +57,15 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             State = deployment.GetServiceState();
 
             Group = deployment.Group;
+
+            ConsulName = deployment.ConsulName;
         }
 
-        public DeploymentModel(Domain.Deployment deployment, 
+        public DeploymentModel(Domain.Deployment deployment,
             IEnumerable<KeyValuePair<ObjectId, string>> allFeeds,
-            IEnumerable<Version> packageVersions):
-            this(deployment)
+            IEnumerable<Version> packageVersions)
+            :
+                this(deployment)
         {
             _allFeeds = allFeeds;
             _packageVersions = packageVersions.OrderByDescending(x => x).Select(item => new KeyValuePair<Version, string>(item, item.ToString()));

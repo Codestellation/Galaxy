@@ -26,9 +26,11 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
         [Display(Name = "Keep on update", Prompt = "files, folders, allowed file masks")]
         public string KeepOnUpdate { get; set; }
 
+        [Display(Name = "Consul Name", Prompt = "{company}.{env}.{product}.{service}[.{id}]")]
+        public string ConsulName { get; set; }
+
         public DeploymentEditModel()
         {
-            
         }
 
         public DeploymentEditModel(Domain.Deployment deployment)
@@ -43,6 +45,7 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             KeepOnUpdate = (deployment.KeepOnUpdate ?? new FileList(new string[0])).ToString();
 
             Group = deployment.Group;
+            ConsulName = deployment.ConsulName;
         }
 
         public Domain.Deployment ToDeployment()
@@ -63,7 +66,7 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             deployment.PackageId = PackageId;
             deployment.Group = Group;
             deployment.KeepOnUpdate = (FileList)KeepOnUpdate;
+            deployment.ConsulName = ConsulName;
         }
-
     }
 }
