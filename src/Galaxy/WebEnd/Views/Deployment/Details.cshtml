@@ -72,7 +72,6 @@
                         </div>
                         <div class="btn-group">
                             <button id="btn-deploy" type="button" class="btn btn-primary">Deploy</button>
-                            <button id="btn-update" type="button" class="btn btn-primary">Update</button>
                         </div>
                     </div>
                 </li>
@@ -96,14 +95,6 @@
 <script>
     $(document).ready(function () {
         var version = $('select[name=PackageVersion]');
-
-        $('#btn-update')
-            .click(function () {
-                $.ajax({
-                    url: '/@DeploymentModule.Path/update/@Model.Id/' + version.val(),
-                    type: 'POST'
-                });
-            });
 
         $('#btn-deploy')
             .click(function () {

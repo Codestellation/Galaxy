@@ -8,9 +8,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class ClearBinaries : IOperation
     {
-        private FileList _keepOnUpdate;
-        private List<DirectoryInfo> _skippedFolders;
-        private DirectoryInfo _baseFolderInfo;
+        private readonly FileList _keepOnUpdate;
+        private readonly List<DirectoryInfo> _skippedFolders;
+        private readonly DirectoryInfo _baseFolderInfo;
 
         public ClearBinaries(string basePath, FileList keepOnUpdate)
         {
@@ -24,7 +24,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             var entries = Directory
                 .EnumerateFileSystemEntries(_baseFolderInfo.FullName, "*.*", SearchOption.AllDirectories)
                 .Except(new[] { _baseFolderInfo.FullName });
-
 
             foreach (var path in entries)
             {
@@ -55,7 +54,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             foreach (var skippedFolder in _skippedFolders)
             {
-                if (info.Parent != null &&  info.Parent.FullName.Equals(skippedFolder.FullName, StringComparison.OrdinalIgnoreCase))
+                if (info.Parent != null && info.Parent.FullName.Equals(skippedFolder.FullName, StringComparison.OrdinalIgnoreCase))
                 {
                     _skippedFolders.Add(info);
                     return;

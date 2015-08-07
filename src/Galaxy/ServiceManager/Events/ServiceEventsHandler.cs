@@ -7,15 +7,13 @@ using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class ServiceEventsHandler : 
+    public class ServiceEventsHandler :
         IHandler<DeleteDeploymentEvent>,
         IHandler<InstallServiceEvent>,
         IHandler<UninstallServiceEvent>,
         IHandler<StartServiceEvent>,
         IHandler<StopServiceEvent>,
-
-        IHandler<DeployServiceEvent>,
-        IHandler<UpdateServiceEvent>
+        IHandler<DeployServiceEvent>
     {
         private readonly DeploymentBoard _deploymentBoard;
         private readonly FeedBoard _feedBoard;
@@ -62,17 +60,7 @@ namespace Codestellation.Galaxy.ServiceManager.Events
 
             _deploymentBoard.SaveDeployment(deployment);
 
-            BuildAndProcess(message.DeploymentId, (d,f) => _builder.DeployServiceTask(d,f));
-        }
-
-        public void Handle(UpdateServiceEvent message)
-        {
-            var deployment = _deploymentBoard.GetDeployment(message.DeploymentId);
-            deployment.PackageVersion = message.Version;
-
-            _deploymentBoard.SaveDeployment(deployment);
-
-            BuildAndProcess(message.DeploymentId, (d, f) => _builder.UpdateServiceTask(d, f));
+            BuildAndProcess(message.DeploymentId, (d, f) => _builder.DeployServiceTask(d, f));
         }
 
         private void BuildAndProcess(ObjectId deploymentId, Func<Deployment, NugetFeed, DeploymentTask> buildTask)

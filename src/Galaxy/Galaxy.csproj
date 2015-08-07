@@ -317,7 +317,6 @@
     <Compile Include="WebEnd\Misc\ReflectionExtensions.cs" />
     <Compile Include="WebEnd\TagBuilder\TextAreaTag.cs" />
     <Compile Include="ServiceManager\Events\UninstallServiceEvent.cs" />
-    <Compile Include="ServiceManager\Events\UpdateServiceEvent.cs" />
     <Compile Include="WebEnd\UserModule.cs" />
     <Compile Include="WebEnd\Misc\ViewExtensions.cs" />
     <Compile Include="WebEnd\OptionsModule.cs" />

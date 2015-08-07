@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Codestellation.Emisstar;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
+using Codestellation.Galaxy.Infrastructure;
+using Codestellation.Galaxy.ServiceManager.Events;
+using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.WebEnd.Models.Deployment;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
-using Nejdb.Bson;
-using Nancy.Responses;
 using Nancy.ModelBinding;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.WebEnd.Models;
-using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.ServiceManager;
-using System;
-using System.Collections;
-using Codestellation.Emisstar;
-using Codestellation.Galaxy.ServiceManager.Events;
+using Nancy.Responses;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd
 {
@@ -39,11 +37,9 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/stop/{id}", true] = (parameters, token) => ProcessRequest(() => PostStop(parameters), token);
             Post["/uninstall/{id}", true] = (parameters, token) => ProcessRequest(() => PostUninstall(parameters), token);
             Post["/deploy/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostDeploy(parameters), token);
-            Post["/update/{id}/{version}", true] = (parameters, token) => ProcessRequest(() => PostUpdate(parameters), token);
 
             Get["/build-log/{id}", true] = (parameters, token) => ProcessRequest(() => GetBuildLogs(parameters), token);
             Get["/build-log/{id}/{filename}", true] = (parameters, token) => ProcessRequest(() => GetBuildLog(parameters), token);
-
         }
 
         private object GetBuildLog(dynamic parameters)
@@ -165,15 +161,14 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var allFeeds =
                 _feedBoard
-                .Feeds
-                .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _feedBoard.Feeds.Count);
+                    .Feeds
+                    .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _feedBoard.Feeds.Count);
 
             return allFeeds;
         }
 
         private object PostInstall(dynamic parameters)
         {
-            
             var id = new ObjectId(parameters.id);
             var message = new InstallServiceEvent(id);
             _publisher.Publish(message);
@@ -211,24 +206,12 @@ namespace Codestellation.Galaxy.WebEnd
             return RedirectToDetails(id);
         }
 
-
         private object PostDeploy(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
             var version = new Version(parameters.version);
 
             var message = new DeployServiceEvent(id, version);
-            
-            _publisher.Publish(message);
-            return RedirectToDetails(id);
-        }
-
-        private object PostUpdate(dynamic parameters)
-        {
-            var id = new ObjectId(parameters.id);
-            var version = new Version(parameters.version);
-
-            var message = new UpdateServiceEvent(id, version);
 
             _publisher.Publish(message);
             return RedirectToDetails(id);

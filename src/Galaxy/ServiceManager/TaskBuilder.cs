@@ -20,13 +20,6 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return CreateDeployTask("DeployService", deployment)
-                .Add(_operations.BackupService(deployment))
-                .Add(_operations.InstallPackage(deployment, deploymentFeed, FileList.Empty));
-        }
-
-        public DeploymentTask UpdateServiceTask(Deployment deployment, NugetFeed deploymentFeed)
-        {
             return CreateDeployTask("UpdateService", deployment)
                 .Add(_operations.StopService(deployment, true))
                 .Add(_operations.BackupService(deployment))
