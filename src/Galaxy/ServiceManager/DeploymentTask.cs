@@ -14,7 +14,6 @@ namespace Codestellation.Galaxy.ServiceManager
         private readonly List<IOperation> _operations;
 
         private OperationResult[] _operationResults;
-        
 
         public IReadOnlyList<IOperation> Operations
         {
@@ -58,11 +57,12 @@ namespace Codestellation.Galaxy.ServiceManager
             }
             finally
             {
+                Context.BuildLog.Flush();
                 Context.BuildLog.Dispose();
             }
 
             var deploymentResult = new OperationResult(Name, _operationResults);
-            var anEvent =  new DeploymentTaskCompletedEvent(this, deploymentResult);
+            var anEvent = new DeploymentTaskCompletedEvent(this, deploymentResult);
             Publisher.Publish(anEvent);
         }
 
@@ -80,10 +80,10 @@ namespace Codestellation.Galaxy.ServiceManager
 
                 Context.BuildLog.WriteLine("Operation '{0}' started. ({1}/{2})", operationName, operationIndex, Operations.Count);
 
-                var operationResult = _operationResults[index] = 
-                    failureDetected 
-                    ? new OperationResult(operationName, ResultCode.NotRan) //do not execute operation if any previous failed
-                    : Execute(operation);
+                var operationResult = _operationResults[index] =
+                    failureDetected
+                        ? new OperationResult(operationName, ResultCode.NotRan) //do not execute operation if any previous failed
+                        : Execute(operation);
 
                 WriteResult(operationResult, operationIndex);
 
@@ -97,10 +97,8 @@ namespace Codestellation.Galaxy.ServiceManager
 
             try
             {
-                
                 operation.Execute(Context);
                 return new OperationResult(operationName, ResultCode.Succeed);
-
             }
             catch (Exception ex)
             {

@@ -25,6 +25,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.BackupService(deployment))
                 .Add(_operations.ClearBinaries(deployment))
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
+                .Add(_operations.DeployConsulConfig(deployment))
                 .Add(_operations.StartService(deployment));
         }
 
@@ -66,6 +67,11 @@ namespace Codestellation.Galaxy.ServiceManager
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream);
+
+            if (!string.IsNullOrWhiteSpace(deployment.ConsulName))
+            {
+                context.SetValue(DeploymentTaskContext.ConsulName, deployment.ConsulName);
+            }
 
             return new DeploymentTask(context);
         }

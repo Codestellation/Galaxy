@@ -1,4 +1,6 @@
-﻿using Codestellation.Galaxy.ServiceManager.Helpers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -8,6 +10,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private readonly string _serviceFolder;
         private readonly string _hostFileName;
         private readonly string _instance;
+        private DeploymentTaskContext _context;
 
         public InstallService(string serviceFolder, string hostFileName, string instance)
         {
@@ -18,19 +21,43 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public void Execute(DeploymentTaskContext context)
         {
+            _context = context;
             var exePath = Folder.Combine(_serviceFolder, _hostFileName);
 
-            var exeParams = string.Format("install -instance:{0}", _instance);
-
-            context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
+            context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, CommandLineArguments);
 
             string error;
-            var result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
+            var result = ProcessStarter.ExecuteWithParams(exePath, CommandLineArguments, out error);
 
             context.BuildLog.WriteLine("Exe output:");
             context.BuildLog.WriteLine(result);
             context.BuildLog.WriteLine("Exe error:");
             context.BuildLog.WriteLine(error);
+        }
+
+        private string CommandLineArguments
+        {
+            get { return "install " + ArgumentsString; }
+        }
+
+        private string ArgumentsString
+        {
+            get
+            {
+                var arguments = Arguments.Select(x => string.Format("-{0}:{1}", x.Key, x.Value));
+                return string.Join(" ", arguments);
+            }
+        }
+
+        private IEnumerable<KeyValuePair<string, object>> Arguments
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(_instance))
+                {
+                    yield return new KeyValuePair<string, object>("instance", _instance);
+                }
+            }
         }
     }
 }

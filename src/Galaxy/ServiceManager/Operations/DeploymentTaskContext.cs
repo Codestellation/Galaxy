@@ -7,12 +7,14 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     public class DeploymentTaskContext
     {
         public const string TaskName = "TaskName";
-        
+
         public const string ServiceStatus = "ServiceStatus";
         public const string ForceStartService = "ForceStartService";
         public const string DeploymentId = "DeploymentId";
         public const string PublisherKey = "PublisherKey";
         public const string LogStream = "LogStream";
+
+        public const string ConsulName = "ConsulName";
 
         public readonly TextWriter BuildLog;
         private readonly Dictionary<object, object> _data;
@@ -31,7 +33,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public TValue GetValue<TValue>(object key)
         {
-            return (TValue) _data[key];
+            return (TValue)_data[key];
         }
 
         public bool TryGetValue<TValue>(object key, out TValue value)
@@ -39,7 +41,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             object temp;
             if (_data.TryGetValue(key, out temp))
             {
-                value = (TValue)temp;    
+                value = (TValue)temp;
                 return true;
             }
 
@@ -49,7 +51,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public IPublisher Publisher
         {
-            get { return (IPublisher) _data[PublisherKey]; }
+            get { return (IPublisher)_data[PublisherKey]; }
         }
     }
 }

@@ -206,6 +206,7 @@
     <Compile Include="ServiceManager\Events\DeleteDeploymentEvent.cs" />
     <Compile Include="ServiceManager\Events\DeployServiceEvent.cs" />
     <Compile Include="ServiceManager\Events\InstallServiceEvent.cs" />
+    <Compile Include="ServiceManager\Operations\DeployConsulConfig.cs" />
     <Compile Include="WebEnd\Models\Jobs\CreateJobModel.cs" />
     <Compile Include="WebEnd\Models\Jobs\JobListItemModel.cs" />
     <Compile Include="WebEnd\Models\Jobs\JobListModel.cs" />
