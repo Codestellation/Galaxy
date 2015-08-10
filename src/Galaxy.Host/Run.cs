@@ -11,8 +11,9 @@ namespace Codestellation.Galaxy.Host
     public static class Run
     {
         public static int Service<TService>()
+            where TService : IService
         {
-            Type serviceType = typeof (TService);
+            Type serviceType = typeof(TService);
 
             TopshelfExitCode code = HostFactory.Run(x =>
             {
@@ -29,7 +30,7 @@ namespace Codestellation.Galaxy.Host
                 });
 
                 x.EnableShutdown();
-                x.EnableServiceRecovery(ConfigureRecovery); 
+                x.EnableServiceRecovery(ConfigureRecovery);
                 x.RunAsLocalSystem();
 
                 Assembly serviceAssembly = Assembly.GetEntryAssembly();
@@ -45,8 +46,8 @@ namespace Codestellation.Galaxy.Host
 
         private static void LogVersions()
         {
-            var logWriter = HostLogger.Get(typeof (Run));
-            
+            var logWriter = HostLogger.Get(typeof(Run));
+
             var hostVersion = GetVersion(Assembly.GetExecutingAssembly());
             var hostVersionMessage = string.Format("Host version: {0}", hostVersion);
             logWriter.Info(hostVersionMessage);
@@ -85,13 +86,13 @@ namespace Codestellation.Galaxy.Host
             configurator.SetResetPeriod(daily);
         }
 
-        static string GetServiceName(Assembly assembly)
+        private static string GetServiceName(Assembly assembly)
         {
             AssemblyName assemblyName = assembly.GetName();
             return assemblyName.Name;
         }
 
-        static string GetServiceDescription(Assembly assembly)
+        private static string GetServiceDescription(Assembly assembly)
         {
             var description = GetAttribute<AssemblyDescriptionAttribute>(assembly);
 
@@ -118,10 +119,9 @@ namespace Codestellation.Galaxy.Host
         private static T GetAttribute<T>(Assembly assembly)
         {
             return assembly
-                   .GetCustomAttributes(typeof(T), false)
-                   .Cast<T>()
-                   .FirstOrDefault();
-            
+                .GetCustomAttributes(typeof(T), false)
+                .Cast<T>()
+                .FirstOrDefault();
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
+using Codestellation.Galaxy.Host;
 using Codestellation.Quarks.IO;
 using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.Agent
 {
-    public class AgentService
+    public class AgentService : IService
     {
         private IDisposable _owinHost;
 
