@@ -3,29 +3,26 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Domain.Agents;
-using Codestellation.Galaxy.Domain.Deployments;
-using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
-using Codestellation.Galaxy.WebEnd;
 using Codestellation.Galaxy.WebEnd.Misc;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Windsor;
+using Nancy.Conventions;
 using Nancy.ErrorHandling;
 using Nancy.ViewEngines;
 using Nancy.ViewEngines.Razor;
 using Nejdb;
 
-namespace Codestellation.Galaxy
+namespace Codestellation.Galaxy.WebEnd.Bootstrap
 {
-    public class Bootstrapper : WindsorNancyBootstrapper
+    public class NancyBootstrapper : WindsorNancyBootstrapper
     {
         private static readonly Assembly Assembly;
         private static readonly string ViewsNamespace;
 
-        static Bootstrapper()
+        static NancyBootstrapper()
         {
             Assembly = Assembly.GetExecutingAssembly();
             var ns = typeof(ModuleBase).Namespace;
@@ -33,7 +30,7 @@ namespace Codestellation.Galaxy
             StaticConfiguration.DisableErrorTraces = false;
         }
 
-        protected override void ConfigureConventions(Nancy.Conventions.NancyConventions nancyConventions)
+        protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
             nancyConventions.ViewLocationConventions.Add((viewName, model, context) => string.Concat(ViewsNamespace, "/", viewName));
 
@@ -54,18 +51,15 @@ namespace Codestellation.Galaxy
                     .IsDefault()
                     .ImplementedBy<RazorConfiguration>()
                     .LifestyleSingleton(),
-
                 Component
                     .For<IStatusCodeHandler>()
                     .ImplementedBy<ForbiddenErrorHandler>()
                     .Named("DefaultErrorHandler")
                     .IsDefault()
                     .LifestyleSingleton(),
-
                 Component
                     .For<TaskBuilder>()
                     .LifestyleTransient(),
-
                 Component
                     .For<OperationBuilder>()
                     .LifestyleTransient()
@@ -97,7 +91,6 @@ namespace Codestellation.Galaxy
             pipelines.BeforeRequest.AddItemToStartOfPipeline(context => NancyHooks.AuthorizeUser(container, context));
         }
 
-
         private void LoadOptions(IWindsorContainer container, Repository repository)
         {
             var optionCollection = repository.GetCollection<Options>();
@@ -107,8 +100,8 @@ namespace Codestellation.Galaxy
                 var options = cursor.Count == 0 ? new Options() : cursor.Current;
                 container.Register(
                     Component
-                    .For<Options>()
-                    .Instance(options));
+                        .For<Options>()
+                        .Instance(options));
             }
         }
 
@@ -143,7 +136,10 @@ namespace Codestellation.Galaxy
             using (var query = users.CreateQuery<User>())
             using (var cursor = query.Execute(QueryMode.Count))
             {
-                if (cursor.Count > 0) return;
+                if (cursor.Count > 0)
+                {
+                    return;
+                }
             }
 
             using (var tx = users.BeginTransaction())

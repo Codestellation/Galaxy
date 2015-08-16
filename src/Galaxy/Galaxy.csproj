@@ -42,7 +42,7 @@
     <StartupObject>Codestellation.Galaxy.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\bootstrap.file-input.js" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\bootstrap.file-input.js" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -56,12 +56,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <EmbeddedResource Include="WebEnd\Content\bootstrap-theme.css.map" />
-    <EmbeddedResource Include="WebEnd\Content\bootstrap.css.map" />
-    <EmbeddedResource Include="WebEnd\Content\glyphicons-halflings-regular.eot" />
-    <EmbeddedResource Include="WebEnd\Content\glyphicons-halflings-regular.ttf" />
-    <EmbeddedResource Include="WebEnd\Content\glyphicons-halflings-regular.woff" />
-    <EmbeddedResource Include="WebEnd\Content\jquery-2.1.0.min.map" />
+    <EmbeddedResource Include="WebEnd\Static\content\bootstrap-theme.css.map" />
+    <EmbeddedResource Include="WebEnd\Static\content\bootstrap.css.map" />
+    <EmbeddedResource Include="WebEnd\Static\fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="WebEnd\Static\fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="WebEnd\Static\fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\jquery-2.1.0.min.map" />
     <EmbeddedResource Include="WebEnd\Views\Error403.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Homepage.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Login\Login.cshtml" />
@@ -110,6 +110,10 @@
       <HintPath>..\packages\Microsoft.Owin.Diagnostics.3.0.1\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.3.0.1\lib\net45\Microsoft.Owin.FileSystems.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
       <Private>True</Private>
@@ -120,6 +124,10 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform">
@@ -274,7 +282,7 @@
     <Compile Include="Service.cs" />
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="WebEnd\Bootstrap\Startup.cs" />
     <Compile Include="WebEnd\Models\AgentDetailsModel.cs" />
     <Compile Include="WebEnd\Models\CreateAgentModel.cs" />
     <Compile Include="WebEnd\AgentModule.cs" />
@@ -284,13 +292,11 @@
     <Compile Include="WebEnd\CrudModule.cs" />
     <Compile Include="WebEnd\CrudOperations.cs" />
     <Compile Include="WebEnd\FileModule.cs" />
-    <Compile Include="WebEnd\Misc\EmbeddedResourceList.cs" />
     <Compile Include="WebEnd\Misc\NancyContextExtensions.cs" />
     <Compile Include="WebEnd\Misc\NancyHooks.cs" />
     <Compile Include="WebEnd\Misc\Security\Authorization.cs" />
     <Compile Include="WebEnd\Misc\Security\Claims.cs" />
     <Compile Include="WebEnd\Misc\Security\UserIdentity.cs" />
-    <Compile Include="WebEnd\Misc\StaticContentModule.cs" />
     <Compile Include="WebEnd\Models\BuildLogsModel.cs" />
     <Compile Include="WebEnd\Misc\Converters\VersionTypeConverter.cs" />
     <Compile Include="WebEnd\Misc\Converters\ObjectIdTypeConverter.cs" />
@@ -298,7 +304,6 @@
     <Compile Include="WebEnd\Models\Deployment\DeploymentListItemModel.cs" />
     <Compile Include="WebEnd\Models\Deployment\DeploymentListModel.cs" />
     <Compile Include="WebEnd\Models\FeedListModel.cs" />
-    <Compile Include="WebEnd\Misc\EmbeddedResource.cs" />
     <Compile Include="WebEnd\FeedModule.cs" />
     <Compile Include="WebEnd\Models\Deployment\DeploymentModel.cs" />
     <Compile Include="WebEnd\Models\FeedModel.cs" />
@@ -307,6 +312,7 @@
     <Compile Include="WebEnd\Models\Deployment\DeploymentFilesModel.cs" />
     <Compile Include="ServiceManager\Events\StartServiceEvent.cs" />
     <Compile Include="ServiceManager\Events\StopServiceEvent.cs" />
+    <Compile Include="WebEnd\Bootstrap\OwinExtensions.cs" />
     <Compile Include="WebEnd\SignalR\HubFactory.cs" />
     <Compile Include="WebEnd\SignalR\SignalRContractResolver.cs" />
     <Compile Include="WebEnd\SignalR\WindsorDependencyResolver.cs" />
@@ -325,13 +331,12 @@
     <Compile Include="WebEnd\Misc\ForbiddenErrorHandler.cs" />
     <Compile Include="WebEnd\Misc\ForbidenResponse.cs" />
     <Compile Include="WebEnd\HomepageModule.cs" />
-    <Compile Include="WebEnd\Misc\HttpExtensions.cs" />
     <Compile Include="WebEnd\Models\HomepageModel.cs" />
     <Compile Include="WebEnd\Models\LoginModel.cs" />
     <Compile Include="WebEnd\Models\RequestDelay.cs" />
     <Compile Include="WebEnd\Models\UserModel.cs" />
     <Compile Include="WebEnd\ModuleBase.cs" />
-    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="WebEnd\Bootstrap\NancyBootstrapper.cs" />
     <Compile Include="WebEnd\Misc\RazorConfiguration.cs" />
     <Compile Include="WebEnd\Misc\ReflectionExtensions.cs" />
     <Compile Include="WebEnd\TagBuilder\TextAreaTag.cs" />
@@ -339,33 +344,34 @@
     <Compile Include="WebEnd\UserModule.cs" />
     <Compile Include="WebEnd\Misc\ViewExtensions.cs" />
     <Compile Include="WebEnd\OptionsModule.cs" />
+    <Compile Include="WebEnd\Web.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\additional-methods-1.11.1.min.js" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\additional-methods-1.11.1.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="WebEnd\Static\content\bootstrap-theme.min.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\bootstrap.min.css" />
+    <EmbeddedResource Include="WebEnd\Static\content\bootstrap.min.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\bootstrap.min.js" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\bootstrap.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="WebEnd\Static\fonts\glyphicons-halflings-regular.svg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="WebEnd\Content\jquery-2.1.0.intellisense.js" />
+    <None Include="WebEnd\Static\scripts\jquery-2.1.0.intellisense.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\jquery-2.1.0.min.js" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\jquery-2.1.0.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\jquery.validate-1.11.1.min.js" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\jquery.validate-1.11.1.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WebEnd\Content\jquery.validate.bootstrap.js" />
+    <EmbeddedResource Include="WebEnd\Static\scripts\jquery.validate.bootstrap.js" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
