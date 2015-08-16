@@ -97,6 +97,10 @@
     <Reference Include="Codestellation.Emisstar.CastleWindsor">
       <HintPath>..\packages\Codestellation.Emisstar.Windsor.0.0.40\lib\net45\Codestellation.Emisstar.CastleWindsor.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -112,6 +116,10 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Hosting, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform">
@@ -199,6 +207,7 @@
     <Compile Include="..\..\subtree\quarks\src\Quarks\Reflection\TypeExtensions.cs">
       <Link>Quarks\TypeExtensions.cs</Link>
     </Compile>
+    <Compile Include="Boostrapping\SignalRInstaller.cs" />
     <Compile Include="Domain\Deployments\DeploymentBoard.cs" />
     <Compile Include="Domain\DeploymentTaskProcessor.cs" />
     <Compile Include="Infrastructure\ServiceVersion.cs" />
@@ -298,6 +307,9 @@
     <Compile Include="WebEnd\Models\Deployment\DeploymentFilesModel.cs" />
     <Compile Include="ServiceManager\Events\StartServiceEvent.cs" />
     <Compile Include="ServiceManager\Events\StopServiceEvent.cs" />
+    <Compile Include="WebEnd\SignalR\HubFactory.cs" />
+    <Compile Include="WebEnd\SignalR\SignalRContractResolver.cs" />
+    <Compile Include="WebEnd\SignalR\WindsorDependencyResolver.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\PresentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\Attributes\AbsentValueAttribute.cs" />
     <Compile Include="WebEnd\TagBuilder\BootstrapClass.cs" />
