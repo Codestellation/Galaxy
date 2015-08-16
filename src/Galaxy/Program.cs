@@ -23,11 +23,8 @@ namespace Codestellation.Galaxy
             TopshelfExitCode code = HostFactory.Run(x =>
             {
                 x.UseNLog();
-                
-                x.AddCommandLineSwitch("clearUsers", clearUsers =>
-                {
-                    Repository.ClearUsersOnStart = clearUsers;
-                });
+
+                x.AddCommandLineSwitch("clearUsers", clearUsers => { Repository.ClearUsersOnStart = clearUsers; });
 
                 x.Service<Service>(s =>
                 {
@@ -38,7 +35,7 @@ namespace Codestellation.Galaxy
                 });
 
                 x.RunAsLocalSystem();
-                x.EnableServiceRecovery(ConfigureRecovery); 
+                x.EnableServiceRecovery(ConfigureRecovery);
                 x.EnableShutdown();
 
                 x.SetDescription(Description);
@@ -55,7 +52,7 @@ namespace Codestellation.Galaxy
             });
 
             HostLogger.Shutdown();
-            return (int) code;
+            return (int)code;
         }
 
         private static ServiceConfig ReadConfigurations()

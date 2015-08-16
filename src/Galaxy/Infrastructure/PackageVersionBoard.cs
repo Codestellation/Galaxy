@@ -1,15 +1,15 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
 using Nejdb.Bson;
-using NuGet;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Threading;
 using NLog;
+using NuGet;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
@@ -38,7 +38,10 @@ namespace Codestellation.Galaxy.Infrastructure
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
                 return obj is FeedPackageTuple && Equals((FeedPackageTuple)obj);
             }
 
@@ -66,7 +69,7 @@ namespace Codestellation.Galaxy.Infrastructure
             _refreshTimer = new Timer(OnTimerRefresh, null, Timeout.Infinite, Timeout.Infinite);
 
             //avoid NRE
-            Refreshed = delegate {  };
+            Refreshed = delegate { };
         }
 
         public IEnumerable<Version> GetPackageVersions(ObjectId feedId, string packageId)
@@ -76,7 +79,7 @@ namespace Codestellation.Galaxy.Infrastructure
                 return new Version[0];
             }
 
-            //this method is thread safe because it use concurrent dictionary. 
+            //this method is thread safe because it use concurrent dictionary.
             var feed = _feedBoard.GetFeed(feedId);
             var tuple = new FeedPackageTuple(feed, packageId);
 
@@ -85,7 +88,6 @@ namespace Codestellation.Galaxy.Infrastructure
                 ? versions.Select(x => x.Version)
                 : new Version[0];
         }
-
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Start()
@@ -122,7 +124,6 @@ namespace Codestellation.Galaxy.Infrastructure
                 var tuples = prev.Result;
                 RefreshCache(tuples);
             });
-
         }
 
         private void RefreshCache(FeedPackageTuple[] tuples)
@@ -153,7 +154,7 @@ namespace Codestellation.Galaxy.Infrastructure
             catch (Exception ex)
             {
                 //TODO: Notify error somehow
-                Logger.Error("Package version cache update error" ,ex);
+                Logger.Error(ex, "Package version cache update error");
             }
         }
 
