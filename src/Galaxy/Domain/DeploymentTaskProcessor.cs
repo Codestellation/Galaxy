@@ -16,7 +16,7 @@ namespace Codestellation.Galaxy.Domain
         {
             _taskQueue = new BlockingCollection<DeploymentTask>();
             _cancellationSource = new CancellationTokenSource();
-            _processingTask = Task.Run((Action) ProcessInternal);
+            _processingTask = Task.Run((Action)ProcessInternal);
         }
 
         public void Process(DeploymentTask task)
@@ -33,9 +33,9 @@ namespace Codestellation.Galaxy.Domain
                     task.Process();
                 }
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
-                //Operation cancelled by cancellation source 
+                //Operation cancelled by cancellation source
             }
         }
 
