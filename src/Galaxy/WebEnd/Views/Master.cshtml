@@ -19,6 +19,8 @@
     <script src="@Web.Scripts/jquery.validate-1.11.1.min.js"></script>
     <script src="@Web.Scripts/additional-methods-1.11.1.min.js"></script>
     <script src="@Web.Scripts/jquery.validate.bootstrap.js"></script>
+    <script src="@Web.Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="signalr/hubs"></script>
 
     @*Move it to separate file*@
     <style type="text/css">
@@ -40,28 +42,27 @@
                 </button>
             </div>
 
-            @if (RenderContext.Context.CurrentUser != null)
-            {
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li @Html.HighLightActive()><a href="/">Dashboard</a></li>
-                        <li @Html.HighLightActive(FeedModule.Path)><a href="/@FeedModule.Path">Feeds</a></li>
-                        <li @Html.HighLightActive(DeploymentModule.Path)><a href="/@DeploymentModule.Path">Deployments</a></li>
-                        <li @Html.HighLightActive(JobModule.Path)><a href="/@JobModule.Path">Jobs</a></li>
-                        <li @Html.HighLightActive(AgentModule.Path)><a href="/@AgentModule.Path">Agents</a></li>
-                        <li @Html.HighLightActive(OptionsModule.Path)><a href="/@OptionsModule.Path">Options</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@RenderContext.Context.CurrentUser<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/@UserModule.Path">Manage Users</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            }
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li @Html.HighLightActive()><a href="/">Dashboard</a></li>
+                    <li @Html.HighLightActive(FeedModule.Path)><a href="/@FeedModule.Path">Feeds</a></li>
+                    <li @Html.HighLightActive(DeploymentModule.Path)><a href="/@DeploymentModule.Path">Deployments</a></li>
+                    <li @Html.HighLightActive(JobModule.Path)><a href="/@JobModule.Path">Jobs</a></li>
+                    <li @Html.HighLightActive(AgentModule.Path)><a href="/@AgentModule.Path">Agents</a></li>
+                    <li @Html.HighLightActive(OptionsModule.Path)><a href="/@OptionsModule.Path">Options</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@RenderContext.Context.CurrentUser<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/@UserModule.Path">Manage Users</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
@@ -73,5 +74,6 @@
     <div class="container">
         <p class="pull-right">@ServiceVersion.InformationalVersion</p>
     </div>
+
 </body>
 </html>

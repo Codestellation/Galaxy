@@ -42,6 +42,7 @@
     <StartupObject>Codestellation.Galaxy.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WebEnd\Static\scripts\jquery.signalR-2.2.0.min.js" />
     <EmbeddedResource Include="WebEnd\Static\scripts\bootstrap.file-input.js" />
     <None Include="app.config">
       <SubType>Designer</SubType>
