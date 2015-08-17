@@ -2,23 +2,21 @@
 @using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.FeedModel>
 @{ Layout = "Master";}
-<div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">Edit Feed</h3>
-    </div>
-</div>
 
-<div class="row">
-    <form class="form-horizontal" role="form" method="POST">
-        @Html.LabeledTextBox(x => x.Name)
-        @Html.LabeledTextBox(x => x.Uri)
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <input type="submit" class="btn btn-success" value="Submit" />
-            </div>
-        </div>
-    </form>
-    <script>
+<h3 class="page-header">Edit Feed</h3>
+
+
+
+<form class="form-horizontal" role="form" method="POST">
+  @Html.LabeledTextBox(x => x.Name)
+  @Html.LabeledTextBox(x => x.Uri)
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-success" value="Submit" />
+    </div>
+  </div>
+</form>
+<script>
         $(document).ready(function() {
 
             validateWithBootstrap();
@@ -38,5 +36,5 @@
                 }
             });
         });
-    </script>
-</div>
+</script>
+

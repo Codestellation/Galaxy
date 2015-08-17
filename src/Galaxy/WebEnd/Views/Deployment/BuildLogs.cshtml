@@ -4,22 +4,17 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.BuildLogsModel>
 @{ Layout = "Master";}
 
-<div class="row">
-    <div class="container  col-lg-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Avaible build logs
-            </div>
-            <ul class="list-group">
-                @foreach (var file in Model.Files)
-                {
-                    <li class="list-group-item">
-                        <a href="/@DeploymentModule.Path/build-log/@Model.DeploymentId/@file.Name">@file.Name</a>
-                    </li>
-                }
-            </ul>
-        </div>
 
-
-    </div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Avaible build logs
+  </div>
+  <ul class="list-group">
+    @foreach (var file in Model.Files)
+    {
+        <li class="list-group-item">
+          <a href="/@DeploymentModule.Path/build-log/@Model.DeploymentId/@file.Name">@file.Name</a>
+        </li>
+    }
+  </ul>
 </div>

@@ -5,29 +5,25 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.Deployment.DeploymentEditModel>
 
 @{ Layout = "Master";}
-<div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">Edit service</h3>
+
+<h3 class="page-header">Edit service</h3>
+
+<form class="form-horizontal" role="form" method="POST">
+  @Html.LabeledDropDown(x => x.FeedId, Model.AllFeeds)
+  @Html.LabeledTextBox(x => x.PackageId)
+  @Html.LabeledTextBox(x => x.Group)
+  @Html.LabeledTextBox(x => x.InstanceName)
+  @Html.LabeledTextBox(x => x.ConsulName)
+  @Html.LabeledTextArea(x => x.KeepOnUpdate)
+
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-success" value="Submit" />
     </div>
-</div>
-
-<div class="row">
-    <form class="form-horizontal" role="form" method="POST">
-        @Html.LabeledDropDown(x => x.FeedId, Model.AllFeeds)
-        @Html.LabeledTextBox(x => x.PackageId)
-        @Html.LabeledTextBox(x => x.Group)
-        @Html.LabeledTextBox(x => x.InstanceName)
-        @Html.LabeledTextBox(x => x.ConsulName)
-        @Html.LabeledTextArea(x => x.KeepOnUpdate)
-
-
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <input type="submit" class="btn btn-success" value="Submit" />
-            </div>
-        </div>
-    </form>
-    <script>
+  </div>
+</form>
+<script>
         $(document).ready(function() {
             validateWithBootstrap();
             $('form').validate({
@@ -48,5 +44,5 @@
                 }
             });
         });
-    </script>
-</div>
+</script>
+

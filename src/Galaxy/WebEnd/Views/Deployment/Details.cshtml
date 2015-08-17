@@ -4,93 +4,91 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.Deployment.DeploymentModel>
 @{ Layout = "Master";}
 
-<div class="row">
-    <div class="container  col-lg-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                @Model.DisplayName
-            </div>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td>Service</td>
-                        <td>@Model.PackageId</td>
-                    </tr>
-                    <tr>
-                        <td>Instance</td>
-                        <td>@Model.InstanceName</td>
-                    </tr>
-                    <tr>
-                        <td>Feed</td>
-                        <td>@Model.FeedName</td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>@Model.Status</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="panel-footer">
-                <div class="btn-group">
-                    <a class="btn btn-primary" href="/@DeploymentModule.Path/edit/@Model.Id">Edit</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Diagnostics
-            </div>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><a href="/@DeploymentModule.Path/build-log/@Model.Id">View Build Logs</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="/@FileModule.Path/backup/@Model.Id">View Backups</a></td>
-                    </tr>
-                    <tr>
-                        <td>State: @Model.State</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="panel-footer">
-            </div>
-        </div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    @Model.DisplayName
+  </div>
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>Service</td>
+        <td>@Model.PackageId</td>
+      </tr>
+      <tr>
+        <td>Instance</td>
+        <td>@Model.InstanceName</td>
+      </tr>
+      <tr>
+        <td>Feed</td>
+        <td>@Model.FeedName</td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td>@Model.Status</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="panel-footer">
+    <div class="btn-group">
+      <a class="btn btn-primary" href="/@DeploymentModule.Path/edit/@Model.Id">Edit</a>
     </div>
-    <div class="container col-lg-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Deployment
-            </div>
-
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="container col-lg-6">
-                            @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
-                        </div>
-                        <div class="btn-group">
-                            <button id="btn-deploy" type="button" class="btn btn-primary">Deploy</button>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/start/@Model.Id">Start</button>
-                </li>
-                <li class="list-group-item">
-                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/stop/@Model.Id">Stop</button>
-                </li>
-                <li class="list-group-item">
-                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/install/@Model.Id">Install</button>
-                </li>
-                <li class="list-group-item">
-                    <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/uninstall/@Model.Id">Uninstall</button>
-                </li>
-            </ul>
-        </div>
-    </div>
+  </div>
 </div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Diagnostics
+  </div>
+  <table class="table">
+    <tbody>
+      <tr>
+        <td><a href="/@DeploymentModule.Path/build-log/@Model.Id">View Build Logs</a></td>
+      </tr>
+      <tr>
+        <td><a href="/@FileModule.Path/backup/@Model.Id">View Backups</a></td>
+      </tr>
+      <tr>
+        <td>State: @Model.State</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="panel-footer">
+  </div>
+</div>
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Deployment
+  </div>
+
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="container col-lg-6">
+          @Html.NoLabelDropDown(x => x.PackageVersion, Model.PackageVersions)
+        </div>
+        <div class="btn-group">
+          <button id="btn-deploy" type="button" class="btn btn-primary">Deploy</button>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/start/@Model.Id">Start</button>
+    </li>
+    <li class="list-group-item">
+      <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/stop/@Model.Id">Stop</button>
+    </li>
+    <li class="list-group-item">
+      <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/install/@Model.Id">Install</button>
+    </li>
+    <li class="list-group-item">
+      <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/uninstall/@Model.Id">Uninstall</button>
+    </li>
+  </ul>
+</div>
+
+
 
 <script>
     $(document).ready(function () {

@@ -10,7 +10,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
 {
     public static class ViewExtensions
     {
-        private static readonly  NonEncodedHtmlString ClassActive = new  NonEncodedHtmlString(@"class=""active""");
+        private static readonly NonEncodedHtmlString ClassActive = new NonEncodedHtmlString(@"class=""active""");
 
         public static IHtmlString LabeledTextBox<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
@@ -53,7 +53,6 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             Expression<Func<TModel, TProperty>> property,
             IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
-
             var input = BuildSelectTag(htmlHelper, property, values);
             input.Classes(BootstrapClass.FormControl);
 
@@ -63,10 +62,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         private static Tag BuildSelectTag<TModel, TProperty, TDisplayValue>(HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property,
             IEnumerable<KeyValuePair<TProperty, TDisplayValue>> values)
         {
-
             var currentValue = htmlHelper.Model.Read(property);
             var inputProperties = InputProperties.Get(property);
-
 
             var hasSelected = false;
 
@@ -74,7 +71,10 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             var options = values.Select(item =>
             {
                 bool isSelected = item.Key.Equals(currentValue);
-                if (isSelected) hasSelected = true;
+                if (isSelected)
+                {
+                    hasSelected = true;
+                }
                 return Tags.Input.Option().Selected(isSelected).Content(item.Value).Value(item.Key);
             });
 
@@ -100,7 +100,7 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             bool value = htmlHelper.Model.Read(property);
 
             var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
-                Tags.Div().Classes(BootstrapClass.ColSmOffset2, BootstrapClass.ColSm10).Content(
+                Tags.Div().Content(
                     Tags.Div().Classes(BootstrapClass.Checkbox).Content(
                         Tags.Label().Content(
                             Tags.Input.CheckBox().Checked(value).Name(path).Content(display.Name)
@@ -133,8 +133,8 @@ namespace Codestellation.Galaxy.WebEnd.Misc
         private static IHtmlString BuildFormControl(string path, string name, Tag input)
         {
             var formGroup = Tags.Div().Classes(BootstrapClass.FormGroup).Content(
-                Tags.Label().For(path).Classes(BootstrapClass.ColSm2, BootstrapClass.ControlLabel).Content(name),
-                Tags.Div().Classes(BootstrapClass.ColSm4).Content(input));
+                Tags.Label().For(path).Classes(BootstrapClass.ControlLabel).Content(name),
+                Tags.Div().Content(input));
 
             return new NonEncodedHtmlString(formGroup.ToHtmlString());
         }

@@ -1,60 +1,59 @@
 ﻿@using Codestellation.Galaxy.WebEnd
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.HomepageModel>
 @{ Layout = "Master";}
-<div class="row">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3>Recent Errors</h3>
-        </div>
-        <table class="table">
-            <tbody>
-                @foreach (var error in  Model.Errors)
-                {
-                    <tr>
-                        <td>
-                            @if (@error.DeploymentId.HasValue)
-                            {
-                                //TODO: Url should be part of Notification
-                                <a href="/@DeploymentModule.Path/details/@error.DeploymentId.Value">Details</a>
-                            }
-                            else
-                            {
-                                <p>No URL</p>
-                            }
-                        </td>
-                        <td>@error.CreatedAt.ToLocalTime()</td>
-                        <td>@error.Message</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <div class="panel-heading">
-            <h3>Recent Events</h3>
-        </div>
-        <table class="table">
-            <tbody>
-                @foreach (var anEvent in  Model.Events)
-                {
-                    <tr>
-                        <td>
-                            @if (string.IsNullOrWhiteSpace(anEvent.Url))
-                            {
-                                <p>No Details</p>
-                            }
-                            else
-                            {
-                                //TODO: Url should be part of Notification
-                                <a href="@anEvent.Url">Details</a>
-                            }
-                        </td>
-                        <td>@anEvent.CreatedAt.ToLocalTime()</td>
-                        <td>@anEvent.Message</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <div class="panel-footer">
-            
-        </div>
-    </div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3>Recent Errors</h3>
+  </div>
+  <table class="table">
+    <tbody>
+      @foreach (var error in Model.Errors)
+      {
+          <tr>
+            <td>
+              @if (@error.DeploymentId.HasValue)
+              {
+                //TODO: Url should be part of Notification
+                <a href="/@DeploymentModule.Path/details/@error.DeploymentId.Value">Details</a>
+              }
+              else
+              {
+                  <p>No URL</p>
+              }
+            </td>
+            <td>@error.CreatedAt.ToLocalTime()</td>
+            <td>@error.Message</td>
+          </tr>
+      }
+    </tbody>
+  </table>
+  <div class="panel-heading">
+    <h3>Recent Events</h3>
+  </div>
+  <table class="table">
+    <tbody>
+      @foreach (var anEvent in Model.Events)
+      {
+          <tr>
+            <td>
+              @if (string.IsNullOrWhiteSpace(anEvent.Url))
+              {
+                  <p>No Details</p>
+              }
+              else
+              {
+                //TODO: Url should be part of Notification
+                <a href="@anEvent.Url">Details</a>
+              }
+            </td>
+            <td>@anEvent.CreatedAt.ToLocalTime()</td>
+            <td>@anEvent.Message</td>
+          </tr>
+      }
+    </tbody>
+  </table>
+  <div class="panel-footer">
+
+  </div>
 </div>
