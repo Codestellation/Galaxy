@@ -4,8 +4,8 @@
     {
         public static readonly string Namespace = typeof(Web).Namespace;
 
-        public const string Scripts = "static/scripts";
+        public const string Scripts = "/static/scripts";
 
-        public const string Styles = "static/content";
+        public const string Styles = "/static/content";
     }
 }
