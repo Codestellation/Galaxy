@@ -6,53 +6,50 @@ using NuGet;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
-    public class InstallPackage: IOperation
+    public class InstallPackage : IOperation
     {
         private readonly string _destination;
-        private readonly InstallPackageOrder[] _orders;
+        private readonly PackageDetails _packageDetails;
         private readonly FileList _skipList;
         private TextWriter _buildLog;
 
-        public InstallPackage(string destination, InstallPackageOrder[] orders, FileList skipList)
+        public InstallPackage(string destination, PackageDetails packageDetails, FileList skipList)
         {
             _destination = destination;
-            _orders = orders;
+            _packageDetails = packageDetails;
             _skipList = skipList;
         }
 
-        public InstallPackage(string destination, InstallPackageOrder[] orders) : this(destination, orders, FileList.Empty)
+        public InstallPackage(string destination, PackageDetails details)
+            : this(destination, details, FileList.Empty)
         {
-            
         }
 
         public void Execute(DeploymentTaskContext context)
         {
             _buildLog = context.BuildLog;
-            foreach (var order in _orders)
-            {
-                Install(order);
-            }
+            Install();
         }
 
-        private void Install(InstallPackageOrder order)
+        private void Install()
         {
-            string packageId = order.PackageId;
+            string packageId = _packageDetails.PackageId;
 
-            var repository = PackageRepositoryFactory.Default.CreateRepository(order.FeedUri);
-            
+            var repository = PackageRepositoryFactory.Default.CreateRepository(_packageDetails.FeedUri);
+
             var manager = new PackageManager(repository, _destination);
 
-            _buildLog.WriteLine("Install '{0}' from '{1}' to '{2}'.", packageId, order.FeedUri, _destination);
+            _buildLog.WriteLine("Install '{0}' from '{1}' to '{2}'.", packageId, _packageDetails.FeedUri, _destination);
 
             manager.PackageInstalled += MoveFilesToDestination;
 
-            if (order.Version == null)
+            if (_packageDetails.Version == null)
             {
                 manager.InstallPackage(packageId);
             }
             else
             {
-                manager.InstallPackage(packageId, new SemanticVersion(order.Version));
+                manager.InstallPackage(packageId, new SemanticVersion(_packageDetails.Version));
             }
         }
 
@@ -60,7 +57,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             var installPath = e.InstallPath;
             _buildLog.WriteLine("Installed '{0}.{1}' to '{2}'.", e.Package.Id, e.Package.Version, installPath);
-            
+
             foreach (var file in e.Package.GetFiles())
             {
                 MoveFileToDestination(installPath, file);
@@ -88,7 +85,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 {
                     File.Delete(destination);
                 }
-                
+
                 File.Move(origin, destination);
                 _buildLog.WriteLine("Ok");
             }

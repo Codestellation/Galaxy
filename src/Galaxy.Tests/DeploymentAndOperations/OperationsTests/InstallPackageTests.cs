@@ -1,10 +1,10 @@
-﻿using Codestellation.Galaxy.ServiceManager.Operations;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Content;
 using Codestellation.Quarks.IO;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 {
@@ -18,7 +18,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         public void Init()
         {
             _nugetFeedFolder = Path.Combine(Environment.CurrentDirectory, "testnuget");
-            
+
             Folder.EnsureDeleted(_nugetFeedFolder);
             Folder.EnsureExists(_nugetFeedFolder);
 
@@ -31,30 +31,23 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         [Test]
         public void InstallPackage_extract_package_success()
         {
-            //given 
+            //given
             var version10 = new Version(1, 0);
-            var order = new[]
-            {
-                new InstallPackageOrder("TestNugetPackage", _nugetFeedFolder, version10),
-                new InstallPackageOrder("Codestellation.Galaxy.Host", _nugetFeedFolder, version10),
-            };
-            var op = new InstallPackage(_targetPath, order);
+
+            var packageDetails = new PackageDetails("TestNugetPackage", _nugetFeedFolder, version10);
+
+            var op = new InstallPackage(_targetPath, packageDetails);
             var stringWriter = new StringWriter();
             var buildLog = new DeploymentTaskContext(stringWriter);
 
             //when
             op.Execute(buildLog);
 
-
             //then
             string[] sampleFiles =
             {
                 "TestNugetPackLib.dll",
-                "Codestellation.Galaxy.Host.exe",
-                "Topshelf.dll",
-                "Topshelf.NLog.dll"
             };
-
 
             var files = Directory
                 .GetFiles(_targetPath)

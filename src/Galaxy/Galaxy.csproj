@@ -266,7 +266,7 @@
     <Compile Include="ServiceManager\OperationBuilder.cs" />
     <Compile Include="ServiceManager\Operations\BackupService.cs" />
     <Compile Include="ServiceManager\Operations\DeploymentTaskContext.cs" />
-    <Compile Include="ServiceManager\Operations\InstallPackageOrder.cs" />
+    <Compile Include="ServiceManager\Operations\PackageDetails.cs" />
     <Compile Include="ServiceManager\Operations\RestoreFromBackup.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />

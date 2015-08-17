@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 {
+    [TestFixture]
     public class ClearBinariesTests
     {
         private string _nugetFeedFolder;
@@ -30,13 +31,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             _basePath = Folder.Combine(_nugetFeedFolder, "extracted");
 
-            var orders = new[]
-            {
-                new InstallPackageOrder("TestNugetPackage", _nugetFeedFolder, version10),
-                new InstallPackageOrder("Codestellation.Galaxy.Host", _nugetFeedFolder, version10),
-            };
-
-            var installPackage = new InstallPackage(_basePath, orders, FileList.Empty);
+            var packageDetails = new PackageDetails("Codestellation.Galaxy.Host", _nugetFeedFolder, version10);
+            var installPackage = new InstallPackage(_basePath, packageDetails, FileList.Empty);
 
             var stringWriter = new StringWriter();
             _context = new DeploymentTaskContext(stringWriter);

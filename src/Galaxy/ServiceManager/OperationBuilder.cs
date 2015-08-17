@@ -27,8 +27,8 @@ namespace Codestellation.Galaxy.ServiceManager
             var packageId = deployment.PackageId;
             var feedUri = deploymentFeed.Uri;
             var packageVersion = deployment.PackageVersion;
-            var orders = new[] { new InstallPackageOrder(packageId, feedUri, packageVersion) };
-            return new InstallPackage(serviceFolder, orders, keepOnUpdate);
+            var packageDetails = new PackageDetails(packageId, feedUri, packageVersion);
+            return new InstallPackage(serviceFolder, packageDetails, keepOnUpdate);
         }
 
         public IOperation UninstallPackage(Deployment deployment)
