@@ -48,6 +48,10 @@
     <Reference Include="Codestellation.Emisstar">
       <HintPath>..\packages\Codestellation.Emisstar.0.0.40\lib\net45\Codestellation.Emisstar.dll</HintPath>
     </Reference>
+    <Reference Include="Consul">
+      <HintPath>..\packages\Consul.0.5.2.62\lib\net45\Consul.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CsQuery, Version=1.3.3.249, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CsQuery.1.3.4\lib\net40\CsQuery.dll</HintPath>
@@ -109,6 +113,14 @@
     <Compile Include="Content\TestPackages.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\ClearBinariesTests.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\InstallPackageTests.cs" />
+    <Compile Include="Host\ConfigManagement\ConfigElementTests.cs" />
+    <Compile Include="Host\ConfigManagement\ConsulConfigLoaderTests.cs" />
+    <Compile Include="Host\ConfigManagement\ConsulConfigTests.cs" />
+    <Compile Include="Host\ConfigManagement\ConsulWrapper.cs" />
+    <Compile Include="Host\ConfigManagement\SampleConfig.cs" />
+    <Compile Include="Host\ConfigManagement\SampleService.cs" />
+    <Compile Include="Host\ConfigManagement\ServiceProxyTests.cs" />
+    <Compile Include="Host\ConfigManagement\Test.cs" />
     <Compile Include="InfrastructureTests\PackageVersionCacheTests.cs" />
     <Compile Include="Maintenance\CleanUpLogTests.cs" />
     <Compile Include="ScratchPad.cs" />
@@ -132,6 +144,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Galaxy.Host\Galaxy.Host.csproj">
+      <Project>{459DF6FD-3F74-41B2-86F0-99C4B897FA67}</Project>
+      <Name>Galaxy.Host</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Galaxy\Galaxy.csproj">
       <Project>{DCA3BBE0-3C81-4109-83DB-244E1116F095}</Project>
       <Name>Galaxy</Name>
@@ -142,6 +158,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebEnd\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="consulx.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -69,6 +69,12 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="ConfigManagement\ConfigElement.cs" />
+    <Compile Include="ConfigManagement\ConfigLoader.cs" />
+    <Compile Include="ConfigManagement\ConsulConfig.cs" />
+    <Compile Include="ConfigManagement\IConsulConfigAware.cs" />
+    <Compile Include="ConfigManagement\ValidationResult.cs" />
+    <Compile Include="ConsulConfigSettings.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="Run.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +84,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
