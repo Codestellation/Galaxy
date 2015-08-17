@@ -173,7 +173,7 @@ namespace Codestellation.Galaxy.WebEnd
             var message = new InstallServiceEvent(id);
             _publisher.Publish(message);
 
-            return RedirectToDetails(id);
+            return "ok";
         }
 
         private object PostStart(dynamic parameters)
@@ -183,7 +183,7 @@ namespace Codestellation.Galaxy.WebEnd
             var message = new StartServiceEvent(id);
             _publisher.Publish(message);
 
-            return RedirectToDetails(id);
+            return "ok";
         }
 
         private object PostStop(dynamic parameters)
@@ -193,7 +193,7 @@ namespace Codestellation.Galaxy.WebEnd
             var message = new StopServiceEvent(id);
             _publisher.Publish(message);
 
-            return RedirectToDetails(id);
+            return "ok";
         }
 
         private object PostUninstall(dynamic parameters)
@@ -203,7 +203,7 @@ namespace Codestellation.Galaxy.WebEnd
             var message = new UninstallServiceEvent(id);
             _publisher.Publish(message);
 
-            return RedirectToDetails(id);
+            return "ok";
         }
 
         private object PostDeploy(dynamic parameters)
@@ -214,7 +214,7 @@ namespace Codestellation.Galaxy.WebEnd
             var message = new DeployServiceEvent(id, version);
 
             _publisher.Publish(message);
-            return RedirectToDetails(id);
+            return "ok";
         }
 
         private static object RedirectToList()

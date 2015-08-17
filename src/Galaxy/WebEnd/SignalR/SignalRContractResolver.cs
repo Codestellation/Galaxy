@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Newtonsoft.Json.Serialization;
 
 namespace Codestellation.Galaxy.WebEnd.SignalR
@@ -14,17 +16,32 @@ namespace Codestellation.Galaxy.WebEnd.SignalR
         {
             _defaultContractSerializer = new DefaultContractResolver();
             _camelCaseContractResolver = new CamelCasePropertyNamesContractResolver();
-            _assembly = typeof(Microsoft.AspNet.SignalR.Infrastructure.Connection).Assembly;
+            _assembly = typeof(Connection).Assembly;
         }
 
         public JsonContract ResolveContract(Type type)
         {
-            if (type.Assembly.Equals(_assembly))
+            if (IsSignalRRelatedType(type))
             {
                 return _defaultContractSerializer.ResolveContract(type);
             }
 
             return _camelCaseContractResolver.ResolveContract(type);
+        }
+
+        private bool IsSignalRRelatedType(Type type)
+        {
+            if (type.Assembly.Equals(_assembly))
+            {
+                return true;
+            }
+
+            if (type.IsGenericType && type.GetGenericArguments().Any(x => x.Assembly.Equals(_assembly)))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

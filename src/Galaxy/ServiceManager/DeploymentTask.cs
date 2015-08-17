@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Codestellation.Emisstar;
+using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Nejdb.Bson;
@@ -88,23 +89,25 @@ namespace Codestellation.Galaxy.ServiceManager
                 WriteResult(operationResult, operationIndex);
 
                 failureDetected = operationResult.ResultCode != ResultCode.Succeed;
+                PublishProgress(index, operationResult);
             }
         }
 
         private OperationResult Execute(IOperation operation)
         {
             var operationName = operation.GetType().Name;
-
+            OperationResult result = null;
             try
             {
                 operation.Execute(Context);
-                return new OperationResult(operationName, ResultCode.Succeed);
+                result = new OperationResult(operationName, ResultCode.Succeed);
             }
             catch (Exception ex)
             {
                 Context.BuildLog.WriteLine(ex.ToString());
-                return new OperationResult(operationName, ResultCode.Failed, ex.Message);
+                result = new OperationResult(operationName, ResultCode.Failed, ex.Message);
             }
+            return result;
         }
 
         private void WriteResult(OperationResult operationResult, int operationIndex)
@@ -128,6 +131,12 @@ namespace Codestellation.Galaxy.ServiceManager
                     return "skipped";
             }
             throw new InvalidOperationException();
+        }
+
+        private void PublishProgress(int index, OperationResult result)
+        {
+            var notification = new OperationProgressNotification(++index, _operations.Count, result);
+            Publisher.Publish(notification);
         }
 
         public override string ToString()

@@ -4,17 +4,24 @@ using Codestellation.Emisstar.Impl;
 
 namespace Codestellation.Galaxy.Infrastructure.Emisstar
 {
-    public class SynchronizedDispatcher : RuleBasedDispatcher
+    public class MultiThreadDispatcher : RuleBasedDispatcher
     {
-        public SynchronizedDispatcher() : base(new Rule(MarkedSynchronized))
+        public MultiThreadDispatcher()
+            : base(new Rule(x => true))
         {
-            
         }
 
         protected override void Invoke(ref MessageHandlerTuple tuple)
         {
             MessageHandlerTuple handlerTuple = tuple;
-            Task.Factory.StartNew(() => InternalInvoke(handlerTuple), CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
+            if (MarkedSynchronized(tuple))
+            {
+                Task.Factory.StartNew(() => InternalInvoke(handlerTuple), CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
+            }
+            else
+            {
+                Task.Run(() => InternalInvoke(handlerTuple));
+            }
         }
 
         private void InternalInvoke(MessageHandlerTuple handlerTuple)
@@ -29,7 +36,7 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
                 tuple
                     .Message
                     .GetType()
-                    .GetCustomAttributes(typeof (SynchronizedAttribute), false)
+                    .GetCustomAttributes(typeof(SynchronizedAttribute), false)
                     .Length > 0;
         }
     }

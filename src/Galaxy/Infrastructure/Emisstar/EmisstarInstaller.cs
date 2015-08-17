@@ -13,20 +13,15 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
         {
             public void Install(IWindsorContainer container, IConfigurationStore store)
             {
-                container.AddFacility<EmisstarFacility>(x =>
-                {
-                    x.RegisterRuleBaseDispatcher<SynchronizedDispatcher>();
-                    x.UseSimpleDispatcher();
-
-                });
+                container.AddFacility<EmisstarFacility>(x => { x.RegisterRuleBaseDispatcher<MultiThreadDispatcher>(); });
 
                 container.Register(Classes
-                                       .FromThisAssembly()
-                                       .IncludeNonPublicTypes()
-                                       .Where(IsPureHandler)
-                                       .WithServiceAllHandlers()
-                                       .Configure(x => x.IsFallback())
-                                       .LifestyleTransient());
+                    .FromThisAssembly()
+                    .IncludeNonPublicTypes()
+                    .Where(IsPureHandler)
+                    .WithServiceAllHandlers()
+                    .Configure(x => x.IsFallback())
+                    .LifestyleTransient());
             }
 
             private bool IsPureHandler(Type type)

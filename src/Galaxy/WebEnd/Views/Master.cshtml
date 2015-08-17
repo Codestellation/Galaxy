@@ -6,74 +6,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Codestellation.Galaxy</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="@Web.Styles/bootstrap.min.css" rel="stylesheet" />
-    <link href="@Web.Styles//bootstrap-theme.min.css" rel="stylesheet" />
+  <title>Codestellation.Galaxy</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="@Web.Styles/bootstrap.min.css" rel="stylesheet" />
+  <link href="@Web.Styles//bootstrap-theme.min.css" rel="stylesheet" />
 
-    <script src="@Web.Scripts/jquery-2.1.0.min.js"></script>
-    <script src="@Web.Scripts/bootstrap.min.js"></script>
-    <script src="@Web.Scripts/bootstrap.file-input.js"></script>
-    <script src="@Web.Scripts/jquery.validate-1.11.1.min.js"></script>
-    <script src="@Web.Scripts/additional-methods-1.11.1.min.js"></script>
-    <script src="@Web.Scripts/jquery.validate.bootstrap.js"></script>
-    <script src="@Web.Scripts/jquery.signalR-2.2.0.min.js"></script>
-    <script src="signalr/hubs"></script>
+  <script src="@Web.Scripts/jquery-2.1.0.min.js"></script>
+  <script src="@Web.Scripts/bootstrap.min.js"></script>
+  <script src="@Web.Scripts/bootstrap.file-input.js"></script>
+  <script src="@Web.Scripts/jquery.validate-1.11.1.min.js"></script>
+  <script src="@Web.Scripts/additional-methods-1.11.1.min.js"></script>
+  <script src="@Web.Scripts/jquery.validate.bootstrap.js"></script>
+  <script src="@Web.Scripts/jquery.signalR-2.2.0.min.js"></script>
+  <script src="/signalr/hubs"></script>
+  <script src="@Web.Scripts/jsrender.min.js"></script>
+  <script src="@Web.Scripts/notify.js"></script>
 
-    @*Move it to separate file*@
-    <style type="text/css">
-        body {
-            padding-top: 70px; /* body padding for fixed top nav */
-            padding-bottom: 20px;
-        }
-    </style>
+  @*Move it to separate file*@
+  <style type="text/css">
+    body {
+      padding-top: 70px; /* body padding for fixed top nav */
+      padding-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Navigate</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li @Html.HighLightActive()><a href="/">Dashboard</a></li>
-                    <li @Html.HighLightActive(FeedModule.Path)><a href="/@FeedModule.Path">Feeds</a></li>
-                    <li @Html.HighLightActive(DeploymentModule.Path)><a href="/@DeploymentModule.Path">Deployments</a></li>
-                    <li @Html.HighLightActive(JobModule.Path)><a href="/@JobModule.Path">Jobs</a></li>
-                    <li @Html.HighLightActive(AgentModule.Path)><a href="/@AgentModule.Path">Agents</a></li>
-                    <li @Html.HighLightActive(OptionsModule.Path)><a href="/@OptionsModule.Path">Options</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@RenderContext.Context.CurrentUser<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/@UserModule.Path">Manage Users</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
-        @RenderBody()
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Navigate</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li @Html.HighLightActive()><a href="/">Dashboard</a></li>
+          <li @Html.HighLightActive(FeedModule.Path)><a href="/@FeedModule.Path">Feeds</a></li>
+          <li @Html.HighLightActive(DeploymentModule.Path)><a href="/@DeploymentModule.Path">Deployments</a></li>
+          <li @Html.HighLightActive(JobModule.Path)><a href="/@JobModule.Path">Jobs</a></li>
+          <li @Html.HighLightActive(AgentModule.Path)><a href="/@AgentModule.Path">Agents</a></li>
+          <li @Html.HighLightActive(OptionsModule.Path)><a href="/@OptionsModule.Path">Options</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@RenderContext.Context.CurrentUser<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/@UserModule.Path">Manage Users</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- /.navbar-collapse -->
     </div>
-    <!-- /container -->
-    <div class="container">
-        <p class="pull-right">@ServiceVersion.InformationalVersion</p>
+    <!-- /.container -->
+  </nav>
+  <div id="notifications" class="container">
+
+  </div>
+  <div class="container">
+    @RenderBody()
+  </div>
+  <!-- /container -->
+  <div class="container">
+    <p class="pull-right">@ServiceVersion.InformationalVersion</p>
+  </div>
+  <script id="notify-alert" type="text/x-jsrender">
+
+    <div class="alert alert-{{:severity}} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>{{:header}}</strong> {{:message}}
     </div>
 
+  </script>
 </body>
 </html>

@@ -12,11 +12,10 @@ namespace Codestellation.Galaxy.Boostrapping
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            GlobalHost.DependencyResolver = new WindsorDependencyResolver(container);
-            var settings = new JsonSerializerSettings();
-            settings.ContractResolver = new SignalRContractResolver();
+            var settings = new JsonSerializerSettings { ContractResolver = new SignalRContractResolver() };
 
             var serializer = JsonSerializer.Create(settings);
+            GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => serializer);
 
             container.Register(
                 Classes
@@ -24,16 +23,13 @@ namespace Codestellation.Galaxy.Boostrapping
                     .Where(IsSignalRComponent)
                     .WithServiceSelf()
                     .WithServiceAllInterfaces()
-                    .LifestyleSingleton(),
-                Component
-                    .For<JsonSerializer>()
-                    .Instance(serializer)
+                    .LifestyleSingleton()
                 );
         }
 
         private bool IsSignalRComponent(Type candidate)
         {
-            return !candidate.IsAbstract && candidate.Namespace.StartsWith(typeof(WindsorDependencyResolver).Namespace, StringComparison.Ordinal);
+            return !candidate.IsAbstract && candidate.Namespace.StartsWith(typeof(HubFactory).Namespace, StringComparison.Ordinal);
         }
     }
 }
