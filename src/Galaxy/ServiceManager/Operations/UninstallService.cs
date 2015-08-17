@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using Codestellation.Galaxy.ServiceManager.Helpers;
 using System.IO;
+using Codestellation.Galaxy.ServiceManager.Helpers;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -21,7 +21,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public override void Execute(DeploymentTaskContext context)
         {
-            var exePath = Path.Combine(_serviceFolder, _hostFileName);
+            var exePath = new FileInfo(Path.Combine(_serviceFolder, _hostFileName));
+
+            if (!exePath.Exists)
+            {
+                context.BuildLog.WriteLine("Service '{0}' not found. Uninstall skipped", exePath.FullName);
+            }
 
             var exeParams = string.Format("uninstall -instance:{0}", _instance);
 
@@ -32,12 +37,14 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             try
             {
-                result = ProcessStarter.ExecuteWithParams(exePath, exeParams, out error);
+                result = ProcessStarter.ExecuteWithParams(exePath.FullName, exeParams, out error);
             }
             catch (Win32Exception ex)
             {
                 if (!SkipIfNotFound)
+                {
                     throw;
+                }
 
                 TryHandle(ex, out result);
             }
