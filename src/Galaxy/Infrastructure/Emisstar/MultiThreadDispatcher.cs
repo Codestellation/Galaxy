@@ -6,22 +6,24 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
 {
     public class MultiThreadDispatcher : RuleBasedDispatcher
     {
+        private readonly SingleThreadScheduler _preserveOrderScheduler;
+
         public MultiThreadDispatcher()
             : base(new Rule(x => true))
         {
+            _preserveOrderScheduler = new SingleThreadScheduler();
         }
 
         protected override void Invoke(ref MessageHandlerTuple tuple)
         {
             MessageHandlerTuple handlerTuple = tuple;
+            var scheduler = _preserveOrderScheduler;
+
             if (MarkedSynchronized(tuple))
             {
-                Task.Factory.StartNew(() => InternalInvoke(handlerTuple), CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
+                scheduler = SingleThreadScheduler.Instance;
             }
-            else
-            {
-                Task.Run(() => InternalInvoke(handlerTuple));
-            }
+            Task.Factory.StartNew(() => InternalInvoke(handlerTuple), CancellationToken.None, TaskCreationOptions.None, scheduler);
         }
 
         private void InternalInvoke(MessageHandlerTuple handlerTuple)

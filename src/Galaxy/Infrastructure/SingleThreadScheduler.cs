@@ -12,17 +12,20 @@ namespace Codestellation.Galaxy.Infrastructure
         private readonly Queue<Task> _tasks;
         private bool _running;
 
-        private SingleThreadScheduler()
+        public SingleThreadScheduler()
         {
             _tasks = new Queue<Task>(10000);
         }
 
-        protected sealed override void QueueTask(Task task)
+        protected override sealed void QueueTask(Task task)
         {
             lock (_tasks)
             {
                 _tasks.Enqueue(task);
-                if (_running) return;
+                if (_running)
+                {
+                    return;
+                }
 
                 _running = true;
 
@@ -30,11 +33,10 @@ namespace Codestellation.Galaxy.Infrastructure
             }
         }
 
-
         private void StartExecution(object ignore)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture; 
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             while (true)
             {
                 Task item;
@@ -49,30 +51,29 @@ namespace Codestellation.Galaxy.Infrastructure
                     {
                         item = _tasks.Dequeue();
                     }
-
                 }
 
-                base.TryExecuteTask(item);
+                TryExecuteTask(item);
             }
         }
 
         // Do not support inlining
-        protected sealed override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
+        protected override sealed bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
             return false;
         }
 
-        protected sealed override bool TryDequeue(Task task)
+        protected override sealed bool TryDequeue(Task task)
         {
             return false;
         }
 
-        public sealed override int MaximumConcurrencyLevel
+        public override sealed int MaximumConcurrencyLevel
         {
             get { return 1; }
         }
 
-        protected sealed override IEnumerable<Task> GetScheduledTasks()
+        protected override sealed IEnumerable<Task> GetScheduledTasks()
         {
             lock (_tasks)
             {
