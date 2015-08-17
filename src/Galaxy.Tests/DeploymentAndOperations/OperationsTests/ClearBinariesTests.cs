@@ -24,7 +24,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             Folder.EnsureExists(_nugetFeedFolder);
 
             var version10 = new Version(1, 0);
-            
+
             TestPackages.CopyHostPackageTo(_nugetFeedFolder);
             TestPackages.CopyTest10To(_nugetFeedFolder);
 
@@ -37,7 +37,6 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             };
 
             var installPackage = new InstallPackage(_basePath, orders, FileList.Empty);
-
 
             var stringWriter = new StringWriter();
             _context = new DeploymentTaskContext(stringWriter);
@@ -66,7 +65,6 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             Assert.That(file, Is.StringEnding(fileToSkip));
         }
 
-
         [Test]
         public void Deletes_folders_exclude_specified_folder()
         {
@@ -77,10 +75,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var folderPath = Path.Combine(_basePath, folderToSkip);
             Directory.CreateDirectory(folderPath);
 
-
             var filePath = Path.Combine(folderPath, aFileInFolder);
 
-            File.WriteAllText(filePath,"Please, please! Do not delete me!");
+            File.WriteAllText(filePath, "Please, please! Do not delete me!");
 
             var keepOnUpdate = new FileList(new[] { folderToSkip });
 
@@ -98,6 +95,18 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         public void Cleanup()
         {
             Folder.EnsureDeleted(_nugetFeedFolder);
+        }
+
+        [Test]
+        public void Should_not_fail_if_directory_not_found()
+        {
+            //given
+            var fakePath = Folder.Combine(_nugetFeedFolder, "this_folder_does_not_exists");
+            var operation = new ClearBinaries(fakePath, FileList.Empty);
+
+            //when
+            //then
+            Assert.DoesNotThrow(() => operation.Execute(_context));
         }
     }
 }
