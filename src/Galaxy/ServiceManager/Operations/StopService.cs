@@ -12,11 +12,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         private DeploymentTaskContext _context;
         private Process _process;
+        private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(1);
 
         public StopService(string serviceName)
             : base(serviceName)
         {
-
         }
 
         public override void Execute(DeploymentTaskContext context)
@@ -44,7 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 sc.Stop();
             }
 
-            sc.WaitForStatus(ServiceControllerStatus.Stopped);
+            sc.WaitForStatus(ServiceControllerStatus.Stopped, Timeout);
 
             WaitForProcessExit();
         }
@@ -55,15 +55,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 return;
             }
-            var timeout = TimeSpan.FromMinutes(3);
-            var hasExited = _process.WaitForExit((int) timeout.TotalMilliseconds);
+
+            var hasExited = _process.WaitForExit((int)Timeout.TotalMilliseconds);
 
             if (hasExited)
             {
                 return;
             }
             var message = string.Format(
-                "Process {0}-{1} did not exit after period {2}. Possible hang up?.", _process.Id, _process.ProcessName, timeout);
+                "Process {0}-{1} did not exit after period {2}. Possible hang up?.", _process.Id, _process.ProcessName, Timeout);
             throw new TimeoutException(message);
         }
 
