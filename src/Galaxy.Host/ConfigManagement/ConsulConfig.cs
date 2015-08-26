@@ -59,7 +59,8 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 
                 if (element.IsMissed || !element.IsValid)
                 {
-                    ValidationResult.AddError(element);
+                    var error = new ValidationError(element.Key, element.Message);
+                    ValidationResult.AddError(error);
                 }
             }
         }

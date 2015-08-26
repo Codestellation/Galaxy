@@ -6,14 +6,14 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 {
     public class ValidationResult
     {
-        private readonly List<ConfigElement> _errors;
+        private readonly List<ValidationError> _errors;
 
         public ValidationResult()
         {
-            _errors = new List<ConfigElement>();
+            _errors = new List<ValidationError>();
         }
 
-        public void AddError(ConfigElement error)
+        public void AddError(ValidationError error)
         {
             if (error == null)
             {
@@ -27,14 +27,14 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             get { return _errors.Count == 0; }
         }
 
-        public IReadOnlyCollection<ConfigElement> Errors
+        public IReadOnlyCollection<ValidationError> Errors
         {
             get { return _errors; }
         }
 
         public override string ToString()
         {
-            return string.Join(Environment.NewLine, Errors.Select(x => string.Format("Property '{0}' has error: {1}", x.Property, x.Message)));
+            return string.Join(Environment.NewLine, Errors.Select(x => string.Format("Property '{0}' has error: {1}", x.Key, x.Message)));
         }
     }
 }
