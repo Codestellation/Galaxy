@@ -1,4 +1,6 @@
-﻿namespace Codestellation.Galaxy.Host.ConfigManagement
+﻿using Codestellation.Galaxy.Host.ConfigManagement;
+
+namespace Codestellation.Galaxy.Host
 {
     public interface IConsulConfigAware<TConfig>
         where TConfig : new()

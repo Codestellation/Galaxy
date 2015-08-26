@@ -66,12 +66,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\subtree\quarks\src\Quarks\IO\Folder.cs">
+      <Link>Quarks\Folder.cs</Link>
+    </Compile>
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="ConfigManagement\ConfigElement.cs" />
     <Compile Include="ConfigManagement\ConfigLoader.cs" />
     <Compile Include="ConfigManagement\ConsulConfig.cs" />
+    <Compile Include="ConfigManagement\ConsulConfigManager.cs" />
     <Compile Include="IConsulConfigAware.cs" />
     <Compile Include="ConfigManagement\ValidationError.cs" />
     <Compile Include="ConfigManagement\ValidationResult.cs" />
