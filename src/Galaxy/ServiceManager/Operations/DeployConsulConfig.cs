@@ -17,7 +17,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             string consulName;
             if (context.TryGetValue(DeploymentTaskContext.ConsulName, out consulName))
             {
-                CreateConsulConfig(context.BuildLog, consulName);
+                var address = context.GetValue<string>(DeploymentTaskContext.ConsulAddress);
+                CreateConsulConfig(context.BuildLog, consulName, address);
             }
             else
             {
@@ -25,10 +26,10 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             }
         }
 
-        private void CreateConsulConfig(TextWriter buildLog, string consulName)
+        private void CreateConsulConfig(TextWriter buildLog, string consulName, string address)
         {
             buildLog.WriteLine("Consul name is '{0}'", consulName);
-            var config = new { Name = consulName };
+            var config = new { Name = consulName, Address = address };
 
             var configPath = Path.Combine(_serviceFolder, "consul.json");
             var serializedConfig = JsonConvert.SerializeObject(config);

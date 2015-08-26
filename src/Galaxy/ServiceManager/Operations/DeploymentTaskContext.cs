@@ -15,6 +15,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public const string LogStream = "LogStream";
 
         public const string ConsulName = "ConsulName";
+        public const string ConsulAddress = "ConsulAddress";
 
         public readonly TextWriter BuildLog;
         private readonly Dictionary<object, object> _data;

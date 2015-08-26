@@ -14,6 +14,7 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             DeployFolder = options.RootDeployFolder;
             PurgeLogsOlderThan = options.PurgeLogsOlderThan;
+            ConsulAddress = options.ConsulAddress;
         }
 
         [Display(Name = "Applications Folder", Prompt = "Path. Leave blank to use default")]
@@ -22,10 +23,14 @@ namespace Codestellation.Galaxy.WebEnd.Models
         [Display(Name = "Purge log older then", Prompt = "days")]
         public int PurgeLogsOlderThan { get; set; }
 
+        [Display(Name = "Consul Address", Prompt = "host:port Leave blank to use default")]
+        public string ConsulAddress { get; set; }
+
         public void Update(Options options)
         {
             options.RootDeployFolder = DeployFolder;
             options.PurgeLogsOlderThan = PurgeLogsOlderThan;
+            options.ConsulAddress = ConsulAddress;
         }
     }
 }

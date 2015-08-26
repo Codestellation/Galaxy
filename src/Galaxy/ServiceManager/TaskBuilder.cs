@@ -11,11 +11,13 @@ namespace Codestellation.Galaxy.ServiceManager
     {
         private readonly OperationBuilder _operations;
         private readonly IPublisher _publisher;
+        private readonly Options _options;
 
-        public TaskBuilder(OperationBuilder operationBuilder, IPublisher publisher)
+        public TaskBuilder(OperationBuilder operationBuilder, IPublisher publisher, Options options)
         {
             _operations = operationBuilder;
             _publisher = publisher;
+            _options = options;
         }
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -66,7 +68,8 @@ namespace Codestellation.Galaxy.ServiceManager
                 .SetValue(DeploymentTaskContext.TaskName, name)
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
-                .SetValue(DeploymentTaskContext.LogStream, actualLogStream);
+                .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
+                .SetValue(DeploymentTaskContext.ConsulAddress, _options.ConsulAddress);
 
             if (!string.IsNullOrWhiteSpace(deployment.ConsulName))
             {
