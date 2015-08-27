@@ -7,16 +7,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
+using Codestellation.Pulsar;
+using Codestellation.Pulsar.Tasks;
+using Codestellation.Pulsar.Timers;
+using Codestellation.Pulsar.Triggers;
 using Nejdb.Bson;
 using NLog;
 using NuGet;
 
 namespace Codestellation.Galaxy.Infrastructure
 {
-    public class PackageVersionBoard : IDisposable
+    public class PackageVersionBoard
     {
         private readonly FeedBoard _feedBoard;
         private readonly DeploymentBoard _deploymentBoard;
+        private readonly IScheduler _scheduler;
 
         private struct FeedPackageTuple : IEquatable<FeedPackageTuple>
         {
@@ -56,17 +61,21 @@ namespace Codestellation.Galaxy.Infrastructure
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly ConcurrentDictionary<FeedPackageTuple, SemanticVersion[]> _cache;
-        private readonly Timer _refreshTimer;
-        private bool _timerStarted;
 
         public event Action Refreshed;
 
-        public PackageVersionBoard(FeedBoard feedBoard, DeploymentBoard deploymentBoard)
+        public PackageVersionBoard(FeedBoard feedBoard, DeploymentBoard deploymentBoard, IScheduler scheduler)
         {
             _feedBoard = feedBoard;
             _deploymentBoard = deploymentBoard;
+            _scheduler = scheduler;
             _cache = new ConcurrentDictionary<FeedPackageTuple, SemanticVersion[]>();
-            _refreshTimer = new Timer(OnTimerRefresh, null, Timeout.Infinite, Timeout.Infinite);
+
+            var task = new SimpleTask(ForceRefresh);
+            var timer = new SimpleTimer();
+            var trigger = new SimpleTimerTrigger(DateTime.Now.AddMinutes(1), TimeSpan.FromMinutes(10), timer);
+            task.AddTrigger(trigger);
+            _scheduler.Add(task);
 
             //avoid NRE
             Refreshed = delegate { };
@@ -90,27 +99,7 @@ namespace Codestellation.Galaxy.Infrastructure
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Start()
-        {
-            if (_timerStarted)
-            {
-                return;
-            }
-            ForceRefresh();
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ForceRefresh()
-        {
-            _timerStarted = true;
-
-            var refreshPeriod = TimeSpan.FromMinutes(5);
-            var startImmediately = TimeSpan.FromSeconds(0);
-
-            _refreshTimer.Change(startImmediately, refreshPeriod);
-        }
-
-        private void OnTimerRefresh(object state)
         {
             Func<FeedPackageTuple[]> getTuplesFunc = GetTuples;
             var getTuplesTask = Task.Factory.StartNew(getTuplesFunc, CancellationToken.None, TaskCreationOptions.None, SingleThreadScheduler.Instance);
@@ -169,11 +158,6 @@ namespace Codestellation.Galaxy.Infrastructure
                 .ToArray();
 
             return results;
-        }
-
-        public void Dispose()
-        {
-            _refreshTimer.Dispose();
         }
     }
 }

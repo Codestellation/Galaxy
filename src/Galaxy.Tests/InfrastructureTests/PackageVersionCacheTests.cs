@@ -1,12 +1,13 @@
-﻿using Codestellation.Galaxy.Domain;
+﻿using System;
+using System.IO;
+using System.Threading;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.Tests.Content;
+using Codestellation.Pulsar.Schedulers;
 using Codestellation.Quarks.IO;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Threading;
 
 namespace Codestellation.Galaxy.Tests.InfrastructureTests
 {
@@ -31,7 +32,6 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
 
             TestPackages.CopyTest10To(_nugetFeedFolder);
             TestPackages.CopyTest11To(_nugetFeedFolder);
-            
         }
 
         [Test]
@@ -41,17 +41,18 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
             var refreshCompleted = new ManualResetEventSlim(false);
 
             var feedBoard = new FeedBoard();
-            
+
             var deploymentBoard = new DeploymentBoard(_repository, new Options());
             var nugetFeed = new NugetFeed() { Uri = _nugetFeedFolder };
 
             feedBoard.AddFeed(nugetFeed);
             deploymentBoard.AddDeployment(new Deployment { FeedId = nugetFeed.Id, PackageId = TestPackageId });
-            var versionCache = new PackageVersionBoard(feedBoard, deploymentBoard);
+            var scheduler = new PulsarScheduler();
 
+            var versionCache = new PackageVersionBoard(feedBoard, deploymentBoard, scheduler);
 
             //when
-            versionCache.Start();
+            versionCache.ForceRefresh();
             versionCache.Refreshed += refreshCompleted.Set;
             Assert.That(refreshCompleted.Wait(TimeSpan.FromSeconds(20)), Is.True, "Cache update timeout");
 

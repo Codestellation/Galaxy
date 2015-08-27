@@ -6,6 +6,7 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd.Misc;
+using Codestellation.Pulsar;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Windsor;
@@ -81,7 +82,7 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
             LoadOptions(container, repository);
             FillDashBoard(container, repository);
 
-            container.Resolve<PackageVersionBoard>().Start();
+            container.Resolve<ISchedulerController>().Start();
 
             base.ApplicationStartup(container, pipelines);
         }
