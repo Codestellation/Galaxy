@@ -233,7 +233,7 @@
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
     <Compile Include="ServiceManager\Events\ServiceEventsHandler.cs" />
-    <Compile Include="Infrastructure\BoardInstaller.cs" />
+    <Compile Include="Boostrapping\BoardInstaller.cs" />
     <Compile Include="ServiceManager\Operations\DeleteFolders.cs" />
     <Compile Include="ServiceManager\Events\DeploymentDeletedEvent.cs" />
     <Compile Include="ServiceManager\Events\DeploymentDeletedHandler.cs" />
@@ -260,7 +260,7 @@
     <Compile Include="Domain\Options.cs" />
     <Compile Include="Domain\SpecialFolder.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="Infrastructure\Emisstar\EmisstarInstaller.cs" />
+    <Compile Include="Boostrapping\EmisstarInstaller.cs" />
     <Compile Include="Infrastructure\FileResponse.cs" />
     <Compile Include="Infrastructure\Emisstar\SynchronizedAttribute.cs" />
     <Compile Include="Infrastructure\Emisstar\MultiThreadDispatcher.cs" />

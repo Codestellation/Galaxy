@@ -4,7 +4,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Codestellation.Galaxy.Domain;
 
-namespace Codestellation.Galaxy.Infrastructure
+namespace Codestellation.Galaxy.Boostrapping
 {
     public class BoardInstaller : IWindsorInstaller
     {

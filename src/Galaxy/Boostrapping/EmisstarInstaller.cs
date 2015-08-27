@@ -4,8 +4,9 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Codestellation.Emisstar;
 using Codestellation.Emisstar.CastleWindsor.Facility;
+using Codestellation.Galaxy.Infrastructure.Emisstar;
 
-namespace Codestellation.Galaxy.Infrastructure.Emisstar
+namespace Codestellation.Galaxy.Boostrapping
 {
     namespace Finam.VentureFx.Core.Bootstrap
     {
