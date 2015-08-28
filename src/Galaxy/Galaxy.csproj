@@ -102,7 +102,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Codestellation.Pulsar, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codestellation.Pulsar.0.1.0.16\lib\portable-net451+win81+wpa81\Codestellation.Pulsar.dll</HintPath>
+      <HintPath>..\packages\Codestellation.Pulsar.0.1.1.17\lib\portable-net451+win81+wpa81\Codestellation.Pulsar.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
