@@ -266,7 +266,7 @@
     <Compile Include="Infrastructure\Emisstar\MultiThreadDispatcher.cs" />
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
-    <Compile Include="Infrastructure\PackageVersionBoard.cs" />
+    <Compile Include="Infrastructure\PackageBoard.cs" />
     <Compile Include="Maintenance\CleanUpLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />

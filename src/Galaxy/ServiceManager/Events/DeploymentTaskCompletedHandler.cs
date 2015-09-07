@@ -8,14 +8,14 @@ namespace Codestellation.Galaxy.ServiceManager.Events
     public class DeploymentTaskCompletedHandler : IHandler<DeploymentTaskCompletedEvent>
     {
         private readonly DeploymentBoard _board;
+        private readonly PackageBoard _cache;
         private readonly Repository _repository;
-        private readonly PackageVersionBoard _versionCache;
 
-        public DeploymentTaskCompletedHandler(DeploymentBoard board, Repository repository, PackageVersionBoard versionCache)
+        public DeploymentTaskCompletedHandler(DeploymentBoard board, Repository repository, PackageBoard cache)
         {
             _board = board;
             _repository = repository;
-            _versionCache = versionCache;
+            _cache = cache;
         }
 
         public void Handle(DeploymentTaskCompletedEvent message)
@@ -37,7 +37,6 @@ namespace Codestellation.Galaxy.ServiceManager.Events
                 deployments.Save(deployment, false);
                 tx.Commit();
             }
-            _versionCache.ForceRefresh();
         }
     }
 }

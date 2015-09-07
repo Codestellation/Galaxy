@@ -126,7 +126,7 @@
     <Compile Include="Host\ConfigManagement\SampleService.cs" />
     <Compile Include="Host\ConfigManagement\ServiceProxyTests.cs" />
     <Compile Include="Host\ConfigManagement\Test.cs" />
-    <Compile Include="InfrastructureTests\PackageVersionCacheTests.cs" />
+    <Compile Include="InfrastructureTests\PackageBoardTests.cs" />
     <Compile Include="Maintenance\CleanUpLogTests.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,17 +18,17 @@ namespace Codestellation.Galaxy.WebEnd
     public class DeploymentModule : CrudModule
     {
         private readonly FeedBoard _feedBoard;
-        private readonly PackageVersionBoard _versionCache;
+        private readonly PackageBoard _packageBoard;
 
         private readonly DeploymentBoard _deploymentBoard;
         private readonly IPublisher _publisher;
         public const string Path = "deployment";
 
-        public DeploymentModule(FeedBoard feedBoard, PackageVersionBoard versionCache, DeploymentBoard deploymentBoard, IPublisher publisher)
+        public DeploymentModule(FeedBoard feedBoard, PackageBoard packageBoard, DeploymentBoard deploymentBoard, IPublisher publisher)
             : base(Path)
         {
             _feedBoard = feedBoard;
-            _versionCache = versionCache;
+            _packageBoard = packageBoard;
             _deploymentBoard = deploymentBoard;
             _publisher = publisher;
 
@@ -98,8 +98,6 @@ namespace Codestellation.Galaxy.WebEnd
 
             _deploymentBoard.AddDeployment(deployment);
 
-            _versionCache.ForceRefresh();
-
             return RedirectToList();
         }
 
@@ -125,8 +123,6 @@ namespace Codestellation.Galaxy.WebEnd
 
             _deploymentBoard.SaveDeployment(deployment);
 
-            _versionCache.ForceRefresh();
-
             return RedirectToDetails(id);
         }
 
@@ -148,7 +144,8 @@ namespace Codestellation.Galaxy.WebEnd
             if (_deploymentBoard.TryGetDeployment(id, out deployment))
             {
                 deployment = _deploymentBoard.GetDeployment(id);
-                var versions = _versionCache.GetPackageVersions(deployment.FeedId, deployment.PackageId);
+                var feed = _feedBoard.GetFeed(deployment.FeedId);
+                var versions = _packageBoard.GetPackageVersions(feed.Uri, deployment.PackageId);
                 return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
             }
             else
