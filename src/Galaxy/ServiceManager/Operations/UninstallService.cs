@@ -23,9 +23,16 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             var exePath = new FileInfo(Path.Combine(_serviceFolder, _hostFileName));
 
-            if (!exePath.Exists)
+            if (!exePath.Exists && SkipIfNotFound)
             {
-                context.BuildLog.WriteLine("Service '{0}' not found. Uninstall skipped", exePath.FullName);
+                context.BuildLog.WriteLine("Service executable '{0}' not found. Uninstall skipped", exePath.FullName);
+                return;
+            }
+
+            if (!IsServiceExists() && SkipIfNotFound)
+            {
+                context.BuildLog.WriteLine("Service '{0}' are not installed. Uninstall skipped", exePath.FullName);
+                return;
             }
 
             var exeParams = string.Format("uninstall -instance:{0}", _instance);
