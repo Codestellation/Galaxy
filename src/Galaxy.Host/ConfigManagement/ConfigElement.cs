@@ -23,7 +23,7 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             }
 
             Key = property.Name.ToLowerInvariant();
-            Path = string.Format("{0}.{1}", consulName, Key).Replace('.', '/');
+            Path = string.Format("{0}.{1}", consulName, Key).Replace('.', '/').ToLowerInvariant();
         }
 
         public PropertyInfo Property { get; private set; }

@@ -15,5 +15,15 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
             Assert.That(element.Path, Is.EqualTo("company/environment/product/service/port"));
             Assert.That(element.Property, Is.EqualTo(Test.PortProperty));
         }
+
+        [Test]
+        public void Should_lowercase_consulName_for_path()
+        {
+            var upperConsulName = Test.ConsulName.ToUpperInvariant();
+
+            var element = new ConfigElement(upperConsulName, Test.PortProperty);
+
+            Assert.That(element.Path, Is.EqualTo("company/environment/product/service/port"));
+        }
     }
 }
