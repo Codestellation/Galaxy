@@ -4,8 +4,6 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 {
     public class ValidationError
     {
-        private readonly string _key;
-        private readonly string _message;
         public readonly string Key;
         public readonly string Message;
 
@@ -20,8 +18,8 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             {
                 throw new ArgumentException("Should be neither null nor empty string", "message");
             }
-            _key = key;
-            _message = message;
+            Key = key;
+            Message = message;
         }
     }
 }

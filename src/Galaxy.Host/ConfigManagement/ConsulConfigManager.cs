@@ -101,7 +101,7 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 
             if (!result.IsValid)
             {
-                throw new InvalidOperationException("Invalid consul config");
+                throw new InvalidOperationException("Invalid consul config: " + result);
             }
         }
 
