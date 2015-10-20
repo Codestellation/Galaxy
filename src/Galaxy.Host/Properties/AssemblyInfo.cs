@@ -3,6 +3,4 @@
 [assembly: AssemblyTitle("Codestellation.Galaxy.Host")]
 [assembly: AssemblyDescription("Host .net dll as a windows service")]
 [assembly: AssemblyCompany("Codestellation project")]
-[assembly: AssemblyProduct("Codestellation Galaxy")]
-[assembly: AssemblyCopyright("Copyright Codestellation project © 2014")]
 [assembly: AssemblyTrademark("Codestellation")]

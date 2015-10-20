@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Codestellation.Galaxy.Host</id>
+        <version>0</version>
+        <title>Codestellation Galaxy Host</title>
+        <authors>Codestellation Team</authors>
+        <description>"Provides extended functionality over TopShelf service"</description>
+        <releaseNotes />
+        <copyright />
+        <dependencies>
+            <dependency id="Consul" version="0.5.2.65" />
+            <dependency id="Newtonsoft.Json" version="7.0.1" />
+            <dependency id="NLog" version="4.0.1" />
+            <dependency id="Topshelf" version="3.2.0" />
+            <dependency id="Topshelf.NLog" version="3.2.0" />
+        </dependencies>
+    </metadata>
+</package>
