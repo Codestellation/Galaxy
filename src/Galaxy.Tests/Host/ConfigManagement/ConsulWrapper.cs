@@ -44,7 +44,7 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
             _consulProcess.BeginOutputReadLine();
             _consulProcess.BeginErrorReadLine();
 
-            if (!_consulStarted.WaitOne(TimeSpan.FromSeconds(5)))
+            if (!_consulStarted.WaitOne(TimeSpan.FromSeconds(30)))
             {
                 throw new InvalidOperationException("Could not start consul agent");
             }
