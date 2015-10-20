@@ -17,7 +17,9 @@ var copyright = string.Format("Copyright (c) Codestellation Team 2014 - {0}", Da
 // Define directories.
 var buildDirInfo = new DirectoryInfo("./build");
 var buildDir = Directory(buildDirInfo.FullName);
-var nugetDir = Directory("./nuget");
+var nugetDirInfo = new DirectoryInfo("./nuget");
+var nugetDir = Directory(nugetDirInfo.FullName);
+
 
 var solutionPath = "./src/Galaxy.sln";
 
@@ -156,36 +158,7 @@ Task("Pack")
     .IsDependentOn("Test")
     .Does(() =>
 {
-/*
-  def get_nuget_dependencies(packages_folder)
-    nuget_packages_file = "#{packages_folder}/packages.config"
-    dependencies = Array.new
-    xml = File.read nuget_packages_file
-    doc = REXML::Document.new xml
-    doc.elements.each "packages/package" do |package|
-        packageId = package.attributes["id"]
-        packageVersion = package.attributes["version"]
-        dependencies << Dependency.new(packageId, packageVersion)
-    end
-    dependencies
-  end
 
-  nuspec :createHostNuspec do |nuspec|
-    solutionpart = "Galaxy.Host"
-
-    puts "Creating .nuspec file for #{solutionpart}..."
-    nuspec.id="Codestellation.#{solutionpart}"
-    nuspec.version = "#{@buildversion_package}"
-    nuspec.authors = @authors
-    nuspec.description = @description
-    nuspec.title = "#{solutionpart}"
-    nuspec.working_directory = "#{buildfolderpath}/#{solutionpart}"
-    nuspec.output_file = "Codestellation.#{solutionpart}.nuspec"
-
-    get_nuget_dependencies("#{@solutionfolder}/#{solutionpart}").each do |dep|
-      nuspec.dependency dep.Name, dep.Version
-    end
-*/
 var nuGetPackSettings   = new NuGetPackSettings {
     Id                      = "Codestellation.Galaxy.Host",
     Version                 = packageVersion,
@@ -216,8 +189,8 @@ Task("Push")
     .Does(() =>
 {
 
-  var packages = buildDirInfo
-      .EnumerateFiles("./nuget/*.nupkg")
+  var packages = nugetDirInfo
+      .EnumerateFiles("*.nupkg")
       .Select(x => x.FullName);
 
   foreach(var package in packages)
