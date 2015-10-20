@@ -1,6 +1,16 @@
 # Build script
 build_script:
-  - ps: .\build.ps1
+  - ps: .\build.ps1 -Target Push
 
+version: '{build}'
 # Tests
 test: off
+
+os: Visual Studio 2015
+
+cache:
+  - packages -> **\*packages.config
+
+environment:
+  myget_key:
+    secure: RMt+ThGgrTCbyy4LE/1rd+i1tT815ahgCMMjzXyLs6f/SvW8XGKRts2agrVXovYD
