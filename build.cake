@@ -154,7 +154,7 @@ Task("Test")
 
 //////////////////////////////////////////////////////////////////////
 
-Task("Pack")
+Task("PackHost")
     .IsDependentOn("Test")
     .Does(() =>
 {
@@ -184,8 +184,49 @@ var nuGetPackSettings   = new NuGetPackSettings {
 NuGetPack("./src/Galaxy.Host/galaxy.host.nuspec", nuGetPackSettings);
 });
 
+Task("PackService")
+    .IsDependentOn("Test")
+    .Does(() =>
+{
+  var galaxyProjFile = "./src/Galaxy/Galaxy.csproj";
+
+  var serviceBuildPath = System.IO.Path.Combine(buildDirInfo.FullName, "service");
+
+  MSBuild(galaxyProjFile, settings => {
+    settings.SetConfiguration(configuration);
+    settings.Properties["OutDir"] = new List<string>{ serviceBuildPath };
+    settings.Verbosity = Verbosity.Minimal;
+    });
+
+  var xmlFiles = new DirectoryInfo(serviceBuildPath)
+    .EnumerateFiles("*.xml");
+
+    foreach(var file in xmlFiles)
+    {
+      file.Delete();
+    }
+
+var nuGetPackSettings   = new NuGetPackSettings {
+    Id                      = "Codestellation.Galaxy",
+    Version                 = packageVersion,
+    Title                   = "Codestellation Galaxy",
+    Authors                 = new[] {"Codestellation Team"},
+    Owners                  = new[] {"Codestellation Team"},
+    Description             = "Deploys topshelf-based services using nuget packages",
+    ProjectUrl              = new Uri("https://github.com/Codestellation/Galaxy"),
+    LicenseUrl              = new Uri("https://github.com/Codestellation/Galaxy/blob/master/LICENSE"),
+    Copyright               = copyright,
+    Tags                    = new [] {"Windows", "Service", "Hosting"},
+    BasePath                = serviceBuildPath,
+    OutputDirectory         = "./nuget"
+};
+
+NuGetPack("./src/Galaxy/galaxy.nuspec", nuGetPackSettings);
+});
+
 Task("Push")
-    .IsDependentOn("Pack")
+    .IsDependentOn("PackHost")
+    .IsDependentOn("PackService")
     .Does(() =>
 {
 
