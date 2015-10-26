@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Domain.Agents;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Quarks.IO;
 using Nejdb;
@@ -30,14 +29,13 @@ namespace Codestellation.Galaxy.Infrastructure
             _collections = new Dictionary<Type, Collection>();
 
             var dbPath = GetDatabasePath();
-            
+
             _database.Open(dbPath, Database.DefaultOpenMode | OpenMode.SyncTransactionToStorage);
             CreateCollection("users", typeof(User), ClearUsersOnStart);
             CreateCollection("feeds", typeof(NugetFeed));
             CreateCollection("deployments", typeof(Deployment));
             CreateCollection("options", typeof(Options));
             CreateCollection("notification", typeof(Notification));
-            CreateCollection("agents", typeof(Agent));
         }
 
         private void CreateCollection(string collectionName, Type entityType, bool clear = false)
@@ -58,7 +56,7 @@ namespace Codestellation.Galaxy.Infrastructure
             {
                 throw new InvalidOperationException("Please call start method before using repository");
             }
-            return _collections[typeof (T)];
+            return _collections[typeof(T)];
         }
 
         public void Dispose()
@@ -66,8 +64,8 @@ namespace Codestellation.Galaxy.Infrastructure
             foreach (var collection in _collections.Values)
             {
                 collection.Dispose();
-            }            
-            
+            }
+
             _database.Close();
             _database.Dispose();
             _library.Dispose();

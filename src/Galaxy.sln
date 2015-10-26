@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galaxy", "Galaxy\Galaxy.csproj", "{DCA3BBE0-3C81-4109-83DB-244E1116F095}"
 EndProject
@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2F5873
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galaxy.Agent", "Galaxy.Agent\Galaxy.Agent.csproj", "{1E9531B5-F840-4FEC-B408-9D006D481026}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,10 +32,6 @@ Global
 		{459DF6FD-3F74-41B2-86F0-99C4B897FA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{459DF6FD-3F74-41B2-86F0-99C4B897FA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{459DF6FD-3F74-41B2-86F0-99C4B897FA67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E9531B5-F840-4FEC-B408-9D006D481026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E9531B5-F840-4FEC-B408-9D006D481026}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E9531B5-F840-4FEC-B408-9D006D481026}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E9531B5-F840-4FEC-B408-9D006D481026}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

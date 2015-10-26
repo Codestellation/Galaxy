@@ -1,24 +1,24 @@
 ﻿using System.Web.Http;
 using Owin;
 
-namespace Codestellation.Galaxy.Agent
+namespace Codestellation.Galaxy.WebEnd.Bootstrap
 {
-    public class OwinStartup
+    internal static class WebApiBootstrap
     {
-        public void Configuration(IAppBuilder appBuilder)
+        public static void UseWebApi(this IAppBuilder appBuilder)
         {
             var config = new HttpConfiguration();
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "{controller}/{id}",
+                routeTemplate: "api/{controller}/{id}",
                 defaults: new { controller = "root", id = RouteParameter.Optional }
-            );
+                );
             config.Routes.MapHttpRoute(
                 name: "controlleraction",
-                routeTemplate: "{controller}/{action}"
-            );
+                routeTemplate: "api/{controller}/{action}"
+                );
 
             appBuilder.UseWebApi(config);
-        } 
+        }
     }
 }

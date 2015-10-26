@@ -1,4 +1,4 @@
-﻿namespace Codestellation.Galaxy.Agent.Web
+﻿namespace Codestellation.Galaxy.WebEnd.Api
 {
     public class Error
     {

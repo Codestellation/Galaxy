@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Codestellation.Quarks.Reflection;
 
-namespace Codestellation.Galaxy.Agent.Web.ServiceControl
+namespace Codestellation.Galaxy.WebEnd.Api.ServiceControl
 {
     public class SystemInfo
     {

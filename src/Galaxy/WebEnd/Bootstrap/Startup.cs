@@ -9,6 +9,7 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
             app.UseWindowsAuthentication();
             app.ServeEmbeddedFiles();
             app.MapSignalR();
+            app.UseWebApi();
             // TODO: May throw such exception (at least on my windows 8.1 pro). Investigation needed.
             // The Nancy self host was unable to start, as no namespace reservation existed for the provided url(s).
             // Please either enable UrlReservations.CreateAutomatically on the HostConfiguration provided to

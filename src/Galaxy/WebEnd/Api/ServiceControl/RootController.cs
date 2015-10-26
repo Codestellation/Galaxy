@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace Codestellation.Galaxy.Agent.Web.ServiceControl
+namespace Codestellation.Galaxy.WebEnd.Api.ServiceControl
 {
     public class RootController : ApiController
     {
