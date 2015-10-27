@@ -1,4 +1,6 @@
 ﻿using System;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
 using Codestellation.Galaxy.Configuration;
 using Codestellation.Galaxy.WebEnd.Bootstrap;
 using Microsoft.Owin.Hosting;
@@ -9,6 +11,7 @@ namespace Codestellation.Galaxy
     {
         private IDisposable _owinHost;
         private readonly string _uriString;
+        private WindsorContainer _container;
 
         public Service(ServiceConfig configuration)
         {
@@ -17,6 +20,9 @@ namespace Codestellation.Galaxy
 
         public void Start()
         {
+            _container = new WindsorContainer();
+            _container.Install(FromAssembly.This());
+
             //TODO: May throw such exception (at least on my windows 8.1 pro). Investigation needed.
 
             //The Nancy self host was unable to start, as no namespace reservation existed for the provided url(s).
@@ -28,7 +34,7 @@ namespace Codestellation.Galaxy
 
             //more information http://msdn.microsoft.com/en-us/library/ms733768.aspx and https://github.com/NancyFx/Nancy/wiki/Self-Hosting-Nancy
 
-            _owinHost = WebApp.Start<OwinStartup>(_uriString);
+            _owinHost = WebApp.Start(_uriString, builder => OwinStartup.Configure(builder, _container));
         }
 
         public void Stop()
@@ -37,6 +43,7 @@ namespace Codestellation.Galaxy
             {
                 _owinHost.Dispose();
             }
+            _container.Dispose();
         }
     }
 }

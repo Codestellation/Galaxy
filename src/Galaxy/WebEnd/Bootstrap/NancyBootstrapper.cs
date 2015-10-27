@@ -1,10 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Castle.Windsor.Installer;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd.Misc;
 using Codestellation.Pulsar;
 using Nancy;
@@ -20,6 +19,7 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
 {
     public class NancyBootstrapper : WindsorNancyBootstrapper
     {
+        private readonly IWindsorContainer _container;
         private static readonly Assembly Assembly;
         private static readonly string ViewsNamespace;
 
@@ -31,6 +31,20 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
             StaticConfiguration.DisableErrorTraces = false;
         }
 
+        public NancyBootstrapper(IWindsorContainer container)
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException(nameof(container));
+            }
+            _container = container;
+        }
+
+        protected override IWindsorContainer GetApplicationContainer()
+        {
+            return _container;
+        }
+
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
             nancyConventions.ViewLocationConventions.Add((viewName, model, context) => string.Concat(ViewsNamespace, "/", viewName));
@@ -40,12 +54,7 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
 
         protected override void ConfigureApplicationContainer(IWindsorContainer container)
         {
-            container.Install(FromAssembly.This());
-
             container.Register(
-                Component
-                    .For<Repository>()
-                    .LifestyleSingleton(),
                 Component
                     .For<IRazorConfiguration>()
                     .Named("DefaultRazorConfiguration")
@@ -57,13 +66,7 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
                     .ImplementedBy<ForbiddenErrorHandler>()
                     .Named("DefaultErrorHandler")
                     .IsDefault()
-                    .LifestyleSingleton(),
-                Component
-                    .For<TaskBuilder>()
-                    .LifestyleTransient(),
-                Component
-                    .For<OperationBuilder>()
-                    .LifestyleTransient()
+                    .LifestyleSingleton()
                 );
             base.ConfigureApplicationContainer(container);
 

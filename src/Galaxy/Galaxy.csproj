@@ -237,6 +237,7 @@
     </Compile>
     <Compile Include="Boostrapping\SchedulerInstaller.cs" />
     <Compile Include="Boostrapping\SignalRInstaller.cs" />
+    <Compile Include="Boostrapping\WebApiInstaller.cs" />
     <Compile Include="Domain\Deployments\DeploymentBoard.cs" />
     <Compile Include="Domain\DeploymentTaskProcessor.cs" />
     <Compile Include="Domain\Notifications\OperationProgressNotification.cs" />
@@ -253,12 +254,13 @@
     <Compile Include="ServiceManager\Events\InstallServiceEvent.cs" />
     <Compile Include="ServiceManager\Operations\DeployConsulConfig.cs" />
     <Compile Include="WebEnd\Api\Error.cs" />
-    <Compile Include="WebEnd\Bootstrap\WebApiBootstrap.cs" />
+    <Compile Include="WebEnd\Api\Feeds\FeedsController.cs" />
     <Compile Include="WebEnd\Api\Response.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\RootController.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\ServiceStatus.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\SystemInfo.cs" />
     <Compile Include="WebEnd\Api\Tasks\TasksController.cs" />
+    <Compile Include="WebEnd\Infrastructure\WindsorControllerActvator.cs" />
     <Compile Include="WebEnd\Models\Jobs\CreateJobModel.cs" />
     <Compile Include="WebEnd\Models\Jobs\JobListItemModel.cs" />
     <Compile Include="WebEnd\Models\Jobs\JobListModel.cs" />
@@ -309,7 +311,7 @@
     <Compile Include="Service.cs" />
     <Compile Include="Infrastructure\SingleThreadScheduler.cs" />
     <Compile Include="ServiceManager\Operations\WinServiceOperation.cs" />
-    <Compile Include="WebEnd\Bootstrap\Startup.cs" />
+    <Compile Include="WebEnd\Bootstrap\OwinStartup.cs" />
     <Compile Include="WebEnd\JobModule.cs" />
     <Compile Include="WebEnd\Models\BackupListModel.cs" />
     <Compile Include="WebEnd\CrudModule.cs" />
