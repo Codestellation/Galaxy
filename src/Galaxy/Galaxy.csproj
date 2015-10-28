@@ -259,6 +259,7 @@
     <Compile Include="WebEnd\Api\ServiceControl\RootController.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\ServiceStatus.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\SystemInfo.cs" />
+    <Compile Include="WebEnd\Api\SingleThreadActionInvoker.cs" />
     <Compile Include="WebEnd\Api\Tasks\TasksController.cs" />
     <Compile Include="WebEnd\Infrastructure\WindsorControllerActvator.cs" />
     <Compile Include="WebEnd\Models\Jobs\CreateJobModel.cs" />

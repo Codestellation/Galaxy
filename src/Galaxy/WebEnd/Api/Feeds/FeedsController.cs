@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Web.Http;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
@@ -21,7 +20,7 @@ namespace Codestellation.Galaxy.WebEnd.Api.Feeds
             _feeds = repository.GetCollection<NugetFeed>();
         }
 
-        public async Task<FeedListModel> Get()
+        public FeedListModel Get()
         {
             return new FeedListModel(_feedBoard, _deploymentBoard);
         }

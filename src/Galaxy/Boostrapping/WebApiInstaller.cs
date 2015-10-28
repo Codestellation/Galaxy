@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Codestellation.Galaxy.WebEnd.Api;
 using Codestellation.Galaxy.WebEnd.Infrastructure;
 
 namespace Codestellation.Galaxy.Boostrapping
@@ -36,7 +38,7 @@ namespace Codestellation.Galaxy.Boostrapping
         private void ConfigureIoC(HttpConfiguration config, IWindsorContainer container)
         {
             config.Services.Replace(typeof(IHttpControllerActivator), new WindsorControllerActivator(container));
-
+            config.Services.Replace(typeof(IHttpActionInvoker), new SingleThreadActionInvoker());
         }
 
         private void ConfigureRouting(HttpConfiguration config)
