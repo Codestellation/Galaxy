@@ -11,7 +11,7 @@ namespace Codestellation.Galaxy.Host
         {
             _service = (IService)Activator.CreateInstance(serviceType);
 
-            ConsulConfigManager.TryLoadConsulConfig(_service);
+            ConfigManager.TryLoadConfig(_service);
         }
 
         public IService Service

@@ -3,7 +3,7 @@ using Codestellation.Galaxy.Host.ConfigManagement;
 
 namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
 {
-    public class SampleService : IService, IConsulConfigAware<SampleConfig>
+    public class SampleService : IService, IConfigAware<SampleConfig>
     {
         public SampleConfig Config { get; private set; }
 

@@ -7,34 +7,40 @@ using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.Host.ConfigManagement
 {
-    public class ConsulConfigManager
+    public static class ConfigManager
     {
         private static readonly string ConsulSettingsFileName = Folder.ToFullPath("consul.json");
         private static readonly string DevConfigFileName = Folder.ToFullPath("config.dev.json");
 
-        public static void TryLoadConsulConfig(IService service)
+        public static void TryLoadConfig(IService service)
         {
-            var consulAware = service
-                .GetType()
-                .GetInterfaces()
-                .SingleOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IConsulConfigAware<>));
+            Type configAware = ConfigAware(service);
 
-            if (consulAware == null)
+            if (configAware == null)
             {
                 return;
             }
 
-            if (TryLoadConsulConfig(service, consulAware))
+            if (TryLoadConsulConfig(service, configAware))
             {
                 return;
             }
 
-            if (TryLoadDevConfig(service, consulAware))
+            if (TryLoadDevConfig(service, configAware))
             {
                 return;
             }
 
             throw new InvalidOperationException("Could not find service config");
+        }
+
+        private static Type ConfigAware(IService service)
+        {
+            var configAware = service
+                .GetType()
+                .GetInterfaces()
+                .SingleOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IConfigAware<>));
+            return configAware;
         }
 
         private static bool TryLoadConsulConfig(IService service, Type consulAware)

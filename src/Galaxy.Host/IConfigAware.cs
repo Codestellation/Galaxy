@@ -2,7 +2,7 @@
 
 namespace Codestellation.Galaxy.Host
 {
-    public interface IConsulConfigAware<TConfig>
+    public interface IConfigAware<TConfig>
         where TConfig : new()
     {
         ValidationResult Accept(TConfig config);

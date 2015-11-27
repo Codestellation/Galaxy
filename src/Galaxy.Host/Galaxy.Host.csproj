@@ -67,8 +67,8 @@
     <Compile Include="ConfigManagement\ConfigElement.cs" />
     <Compile Include="ConfigManagement\ConfigLoader.cs" />
     <Compile Include="ConfigManagement\ConsulConfig.cs" />
-    <Compile Include="ConfigManagement\ConsulConfigManager.cs" />
-    <Compile Include="IConsulConfigAware.cs" />
+    <Compile Include="ConfigManagement\ConfigManager.cs" />
+    <Compile Include="IConfigAware.cs" />
     <Compile Include="ConfigManagement\ValidationError.cs" />
     <Compile Include="ConfigManagement\ValidationResult.cs" />
     <Compile Include="ConsulConfigSettings.cs" />
