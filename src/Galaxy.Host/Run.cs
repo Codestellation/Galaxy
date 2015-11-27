@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using NLog;
+using Codestellation.Galaxy.Host.LogManagement;
 using Topshelf;
 using Topshelf.Logging;
 
@@ -17,7 +17,7 @@ namespace Codestellation.Galaxy.Host
 
             TopshelfExitCode code = HostFactory.Run(x =>
             {
-                x.UseNLog(LogManager.GetCurrentClassLogger().Factory);
+                x.InitializeLoggers(serviceType.Assembly);
 
                 LogVersions();
 
