@@ -1,6 +1,7 @@
 ﻿using System;
 using Codestellation.Quarks.DateAndTime;
 using Nejdb.Bson;
+using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.Domain.Notifications
 {
@@ -13,6 +14,11 @@ namespace Codestellation.Galaxy.Domain.Notifications
 
         public string Url;
 
+        [JsonConstructor]
+        private Notification()
+        {
+        }
+
         public Notification(ObjectId? deploymentId, string message, Severity severity)
         {
             DeploymentId = deploymentId;
@@ -23,7 +29,7 @@ namespace Codestellation.Galaxy.Domain.Notifications
 
         public static Notification Info(ObjectId? deploymentId, string message)
         {
-            return new Notification(deploymentId,message, Severity.Info);
+            return new Notification(deploymentId, message, Severity.Info);
         }
 
         public static Notification Warning(ObjectId? deploymentId, string message)

@@ -20,7 +20,7 @@ namespace Codestellation.Galaxy.WebEnd
         }
         private object OnRoot()
         {
-            var model = new HomepageModel(_feedBoard, _notificationBoard);
+            var model = new HomepageModel(_notificationBoard);
             return View["Homepage", model];
         }
     }

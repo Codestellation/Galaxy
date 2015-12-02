@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using Codestellation.Galaxy.Domain;
+﻿using System;
+using System.Collections.Generic;
 using Codestellation.Galaxy.Domain.Notifications;
+using Codestellation.Quarks.DateAndTime;
 
 namespace Codestellation.Galaxy.WebEnd.Models
 {
@@ -8,11 +9,19 @@ namespace Codestellation.Galaxy.WebEnd.Models
     {
         public readonly IList<Notification> Errors;
         public readonly IList<Notification> Events;
+        private DateTime _now;
 
-        public HomepageModel(FeedBoard feedBoard, NotificationBoard notificationBoard)
+        public bool HasErrors => Errors.Count > 0;
+        public bool HasEvents => Events.Count > 0;
+
+        public bool NoNotifications => Errors.Count + Events.Count == 0;
+
+        public HomepageModel(NotificationBoard notificationBoard)
         {
-            Errors = notificationBoard.GetNotifications(x => x.Severity == Severity.Error, 10);
-            Events = notificationBoard.GetNotifications(x => x.Severity < Severity.Error, 10);
+            _now = Clock.UtcNow;
+
+            Errors = notificationBoard.GetNotifications(x => x.Severity == Severity.Error && x.CreatedAt >= _now.AddDays(-30), 10);
+            Events = notificationBoard.GetNotifications(x => x.Severity < Severity.Error && x.CreatedAt >= _now.AddDays(-30), 10);
         }
     }
 }
