@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Quarks.IO;
 using Nejdb;
@@ -43,7 +44,7 @@ namespace Codestellation.Galaxy.Domain.Deployments
             }
             SaveDeployment(deployment);
 
-            //to make folders  
+            //to make folders
             FillServiceFolders(deployment);
 
             SaveDeployment(deployment);
@@ -71,16 +72,17 @@ namespace Codestellation.Galaxy.Domain.Deployments
         {
             var serviceFolders = deployment.ServiceFolders;
 
-            var fullPath = string.IsNullOrWhiteSpace(deployment.InstanceName)
-                ? Folder.Combine(_options.GetDeployFolder(), deployment.PackageId)
-                : Folder.Combine(_options.GetDeployFolder(), string.Format("{0}-{1}", deployment.PackageId, deployment.InstanceName));
-            var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, fullPath);
-            serviceFolders.Add(specialFolder);
+            var subfolder = BuildSubfolder(deployment);
 
+            var deployFolderPath = Path.Combine(_options.GetDeployFolder(), subfolder);
+            var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, deployFolderPath);
+            serviceFolders.Add(specialFolder);
 
             BuildServiceFolder(deployment, SpecialFolderDictionary.DeployLogsFolder, "BuildLogs");
             BuildServiceFolder(deployment, SpecialFolderDictionary.FileOverrides, "FileOverrides");
             BuildServiceFolder(deployment, SpecialFolderDictionary.BackupFolder, "Backups");
+
+            BuildFolders(deployment);
         }
 
         private void BuildServiceFolder(Deployment deployment, string purpose, string subfolder)
@@ -97,6 +99,32 @@ namespace Codestellation.Galaxy.Domain.Deployments
                 _deploymentCollection.Save(deployment, false);
                 tx.Commit();
             }
+        }
+
+        private void BuildFolders(Deployment deployment)
+        {
+            string subFolder = BuildSubfolder(deployment);
+
+            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Logs, Path.Combine(_options.FolderOptions.Logs, subFolder)));
+            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Configs, Path.Combine(_options.FolderOptions.Configs, subFolder)));
+            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Data, Path.Combine(_options.FolderOptions.Data, subFolder)));
+        }
+
+        private static string BuildSubfolder(Deployment deployment)
+        {
+            string subFolder = string.Empty;
+            if (!string.IsNullOrWhiteSpace(deployment.Group))
+            {
+                subFolder = deployment.Group.Replace(" ", "-").ToLowerInvariant();
+            }
+
+            var name = (deployment.HasInstanceName
+                ? $"{deployment.PackageId}-{deployment.InstanceName}"
+                : deployment.PackageId)
+                .Replace(" ", "-").ToLowerInvariant();
+
+            subFolder = Path.Combine(subFolder, name);
+            return subFolder;
         }
     }
 }

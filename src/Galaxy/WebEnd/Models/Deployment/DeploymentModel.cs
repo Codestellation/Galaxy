@@ -21,23 +21,18 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
 
         public string Status { get; set; }
 
-        private readonly IEnumerable<KeyValuePair<Version, string>> _packageVersions;
-
-        public IEnumerable<KeyValuePair<Version, string>> PackageVersions
-        {
-            get { return _packageVersions; }
-        }
+        public IEnumerable<KeyValuePair<Version, string>> PackageVersions { get; }
 
         private readonly IEnumerable<KeyValuePair<ObjectId, string>> _allFeeds;
 
-        public string FeedName
-        {
-            get { return _allFeeds.Single(x => x.Key == FeedId).Value; }
-        }
+        public Dictionary<string, string> Folders { get; private set; }
+
+        public string FeedName => _allFeeds.Single(x => x.Key == FeedId).Value;
 
         public string State { get; set; }
 
         //used by nancy model binder
+
         public DeploymentModel()
         {
         }
@@ -59,6 +54,8 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             Group = deployment.Group;
 
             ConsulName = deployment.ConsulName;
+
+            Folders = deployment.ServiceFolders.ToDictionary(x => x.Key, x => x.Value.FullPath);
         }
 
         public DeploymentModel(Domain.Deployment deployment,
@@ -68,7 +65,7 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
                 this(deployment)
         {
             _allFeeds = allFeeds;
-            _packageVersions = packageVersions.OrderByDescending(x => x).Select(item => new KeyValuePair<Version, string>(item, item.ToString()));
+            PackageVersions = packageVersions.OrderByDescending(x => x).Select(item => new KeyValuePair<Version, string>(item, item.ToString()));
         }
     }
 }

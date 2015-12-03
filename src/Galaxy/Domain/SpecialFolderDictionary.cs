@@ -9,6 +9,10 @@ namespace Codestellation.Galaxy.Domain
         public static readonly string BackupFolder = "BackupFolder";
         public static readonly string FileOverrides = "FileOverrides";
 
+        public static readonly string Logs = "Logs";
+        public static readonly string Configs = "Configs";
+        public static readonly string Data = "Data";
+
         public void Add(SpecialFolder folder)
         {
             Add(folder.Purpose, folder);
@@ -18,6 +22,5 @@ namespace Codestellation.Galaxy.Domain
         {
             return Remove(folder.Purpose);
         }
-
     }
 }

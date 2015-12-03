@@ -28,6 +28,8 @@ namespace Codestellation.Galaxy.Domain
 
         public SpecialFolderDictionary ServiceFolders { get; private set; }
 
+        public bool HasInstanceName => !string.IsNullOrWhiteSpace(InstanceName);
+
         public string GetServiceName()
         {
             //NOTE: instance name may change. Do not cache it
