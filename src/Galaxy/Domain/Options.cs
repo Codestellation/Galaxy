@@ -7,6 +7,11 @@ namespace Codestellation.Galaxy.Domain
     {
         public ObjectId Id { get; private set; }
 
+        public Options()
+        {
+            FolderOptions = new FolderOptions();
+        }
+
         public string RootDeployFolder { get; set; }
 
         public int PurgeLogsOlderThan { get; set; }
@@ -22,5 +27,7 @@ namespace Codestellation.Galaxy.Domain
 
             return RootDeployFolder;
         }
+
+        public FolderOptions FolderOptions { get; set; }
     }
 }

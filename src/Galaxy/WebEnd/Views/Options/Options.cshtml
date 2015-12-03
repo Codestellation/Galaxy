@@ -6,13 +6,17 @@
 <h3 class="page-header">Service settings</h3>
 
 <form class="form-horizontal" role="form" method="POST">
-    @Html.LabeledTextBox(x => x.DeployFolder)
-    @Html.LabeledTextBox(x => x.PurgeLogsOlderThan)
-    @Html.LabeledTextBox(x => x.ConsulAddress)
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <input type="submit" class="btn btn-success" value="Submit" />
-        </div>
+  @Html.LabeledTextBox(x => x.DeployFolder)
+  @Html.LabeledTextBox(x => x.PurgeLogsOlderThan)
+  @Html.LabeledTextBox(x => x.ConsulAddress)
+
+  @Html.LabeledTextBox(x => x.ConfigsFolder)
+  @Html.LabeledTextBox(x => x.DataFolder)
+  @Html.LabeledTextBox(x => x.LogsFolder)
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-success" value="Submit" />
     </div>
+  </div>
 </form>
 

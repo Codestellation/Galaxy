@@ -15,6 +15,10 @@ namespace Codestellation.Galaxy.WebEnd.Models
             DeployFolder = options.RootDeployFolder;
             PurgeLogsOlderThan = options.PurgeLogsOlderThan;
             ConsulAddress = options.ConsulAddress;
+
+            ConfigsFolder = options.FolderOptions.Configs;
+            LogsFolder = options.FolderOptions.Logs;
+            DataFolder = options.FolderOptions.Data;
         }
 
         [Display(Name = "Applications Folder", Prompt = "Path. Leave blank to use default")]
@@ -26,11 +30,24 @@ namespace Codestellation.Galaxy.WebEnd.Models
         [Display(Name = "Consul Address", Prompt = "host:port Leave blank to use default")]
         public string ConsulAddress { get; set; }
 
+        [Display(Name = "Configurations Folder")]
+        public string ConfigsFolder { get; set; }
+
+        [Display(Name = "Logs Folder")]
+        public string LogsFolder { get; set; }
+
+        [Display(Name = "Data Folder")]
+        public string DataFolder { get; set; }
+
         public void Update(Options options)
         {
             options.RootDeployFolder = DeployFolder;
             options.PurgeLogsOlderThan = PurgeLogsOlderThan;
             options.ConsulAddress = ConsulAddress;
+
+            options.FolderOptions.Configs = ConfigsFolder;
+            options.FolderOptions.Logs = LogsFolder;
+            options.FolderOptions.Data = DataFolder;
         }
     }
 }
