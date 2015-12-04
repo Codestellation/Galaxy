@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Codestellation.Galaxy.Domain
 {
@@ -13,6 +14,8 @@ namespace Codestellation.Galaxy.Domain
         public static readonly string Configs = "Configs";
         public static readonly string Data = "Data";
 
+        private static readonly HashSet<string> HostFolderKeys = new HashSet<string> { Logs, Configs, Data };
+
         public void Add(SpecialFolder folder)
         {
             Add(folder.Purpose, folder);
@@ -22,5 +25,7 @@ namespace Codestellation.Galaxy.Domain
         {
             return Remove(folder.Purpose);
         }
+
+        public IEnumerable<SpecialFolder> HostFolders => Values.Where(x => HostFolderKeys.Contains(x.Purpose));
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.IO;
-using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
+using Codestellation.Galaxy.Domain;
+using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -14,16 +17,20 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public void Execute(DeploymentTaskContext context)
         {
-            dynamic hostConfig = new JObject();
+            dynamic hostConfig = new ExpandoObject();
 
-            hostConfig.Folders = context.GetValue<object>(DeploymentTaskContext.Folders);
             hostConfig.Consul = new
             {
                 Name = context.GetValue<string>(DeploymentTaskContext.ConsulName),
                 Address = context.GetValue<string>(DeploymentTaskContext.ConsulAddress)
             };
 
-            var hostConfigString = hostConfig.ToString();
+            foreach (var folder in context.GetValue<SpecialFolder[]>(DeploymentTaskContext.Folders))
+            {
+                ((IDictionary<string, object>)hostConfig)[folder.Purpose] = folder.FullPath;
+            }
+
+            var hostConfigString = JsonConvert.SerializeObject(hostConfig, Formatting.Indented);
 
             context.BuildLog.WriteLine("Generated host config");
             context.BuildLog.WriteLine(hostConfigString);
