@@ -253,7 +253,7 @@
     <Compile Include="ServiceManager\Events\DeleteDeploymentEvent.cs" />
     <Compile Include="ServiceManager\Events\DeployServiceEvent.cs" />
     <Compile Include="ServiceManager\Events\InstallServiceEvent.cs" />
-    <Compile Include="ServiceManager\Operations\DeployConsulConfig.cs" />
+    <Compile Include="ServiceManager\Operations\DeployHostConfig.cs" />
     <Compile Include="WebEnd\Api\Error.cs" />
     <Compile Include="WebEnd\Api\Feeds\FeedsController.cs" />
     <Compile Include="WebEnd\Api\Response.cs" />

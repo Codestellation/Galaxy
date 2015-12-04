@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
@@ -69,12 +70,9 @@ namespace Codestellation.Galaxy.ServiceManager
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
-                .SetValue(DeploymentTaskContext.ConsulAddress, _options.ConsulAddress);
-
-            if (!string.IsNullOrWhiteSpace(deployment.ConsulName))
-            {
-                context.SetValue(DeploymentTaskContext.ConsulName, deployment.ConsulName);
-            }
+                .SetValue(DeploymentTaskContext.ConsulAddress, _options.ConsulAddress)
+                .SetValue(DeploymentTaskContext.ConsulName, deployment.ConsulName)
+                .SetValue(DeploymentTaskContext.Folders, deployment.ServiceFolders.ToArray());
 
             return new DeploymentTask(context);
         }
@@ -101,7 +99,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask DeleteDeploymentTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return CreateDeployTask("DeleteDeployment", deployment, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it! 
+            return CreateDeployTask("DeleteDeployment", deployment, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it!
                 .Add(_operations.StopService(deployment, skipIfNotFound: true))
                 .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
                 .Add(_operations.DeleteFolders(deployment))

@@ -88,7 +88,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public IOperation DeployConsulConfig(Deployment deployment)
         {
             var serviceFolder = deployment.GetDeployFolder();
-            return new DeployConsulConfig(serviceFolder);
+            return new DeployHostConfig(serviceFolder);
         }
     }
 }
