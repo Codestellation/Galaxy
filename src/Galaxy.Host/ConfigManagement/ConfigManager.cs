@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Codestellation.Quarks.IO;
 using Consul;
 using Newtonsoft.Json;
 
@@ -9,9 +8,6 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 {
     public static class ConfigManager
     {
-        private static readonly string ConsulSettingsFileName = Folder.ToFullPath("consul.json");
-        private static readonly string DevConfigFileName = Folder.ToFullPath("config.dev.json");
-
         public static void TryLoadConfig(IService service)
         {
             Type configAware = ConfigAware(service);
@@ -21,17 +17,15 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
                 return;
             }
 
-            if (TryLoadConsulConfig(service, configAware))
+            HostConfig hostConfig = service.HostConfig;
+            if (hostConfig.UseConsulConfig)
             {
-                return;
+                LoadConsulConfig(service, configAware, hostConfig.Consul);
             }
-
-            if (TryLoadDevConfig(service, configAware))
+            else
             {
-                return;
+                LoadFileConfig(service, configAware, hostConfig);
             }
-
-            throw new InvalidOperationException("Could not find service config");
         }
 
         private static Type ConfigAware(IService service)
@@ -43,16 +37,8 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             return configAware;
         }
 
-        private static bool TryLoadConsulConfig(IService service, Type consulAware)
+        private static void LoadConsulConfig(IService service, Type consulAware, ConsulConfigSettings consulSettings)
         {
-            if (!File.Exists(ConsulSettingsFileName))
-            {
-                return false;
-            }
-            var consulConfigContent = File.ReadAllText(ConsulSettingsFileName);
-
-            var consulSettings = JsonConvert.DeserializeObject<ConsulConfigSettings>(consulConfigContent);
-
             Type configType = GetConfigType(consulAware);
 
             var clientConfig = new ConsulClientConfiguration();
@@ -74,29 +60,28 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 
             var serviceConfig = config.BuildConfig();
             ProvideConfigToService(service, consulAware, serviceConfig);
-            return true;
         }
 
-        private static bool TryLoadDevConfig(IService service, Type consulAware)
+        private static void LoadFileConfig(IService service, Type consulAware, HostConfig hostConfig)
         {
-            if (!Environment.UserInteractive)
-            {
-                return false;
-            }
+            var serviceConfigFile = new FileInfo(Path.Combine(hostConfig.Configs.FullName, "config.json"));
 
-            if (!File.Exists(DevConfigFileName))
-            {
-                return false;
-            }
-
-            var content = File.ReadAllText(DevConfigFileName);
             var configType = GetConfigType(consulAware);
 
-            var serviceConfig = JsonConvert.DeserializeObject(content, configType);
+            if (!serviceConfigFile.Exists)
+            {
+                throw new InvalidOperationException("Could not find any config file");
+            }
 
+            var serviceConfig = ReadConfig(configType, serviceConfigFile);
             ProvideConfigToService(service, consulAware, serviceConfig);
+        }
 
-            return true;
+        private static object ReadConfig(Type configType, FileInfo serviceConfigFile)
+        {
+            var content = File.ReadAllText(serviceConfigFile.FullName);
+            var serviceConfig = JsonConvert.DeserializeObject(content, configType);
+            return serviceConfig;
         }
 
         private static void ProvideConfigToService(IService service, Type consulAware, object serviceConfig)

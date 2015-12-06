@@ -2,6 +2,8 @@
 {
     public interface IService
     {
+        HostConfig HostConfig { get; set; }
+
         void Start();
 
         void Stop();

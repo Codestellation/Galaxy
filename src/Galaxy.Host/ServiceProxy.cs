@@ -5,19 +5,20 @@ namespace Codestellation.Galaxy.Host
 {
     internal class ServiceProxy
     {
-        private readonly IService _service;
-
         public ServiceProxy(Type serviceType)
         {
-            _service = (IService)Activator.CreateInstance(serviceType);
+            Service = (IService)Activator.CreateInstance(serviceType);
 
-            ConfigManager.TryLoadConfig(_service);
+            var hostConfig = HostConfig.Load();
+
+            hostConfig.Validate();
+
+            Service.HostConfig = hostConfig;
+
+            ConfigManager.TryLoadConfig(Service);
         }
 
-        public IService Service
-        {
-            get { return _service; }
-        }
+        public IService Service { get; }
 
         public void Start()
         {

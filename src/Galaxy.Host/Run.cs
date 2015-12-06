@@ -11,7 +11,7 @@ namespace Codestellation.Galaxy.Host
     public static class Run
     {
         public static int Service<TService>()
-            where TService : IService
+            where TService : IService, new()
         {
             Type serviceType = typeof(TService);
 

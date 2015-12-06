@@ -7,6 +7,8 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
     {
         public SampleConfig Config { get; private set; }
 
+        public HostConfig HostConfig { get; set; }
+
         public void Start()
         {
         }
