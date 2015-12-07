@@ -30,7 +30,14 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
             _consul.PutKey(_config.Elements.First(x => x.Key == Test.PortKey).Path, 10);
             _consul.PutKey(_config.Elements.First(x => x.Key == Test.HostKey).Path, "localhost");
 
-            File.WriteAllText("consul.json", JsonConvert.SerializeObject(Test.ConsulSettings));
+            var config = new
+            {
+                Logs = AppDomain.CurrentDomain.BaseDirectory,
+                Configs = AppDomain.CurrentDomain.BaseDirectory,
+                Data = AppDomain.CurrentDomain.BaseDirectory,
+                Consul = Test.ConsulSettings
+            };
+            File.WriteAllText("config.json", JsonConvert.SerializeObject(config));
         }
 
         [TearDown]
