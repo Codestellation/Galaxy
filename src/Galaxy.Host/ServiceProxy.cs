@@ -5,13 +5,9 @@ namespace Codestellation.Galaxy.Host
 {
     internal class ServiceProxy
     {
-        public ServiceProxy(Type serviceType)
+        public ServiceProxy(Type serviceType, HostConfig hostConfig)
         {
             Service = (IService)Activator.CreateInstance(serviceType);
-
-            var hostConfig = HostConfig.Load();
-
-            hostConfig.Validate();
 
             Service.HostConfig = hostConfig;
 

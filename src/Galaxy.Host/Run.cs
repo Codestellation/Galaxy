@@ -17,13 +17,16 @@ namespace Codestellation.Galaxy.Host
 
             TopshelfExitCode code = HostFactory.Run(x =>
             {
-                x.InitializeLoggers(serviceType.Assembly);
+                var hostConfig = HostConfig.Load();
+                hostConfig.Validate();
+
+                x.InitializeLoggers(serviceType.Assembly, hostConfig.Logs);
 
                 LogVersions();
 
                 x.Service<ServiceProxy>(s =>
                 {
-                    s.ConstructUsing(name => new ServiceProxy(serviceType));
+                    s.ConstructUsing(name => new ServiceProxy(serviceType, hostConfig));
                     s.WhenStarted(StartService);
                     s.WhenStopped(tc => tc.Stop());
                     s.WhenShutdown(tc => tc.Stop());
