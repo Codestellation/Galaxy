@@ -70,7 +70,7 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
 
             if (!serviceConfigFile.Exists)
             {
-                throw new InvalidOperationException("Could not find any config file");
+                throw new FileNotFoundException($"Could not find config file '${serviceConfigFile.FullName}'", serviceConfigFile.FullName);
             }
 
             var serviceConfig = ReadConfig(configType, serviceConfigFile);

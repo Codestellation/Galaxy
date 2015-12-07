@@ -30,14 +30,14 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
             _consul.PutKey(_config.Elements.First(x => x.Key == Test.PortKey).Path, 10);
             _consul.PutKey(_config.Elements.First(x => x.Key == Test.HostKey).Path, "localhost");
 
-            var config = new
+            var serviceConfig = new
             {
                 Logs = AppDomain.CurrentDomain.BaseDirectory,
                 Configs = AppDomain.CurrentDomain.BaseDirectory,
                 Data = AppDomain.CurrentDomain.BaseDirectory,
                 Consul = Test.ConsulSettings
             };
-            File.WriteAllText("host.config.json", JsonConvert.SerializeObject(config));
+            File.WriteAllText("host.config.json", JsonConvert.SerializeObject(serviceConfig));
         }
 
         [TearDown]
@@ -51,7 +51,9 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
         {
             var proxyType = typeof(IService).Assembly.GetTypes().Single(x => x.Name == "ServiceProxy");
 
-            var proxy = proxyType.GetConstructor(new[] { typeof(Type) }).Invoke(new[] { typeof(SampleService) });
+            var proxy = proxyType
+                .GetConstructor(new[] { typeof(Type), typeof(HostConfig) })
+                .Invoke(new object[] { typeof(SampleService), HostConfig.Load() });
 
             var sampleService = (SampleService)proxyType.GetProperty("Service").GetValue(proxy);
 

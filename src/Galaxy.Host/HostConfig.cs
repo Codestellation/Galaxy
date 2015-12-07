@@ -12,7 +12,7 @@ namespace Codestellation.Galaxy.Host
     {
         private static readonly FileInfo ConfigFile = new FileInfo(Folder.ToFullPath("host.config.json"));
 
-        private static readonly HostConfig DevConfig = new HostConfig
+        public static readonly HostConfig DevConfig = new HostConfig
         {
             Data = new DirectoryInfo(Folder.ToFullPath("data")),
             Logs = new DirectoryInfo(Folder.ToFullPath("logs")),
