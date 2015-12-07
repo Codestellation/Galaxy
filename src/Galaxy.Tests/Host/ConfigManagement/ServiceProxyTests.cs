@@ -37,7 +37,7 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
                 Data = AppDomain.CurrentDomain.BaseDirectory,
                 Consul = Test.ConsulSettings
             };
-            File.WriteAllText("config.json", JsonConvert.SerializeObject(config));
+            File.WriteAllText("host.config.json", JsonConvert.SerializeObject(config));
         }
 
         [TearDown]

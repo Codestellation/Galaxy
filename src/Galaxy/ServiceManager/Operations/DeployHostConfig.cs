@@ -40,7 +40,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         private void WriteConfig(TextWriter buildLog, string hostConfig)
         {
-            var configPath = Path.Combine(_serviceFolder, "config.json");
+            var configPath = Path.Combine(_serviceFolder, "host.config.json");
 
             buildLog.WriteLine("Write host config to '{0}'", configPath);
             File.WriteAllText(configPath, hostConfig);

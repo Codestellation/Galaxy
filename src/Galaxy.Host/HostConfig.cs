@@ -10,7 +10,7 @@ namespace Codestellation.Galaxy.Host
 {
     public class HostConfig
     {
-        private static readonly FileInfo ConfigFile = new FileInfo(Folder.ToFullPath("config.json"));
+        private static readonly FileInfo ConfigFile = new FileInfo(Folder.ToFullPath("host.config.json"));
 
         private static readonly HostConfig DevConfig = new HostConfig
         {
@@ -49,7 +49,7 @@ namespace Codestellation.Galaxy.Host
                 return DevConfig;
             }
 
-            throw new InvalidOperationException("config.json not found");
+            throw new InvalidOperationException("host.config.json not found");
         }
 
         internal void Validate()
