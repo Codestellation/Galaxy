@@ -42,8 +42,7 @@ namespace Codestellation.Galaxy.Host.LogManagement
 
             //LogManager.Configuration = new XmlLoggingConfiguration(path);
 
-            var logManager = Expression.Constant(logManagerType);
-            var configurationProperty = Expression.PropertyOrField(logManager, "Configuration");
+            var configurationProperty = Expression.Property(null, logManagerType, "Configuration");
 
             var xmlConfigurationType = Type.GetType("NLog.Config.XmlLoggingConfiguration, NLog");
 
