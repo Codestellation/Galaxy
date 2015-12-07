@@ -20,7 +20,7 @@ namespace Codestellation.Galaxy.Host
                 var hostConfig = HostConfig.Load();
                 hostConfig.Validate();
 
-                x.InitializeLoggers(serviceType.Assembly, hostConfig.Logs);
+                x.InitializeLoggers(serviceType.Assembly, hostConfig.Configs);
 
                 LogVersions();
 

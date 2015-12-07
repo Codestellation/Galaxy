@@ -37,7 +37,7 @@ namespace Codestellation.Galaxy.Host.LogManagement
 
             if (!File.Exists(nlogFile))
             {
-                throw new FileNotFoundException("Could not find nlog.config", nlogFile);
+                throw new FileNotFoundException($"Could not find ${nlogFile}", nlogFile);
             }
 
             //LogManager.Configuration = new XmlLoggingConfiguration(path);
