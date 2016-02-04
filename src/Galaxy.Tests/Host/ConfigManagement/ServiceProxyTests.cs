@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Codestellation.Galaxy.Host;
 using Codestellation.Galaxy.Host.ConfigManagement;
 using Consul;
@@ -51,9 +52,10 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
         {
             var proxyType = typeof(IService).Assembly.GetTypes().Single(x => x.Name == "ServiceProxy");
 
+            var settings = MakeHostConfig();
             var proxy = proxyType
                 .GetConstructor(new[] { typeof(Type), typeof(HostConfig) })
-                .Invoke(new object[] { typeof(SampleService), HostConfig.Load() });
+                .Invoke(new object[] { typeof(SampleService), settings });
 
             var sampleService = (SampleService)proxyType.GetProperty("Service").GetValue(proxy);
 
@@ -61,6 +63,15 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
 
             Assert.That(config.Port, Is.EqualTo(10));
             Assert.That(config.Host, Is.EqualTo("localhost"));
+        }
+
+        private static HostConfig MakeHostConfig()
+        {
+            var loadMethod = typeof(HostConfig)
+                .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                .Single(x => x.Name == "Load");
+            var settings = loadMethod.Invoke(null, new object[0]);
+            return (HostConfig)settings;
         }
     }
 }

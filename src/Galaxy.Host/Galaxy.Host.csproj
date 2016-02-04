@@ -68,6 +68,7 @@
     <Compile Include="ConfigManagement\ConfigLoader.cs" />
     <Compile Include="ConfigManagement\ConsulConfig.cs" />
     <Compile Include="ConfigManagement\ConfigManager.cs" />
+    <Compile Include="ISettings.cs" />
     <Compile Include="Misc\DirectoryInfoConverter.cs" />
     <Compile Include="HostConfig.cs" />
     <Compile Include="IConfigAware.cs" />
