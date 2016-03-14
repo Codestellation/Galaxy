@@ -11,9 +11,7 @@
         <dependencies>
             <dependency id="Consul" version="0.5.2.65" />
             <dependency id="Newtonsoft.Json" version="7.0.1" />
-            <dependency id="NLog" version="4.0.1" />
             <dependency id="Topshelf" version="3.2.0" />
-            <dependency id="Topshelf.NLog" version="3.2.0" />
         </dependencies>
     </metadata>
 </package>
