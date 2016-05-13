@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Codestellation.Galaxy.Host;
 
 namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
 {
@@ -14,7 +13,5 @@ namespace Codestellation.Galaxy.Tests.Host.ConfigManagement
         public static readonly PropertyInfo HostProperty = typeof(SampleConfig).GetProperty("Host");
 
         public static readonly string HostKey = HostProperty.Name.ToLowerInvariant();
-
-        public static readonly ConsulConfigSettings ConsulSettings = new ConsulConfigSettings { Name = ConsulName };
     }
 }

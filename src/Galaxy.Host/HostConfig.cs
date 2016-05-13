@@ -21,15 +21,11 @@ namespace Codestellation.Galaxy.Host
 
         private readonly object _latch = new object();
 
-        public ConsulConfigSettings Consul { get; set; }
-
         public DirectoryInfo Logs { get; private set; }
 
         public DirectoryInfo Configs { get; private set; }
 
         public DirectoryInfo Data { get; private set; }
-
-        public bool UseConsulConfig => !string.IsNullOrWhiteSpace(Consul?.Name);
 
         public void SaveData(ISettings settings)
         {

@@ -40,10 +40,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Consul, Version=0.5.2.65, Culture=neutral, PublicKeyToken=20a6ad9a81df1d95, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Consul.0.5.2.65\lib\net45\Consul.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -65,8 +61,6 @@
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="ConfigManagement\ConfigElement.cs" />
-    <Compile Include="ConfigManagement\ConfigLoader.cs" />
-    <Compile Include="ConfigManagement\ConsulConfig.cs" />
     <Compile Include="ConfigManagement\ConfigManager.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Misc\DirectoryInfoConverter.cs" />
@@ -74,7 +68,6 @@
     <Compile Include="IConfigAware.cs" />
     <Compile Include="ConfigManagement\ValidationError.cs" />
     <Compile Include="ConfigManagement\ValidationResult.cs" />
-    <Compile Include="ConsulConfigSettings.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="LogManagement\LoggingExtensions.cs" />
     <Compile Include="Run.cs" />

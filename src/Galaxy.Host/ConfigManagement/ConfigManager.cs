@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Consul;
 using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.Host.ConfigManagement
@@ -18,14 +17,8 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             }
 
             HostConfig hostConfig = service.HostConfig;
-            if (hostConfig.UseConsulConfig)
-            {
-                LoadConsulConfig(service, configAware, hostConfig.Consul);
-            }
-            else
-            {
-                LoadFileConfig(service, configAware, hostConfig);
-            }
+
+            LoadFileConfig(service, configAware, hostConfig);
         }
 
         private static Type ConfigAware(IService service)
@@ -35,31 +28,6 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
                 .GetInterfaces()
                 .SingleOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IConfigAware<>));
             return configAware;
-        }
-
-        private static void LoadConsulConfig(IService service, Type consulAware, ConsulConfigSettings consulSettings)
-        {
-            Type configType = GetConfigType(consulAware);
-
-            var clientConfig = new ConsulClientConfiguration();
-            if (!string.IsNullOrWhiteSpace(consulSettings.Address))
-            {
-                clientConfig.Address = consulSettings.Address;
-            }
-
-            var client = new Client(clientConfig);
-            var loader = new ConfigLoader(client);
-            var config = new ConsulConfig(configType, loader, consulSettings.Name);
-
-            config.Load();
-
-            if (!config.ValidationResult.IsValid)
-            {
-                throw new InvalidOperationException(config.ValidationResult.ToString());
-            }
-
-            var serviceConfig = config.BuildConfig();
-            ProvideConfigToService(service, consulAware, serviceConfig);
         }
 
         private static void LoadFileConfig(IService service, Type consulAware, HostConfig hostConfig)
