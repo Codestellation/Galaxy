@@ -70,8 +70,6 @@ namespace Codestellation.Galaxy.ServiceManager
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
-                .SetValue(DeploymentTaskContext.ConsulAddress, _options.ConsulAddress)
-                .SetValue(DeploymentTaskContext.ConsulName, deployment.ConsulName)
                 .SetValue(DeploymentTaskContext.Folders, deployment.ServiceFolders.HostFolders.ToArray());
 
             return new DeploymentTask(context);

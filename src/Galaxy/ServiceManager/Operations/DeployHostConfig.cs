@@ -19,12 +19,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             dynamic hostConfig = new ExpandoObject();
 
-            hostConfig.Consul = new
-            {
-                Name = context.GetValue<string>(DeploymentTaskContext.ConsulName),
-                Address = context.GetValue<string>(DeploymentTaskContext.ConsulAddress)
-            };
-
             foreach (var folder in context.GetValue<SpecialFolder[]>(DeploymentTaskContext.Folders))
             {
                 ((IDictionary<string, object>)hostConfig)[folder.Purpose] = folder.FullPath;

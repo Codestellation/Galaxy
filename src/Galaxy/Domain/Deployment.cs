@@ -19,8 +19,6 @@ namespace Codestellation.Galaxy.Domain
         public Version PackageVersion { get; set; }
         public FileList KeepOnUpdate { get; set; }
 
-        public string ConsulName { get; set; }
-
         public Deployment()
         {
             ServiceFolders = new SpecialFolderDictionary();
@@ -33,12 +31,7 @@ namespace Codestellation.Galaxy.Domain
         public string GetServiceName()
         {
             //NOTE: instance name may change. Do not cache it
-            if (string.IsNullOrWhiteSpace(InstanceName))
-            {
-                return PackageId;
-            }
-
-            return string.Format("{0}${1}", PackageId, InstanceName);
+            return string.IsNullOrWhiteSpace(InstanceName) ? PackageId : $"{PackageId}${InstanceName}";
         }
 
         public string GetDisplayName()
@@ -46,7 +39,7 @@ namespace Codestellation.Galaxy.Domain
             var result = PackageId;
             if (!string.IsNullOrWhiteSpace(InstanceName))
             {
-                result += string.Format("{0} (Instance: {1})", result, InstanceName);
+                result += $"{result} (Instance: {InstanceName})";
             }
             return result;
         }
@@ -79,9 +72,6 @@ namespace Codestellation.Galaxy.Domain
             return controller.Status.ToString();
         }
 
-        public string GetServiceHostFileName()
-        {
-            return string.Format("{0}.exe", PackageId);
-        }
+        public string GetServiceHostFileName() => $"{PackageId}.exe";
     }
 }

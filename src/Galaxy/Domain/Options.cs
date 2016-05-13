@@ -16,8 +16,6 @@ namespace Codestellation.Galaxy.Domain
 
         public int PurgeLogsOlderThan { get; set; }
 
-        public string ConsulAddress { get; set; }
-
         public string GetDeployFolder()
         {
             if (string.IsNullOrWhiteSpace(RootDeployFolder))

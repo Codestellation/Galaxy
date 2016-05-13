@@ -14,7 +14,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             DeployFolder = options.RootDeployFolder;
             PurgeLogsOlderThan = options.PurgeLogsOlderThan;
-            ConsulAddress = options.ConsulAddress;
 
             ConfigsFolder = options.FolderOptions.Configs;
             LogsFolder = options.FolderOptions.Logs;
@@ -43,7 +42,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         {
             options.RootDeployFolder = DeployFolder;
             options.PurgeLogsOlderThan = PurgeLogsOlderThan;
-            options.ConsulAddress = ConsulAddress;
 
             options.FolderOptions.Configs = ConfigsFolder;
             options.FolderOptions.Logs = LogsFolder;

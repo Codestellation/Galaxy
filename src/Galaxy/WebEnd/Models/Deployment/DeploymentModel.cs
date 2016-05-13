@@ -17,8 +17,6 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
         public string PackageId { get; set; }
         public Version PackageVersion { get; set; }
 
-        public string ConsulName { get; set; }
-
         public string Status { get; set; }
 
         public IEnumerable<KeyValuePair<Version, string>> PackageVersions { get; }
@@ -52,9 +50,6 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             State = deployment.GetServiceState();
 
             Group = deployment.Group;
-
-            ConsulName = deployment.ConsulName;
-
             Folders = deployment.ServiceFolders.ToDictionary(x => x.Key, x => x.Value.FullPath);
         }
 
