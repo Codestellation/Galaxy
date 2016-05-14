@@ -30,27 +30,27 @@ namespace Codestellation.Galaxy.ServiceManager.Events
 
         public void Handle(InstallServiceEvent message)
         {
-            BuildAndProcess(message.DeploymentId, (d, f) => _builder.InstallServiceTask(d, f));
+            BuildAndProcess(message.DeploymentId, (d, f) => _builder.InstallServiceTask(d));
         }
 
         public void Handle(UninstallServiceEvent message)
         {
-            BuildAndProcess(message.DeploymentId, (d, f) => _builder.UninstallServiceTask(d, f));
+            BuildAndProcess(message.DeploymentId, (d, f) => _builder.UninstallServiceTask(d));
         }
 
         public void Handle(StartServiceEvent message)
         {
-            BuildAndProcess(message.DeploymentId, (d, f) => _builder.StartServiceTask(d, f));
+            BuildAndProcess(message.DeploymentId, (d, f) => _builder.StartServiceTask(d));
         }
 
         public void Handle(StopServiceEvent message)
         {
-            BuildAndProcess(message.DeploymentId, (d, f) => _builder.StopServiceTask(d, f));
+            BuildAndProcess(message.DeploymentId, (d, f) => _builder.StopServiceTask(d));
         }
 
         public void Handle(DeleteDeploymentEvent message)
         {
-            BuildAndProcess(message.DeploymentId, (d, f) => _builder.DeleteDeploymentTask(d, f));
+            BuildAndProcess(message.DeploymentId, (d, f) => _builder.DeleteDeploymentTask(d));
         }
 
         public void Handle(DeployServiceEvent message)

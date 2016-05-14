@@ -12,13 +12,11 @@ namespace Codestellation.Galaxy.ServiceManager
     {
         private readonly OperationBuilder _operations;
         private readonly IPublisher _publisher;
-        private readonly Options _options;
 
-        public TaskBuilder(OperationBuilder operationBuilder, IPublisher publisher, Options options)
+        public TaskBuilder(OperationBuilder operationBuilder, IPublisher publisher)
         {
             _operations = operationBuilder;
             _publisher = publisher;
-            _options = options;
         }
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -32,20 +30,20 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.StartService(deployment));
         }
 
-        public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
+        public DeploymentTask InstallServiceTask(Deployment deployment)
         {
             return CreateDeployTask("InstallService", deployment)
                 .Add(_operations.InstallService(deployment));
         }
 
-        public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed deploymentFeed)
+        public DeploymentTask UninstallServiceTask(Deployment deployment)
         {
             return CreateDeployTask("UninstallService", deployment)
                 .Add(_operations.StopService(deployment, true))
                 .Add(_operations.UninstallService(deployment));
         }
 
-        public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed deploymentFeed)
+        public DeploymentTask StartServiceTask(Deployment deployment)
         {
             var startServiceTask = CreateDeployTask("StartService", deployment)
                 .Add(_operations.StartService(deployment));
@@ -53,7 +51,7 @@ namespace Codestellation.Galaxy.ServiceManager
             return startServiceTask;
         }
 
-        public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed deploymentFeed)
+        public DeploymentTask StopServiceTask(Deployment deployment)
         {
             return CreateDeployTask("StopService", deployment)
                 .Add(_operations.StopService(deployment, false));
@@ -80,7 +78,7 @@ namespace Codestellation.Galaxy.ServiceManager
             var deployLogFolder = deployment.GetDeployLogFolder();
             Folder.EnsureExists(deployLogFolder);
 
-            var filename = string.Format("{0}.{1:yyyy-MM-dd_HH.mm.ss}.log", name, Clock.UtcNow.ToLocalTime());
+            var filename = $"{name}.{Clock.UtcNow.ToLocalTime():yyyy-MM-dd_HH.mm.ss}.log";
             var fullPath = Path.Combine(deployLogFolder, filename);
             var defaultStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
             return defaultStream;
@@ -95,7 +93,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.RestoreFrom(deployment, backupFolder));
         }
 
-        public DeploymentTask DeleteDeploymentTask(Deployment deployment, NugetFeed deploymentFeed)
+        public DeploymentTask DeleteDeploymentTask(Deployment deployment)
         {
             return CreateDeployTask("DeleteDeployment", deployment, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it!
                 .Add(_operations.StopService(deployment, skipIfNotFound: true))
