@@ -218,7 +218,9 @@ var nuGetPackSettings   = new NuGetPackSettings {
     Copyright               = copyright,
     Tags                    = new [] {"Windows", "Service", "Hosting"},
     BasePath                = serviceBuildPath,
+    Files                   = new [] { new NuSpecContent {Source = "*.dll;*.exe;*.config;*.pdb", Target = ""}},
     OutputDirectory         = "./nuget"
+    
 };
 
 NuGetPack("./src/Galaxy/galaxy.nuspec", nuGetPackSettings);
