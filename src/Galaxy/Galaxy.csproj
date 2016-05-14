@@ -249,6 +249,7 @@
     <Compile Include="ServiceManager\Operations\DeleteFolders.cs" />
     <Compile Include="ServiceManager\Events\DeploymentDeletedEvent.cs" />
     <Compile Include="ServiceManager\Events\DeploymentDeletedHandler.cs" />
+    <Compile Include="ServiceManager\Operations\EnsureFolders.cs" />
     <Compile Include="ServiceManager\Operations\PublishDeploymentDeleted.cs" />
     <Compile Include="ServiceManager\Events\DeleteDeploymentEvent.cs" />
     <Compile Include="ServiceManager\Events\DeployServiceEvent.cs" />
