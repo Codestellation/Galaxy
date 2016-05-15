@@ -13,7 +13,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public OptionsModel(Options options)
         {
             DeployFolder = options.RootDeployFolder;
-            PurgeLogsOlderThan = options.PurgeLogsOlderThan;
 
             ConfigsFolder = options.FolderOptions.Configs;
             LogsFolder = options.FolderOptions.Logs;
@@ -22,12 +21,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
 
         [Display(Name = "Applications Folder", Prompt = "Path. Leave blank to use default")]
         public string DeployFolder { get; set; }
-
-        [Display(Name = "Purge log older then", Prompt = "days")]
-        public int PurgeLogsOlderThan { get; set; }
-
-        [Display(Name = "Consul Address", Prompt = "host:port Leave blank to use default")]
-        public string ConsulAddress { get; set; }
 
         [Display(Name = "Configurations Folder")]
         public string ConfigsFolder { get; set; }
@@ -41,7 +34,6 @@ namespace Codestellation.Galaxy.WebEnd.Models
         public void Update(Options options)
         {
             options.RootDeployFolder = DeployFolder;
-            options.PurgeLogsOlderThan = PurgeLogsOlderThan;
 
             options.FolderOptions.Configs = ConfigsFolder;
             options.FolderOptions.Logs = LogsFolder;
