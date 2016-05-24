@@ -13,14 +13,10 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
         private const string TestPackageId = "TestNugetPackage";
 
         private string _nugetFeedFolder;
-        private Repository _repository;
 
         [SetUp]
         public void CreateFeed()
         {
-            _repository = new Repository();
-            _repository.Start();
-
             _nugetFeedFolder = Path.Combine(Environment.CurrentDirectory, "testnuget");
 
             Folder.EnsureDeleted(_nugetFeedFolder);
@@ -46,7 +42,6 @@ namespace Codestellation.Galaxy.Tests.InfrastructureTests
         public void Cleanup()
         {
             Directory.Delete(_nugetFeedFolder, true);
-            _repository.Dispose();
         }
     }
 }
