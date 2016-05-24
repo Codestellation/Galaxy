@@ -1,49 +1,52 @@
 ﻿using System;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Codestellation.Galaxy.Configuration;
+using Codestellation.Galaxy.Host;
+using Codestellation.Galaxy.Host.ConfigManagement;
 using Codestellation.Galaxy.WebEnd.Bootstrap;
 using Microsoft.Owin.Hosting;
 
 namespace Codestellation.Galaxy
 {
-    public class Service
+    public class Service : IService, IConfigAware<ServiceConfig>
     {
         private IDisposable _owinHost;
-        private readonly string _uriString;
+        private string _uriString;
         private WindsorContainer _container;
 
-        public Service(ServiceConfig configuration)
+        public HostConfig HostConfig { get; set; }
+
+        public ValidationResult Accept(ServiceConfig config)
         {
-            _uriString = string.Format("http://*:{0}", configuration.WebPort);
+            var result = new ValidationResult();
+            if (config.WebPort == 0)
+            {
+                var error = new ValidationError(nameof(ServiceConfig.WebPort), $"Should be between 1 and {ushort.MaxValue}");
+                result.AddError(error);
+                return result;
+            }
+            _uriString = $"http://*:{config.WebPort}";
+            return result;
         }
 
         public void Start()
         {
             _container = new WindsorContainer();
             _container.Install(FromAssembly.This());
-
-            //TODO: May throw such exception (at least on my windows 8.1 pro). Investigation needed.
-
-            //The Nancy self host was unable to start, as no namespace reservation existed for the provided url(s).
-            //Please either enable UrlReservations.CreateAutomatically on the HostConfiguration provided to
-            //the NancyHost, or create the reservations manually with the (elevated) command(s):
-            //netsh http add urlacl url=http://+/ user=Everyone
-            //On russian machines this command could look like this:
-            //netsh http add urlacl url=http://+:80/ user=Все
-
-            //more information http://msdn.microsoft.com/en-us/library/ms733768.aspx and https://github.com/NancyFx/Nancy/wiki/Self-Hosting-Nancy
+            _container.Register(
+                Component
+                    .For<HostConfig>()
+                    .Instance(HostConfig));
 
             _owinHost = WebApp.Start(_uriString, builder => OwinStartup.Configure(builder, _container));
         }
 
         public void Stop()
         {
-            if (_owinHost != null)
-            {
-                _owinHost.Dispose();
-            }
-            _container.Dispose();
+            _owinHost?.Dispose();
+            _container?.Dispose();
         }
     }
 }

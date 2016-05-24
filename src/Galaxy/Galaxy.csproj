@@ -50,10 +50,10 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="data\config.json">
+    <None Include="configs\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="data\NLog.config">
+    <Content Include="configs\NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="NLog.xsd">
@@ -405,7 +405,12 @@
   <ItemGroup>
     <EmbeddedResource Include="WebEnd\Static\scripts\jquery.validate.bootstrap.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Galaxy.Host\Galaxy.Host.csproj">
+      <Project>{459DF6FD-3F74-41B2-86F0-99C4B897FA67}</Project>
+      <Name>Galaxy.Host</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
