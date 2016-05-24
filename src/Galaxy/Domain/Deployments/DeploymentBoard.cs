@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Codestellation.Galaxy.Host;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Quarks.IO;
 using Nejdb;
 using Nejdb.Bson;
 
@@ -11,12 +11,14 @@ namespace Codestellation.Galaxy.Domain.Deployments
     public class DeploymentBoard
     {
         private readonly Options _options;
+        private readonly HostConfig _config;
         private readonly Dictionary<ObjectId, Deployment> _deployments;
         private readonly Collection _deploymentCollection;
 
-        public DeploymentBoard(Repository repository, Options options)
+        public DeploymentBoard(Repository repository, Options options, HostConfig config)
         {
             _options = options;
+            _config = config;
             _deploymentCollection = repository.GetCollection<Deployment>();
             _deployments = new Dictionary<ObjectId, Deployment>();
 
@@ -78,18 +80,7 @@ namespace Codestellation.Galaxy.Domain.Deployments
             var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, deployFolderPath);
             serviceFolders.Add(specialFolder);
 
-            BuildServiceFolder(deployment, SpecialFolderDictionary.DeployLogsFolder, "BuildLogs");
-            BuildServiceFolder(deployment, SpecialFolderDictionary.FileOverrides, "FileOverrides");
-            BuildServiceFolder(deployment, SpecialFolderDictionary.BackupFolder, "Backups");
-
             BuildFolders(deployment);
-        }
-
-        private void BuildServiceFolder(Deployment deployment, string purpose, string subfolder)
-        {
-            var fullPath = Folder.Combine(Folder.BasePath, deployment.Id.ToString(), subfolder);
-            var folder = new SpecialFolder(purpose, fullPath);
-            deployment.ServiceFolders.Add(folder);
         }
 
         public void SaveDeployment(Deployment deployment)
@@ -105,6 +96,8 @@ namespace Codestellation.Galaxy.Domain.Deployments
         {
             string subFolder = BuildSubfolder(deployment);
 
+            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.DeployLogsFolder, Path.Combine(_config.Logs.FullName, "deploy-logs", subFolder)));
+            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.BackupFolder, Path.Combine(_config.Data.FullName, "backups", subFolder)));
             deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Logs, Path.Combine(_options.FolderOptions.Logs, subFolder)));
             deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Configs, Path.Combine(_options.FolderOptions.Configs, subFolder)));
             deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Data, Path.Combine(_options.FolderOptions.Data, subFolder)));
