@@ -218,7 +218,7 @@ var nuGetPackSettings   = new NuGetPackSettings {
     Copyright               = copyright,
     Tags                    = new [] {"Windows", "Service", "Hosting"},
     BasePath                = serviceBuildPath,
-    Files                   = new [] { new NuSpecContent {Source = "*.dll;*.exe;*.config;*.pdb", Target = ""}},
+    Files                   = new [] { new NuSpecContent {Source = "*.dll;*.exe;*.config;*.pdb;*.ps1", Target = ""}},
     OutputDirectory         = "./nuget"
     
 };
