@@ -95,6 +95,7 @@ namespace Codestellation.Galaxy.Infrastructure
                 Folder.EnsureExists(_dataFoler.FullName);
                 Directory.Move(oldFolder, newFolder);
             }
+            Folder.EnsureExists(newFolder);
             var dbPath = Path.Combine(newFolder, databaseName);
             Logger.Debug("Path to database: {0}", dbPath);
             return dbPath;
