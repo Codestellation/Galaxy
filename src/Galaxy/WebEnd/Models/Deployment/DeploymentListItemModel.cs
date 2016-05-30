@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nejdb.Bson;
@@ -12,13 +13,16 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             Group = deployment.Group;
             Status = deployment.Status;
             DisplayName = deployment.GetDisplayName();
-            FeedName = allFeeds.SingleOrDefault(x =>  x.Key == deployment.FeedId).Value;
+            Version packageVersion = deployment.PackageVersion;
+            PackageVersion = packageVersion?.ToString() ?? "n/a";
+            FeedName = allFeeds.SingleOrDefault(x => x.Key == deployment.FeedId).Value;
         }
 
         public ObjectId Id { get; set; }
 
         public string Group { get; set; }
         public string DisplayName { get; set; }
+        public string PackageVersion { get; set; }
         public string FeedName { get; set; }
         public string Status { get; set; }
     }
