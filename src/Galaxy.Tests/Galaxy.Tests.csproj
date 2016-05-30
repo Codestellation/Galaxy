@@ -103,10 +103,6 @@
     <Compile Include="Content\TestPackages.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\ClearBinariesTests.cs" />
     <Compile Include="DeploymentAndOperations\OperationsTests\InstallPackageTests.cs" />
-    <Compile Include="Host\ConfigManagement\ConfigElementTests.cs" />
-    <Compile Include="Host\ConfigManagement\SampleConfig.cs" />
-    <Compile Include="Host\ConfigManagement\SampleService.cs" />
-    <Compile Include="Host\ConfigManagement\Test.cs" />
     <Compile Include="InfrastructureTests\PackageBoardTests.cs" />
     <Compile Include="Maintenance\CleanUpLogTests.cs" />
     <Compile Include="ScratchPad.cs" />
@@ -143,14 +139,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebEnd\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="consulx.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

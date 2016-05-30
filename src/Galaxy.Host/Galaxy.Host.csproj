@@ -61,7 +61,6 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="ConfigManagement\ConfigElement.cs" />
     <Compile Include="ConfigManagement\ConfigManager.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Misc\DirectoryInfoConverter.cs" />
