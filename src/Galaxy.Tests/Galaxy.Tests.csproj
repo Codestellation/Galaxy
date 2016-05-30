@@ -54,10 +54,6 @@
       <HintPath>..\..\packages\Codestellation.Pulsar.0.2.28.54\lib\portable-net451+win81+wpa81\Codestellation.Pulsar.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CsQuery, Version=1.3.3.249, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CsQuery.1.3.4\lib\net40\CsQuery.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Nancy, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Nancy.1.2.0\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
