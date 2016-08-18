@@ -18,6 +18,13 @@ namespace Codestellation.Galaxy
 
         public HostConfig HostConfig { get; set; }
 
+        public bool CanGetSample => true;
+
+        public ServiceConfig GetSample()
+        {
+            return new ServiceConfig { WebPort = 8088 };
+        }
+
         public ValidationResult Accept(ServiceConfig config)
         {
             var result = new ValidationResult();

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Codestellation.Galaxy.Host.ConfigManagement
 {
@@ -68,6 +69,21 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
         {
             var configType = consulAware.GenericTypeArguments[0];
             return configType;
+        }
+
+        public static string GetSample(IService service)
+        {
+            Type configAware = ConfigAware(service);
+            dynamic dynService = service;
+            if (configAware != null && dynService.CanGetSample)
+            {
+                object sample = dynService.GetSample();
+
+                JObject jSample = JObject.FromObject(sample);
+
+                return jSample.ToString(Formatting.Indented);
+            }
+            return "{}";
         }
     }
 }

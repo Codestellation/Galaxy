@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Codestellation.Galaxy.Host.LogManagement;
+using Codestellation.Galaxy.Host.Misc;
 using Topshelf;
 using Topshelf.Logging;
 
@@ -10,23 +11,50 @@ namespace Codestellation.Galaxy.Host
 {
     public static class Run
     {
+        private static ServiceProxy _serviceProxy;
+        private static bool _startService = true;
+
         public static int Service<TService>()
             where TService : IService, new()
         {
             Type serviceType = typeof(TService);
 
+            _serviceProxy = new ServiceProxy(serviceType);
+
+            ProcessCustomCommand();
+
+            if (!_startService)
+            {
+                return 0;
+            }
+
+            TopshelfExitCode code = RunServiceNormally<TService>(serviceType);
+
+            HostLogger.Shutdown();
+            return (int)code;
+        }
+
+        public static void ProcessCustomCommand()
+        {
+            if (Environment.GetCommandLineArgs().Contains("config-sample"))
+            {
+                string sample = _serviceProxy.GetConfigSample();
+
+                Console.Out.WriteLine(sample);
+                _startService = false;
+            }
+        }
+
+        private static TopshelfExitCode RunServiceNormally<TService>(Type serviceType) where TService : IService, new()
+        {
             TopshelfExitCode code = HostFactory.Run(x =>
             {
-                var hostConfig = HostConfig.Load();
-                hostConfig.Validate();
-
-                x.InitializeLoggers(serviceType.Assembly, hostConfig.Configs);
-
-                LogVersions();
+                x.InitializeLoggers(serviceType.Assembly, _serviceProxy.HostConfig.Configs);
+                VersionLogger.LogVersions();
 
                 x.Service<ServiceProxy>(s =>
                 {
-                    s.ConstructUsing(name => new ServiceProxy(serviceType, hostConfig));
+                    s.ConstructUsing(name => _serviceProxy);
                     s.WhenStarted(StartService);
                     s.WhenStopped(tc => tc.Stop());
                     s.WhenShutdown(tc => tc.Stop());
@@ -42,22 +70,7 @@ namespace Codestellation.Galaxy.Host
                 x.SetDisplayName(serviceName.Replace('.', ' '));
                 x.SetDescription(GetServiceDescription(serviceAssembly));
             });
-
-            HostLogger.Shutdown();
-            return (int)code;
-        }
-
-        private static void LogVersions()
-        {
-            var logWriter = HostLogger.Get(typeof(Run));
-
-            var hostVersion = GetVersion(Assembly.GetExecutingAssembly());
-            var hostVersionMessage = string.Format("Host version: {0}", hostVersion);
-            logWriter.Info(hostVersionMessage);
-
-            var serviceVersion = GetVersion(Assembly.GetEntryAssembly());
-            var serviceVersionMessage = string.Format("Service version: {0}", serviceVersion);
-            logWriter.Info(serviceVersionMessage);
+            return code;
         }
 
         private static bool StartService(ServiceProxy service, HostControl hostControl)
@@ -97,34 +110,7 @@ namespace Codestellation.Galaxy.Host
 
         private static string GetServiceDescription(Assembly assembly)
         {
-            var description = GetAttribute<AssemblyDescriptionAttribute>(assembly);
-
-            return description == null ? null : description.Description;
-        }
-
-        private static string GetVersion(Assembly assembly)
-        {
-            var info = GetAttribute<AssemblyInformationalVersionAttribute>(assembly);
-
-            if (info != null)
-            {
-                return info.InformationalVersion;
-            }
-
-            var version = GetAttribute<AssemblyVersionAttribute>(assembly);
-            if (version != null)
-            {
-                return version.Version;
-            }
-            return "Unknown";
-        }
-
-        private static T GetAttribute<T>(Assembly assembly)
-        {
-            return assembly
-                .GetCustomAttributes(typeof(T), false)
-                .Cast<T>()
-                .FirstOrDefault();
+            return assembly.GetAttribute<AssemblyDescriptionAttribute>()?.Description;
         }
     }
 }
