@@ -248,8 +248,12 @@
     <Compile Include="Domain\Notifications\OperationProgressNotification.cs" />
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
+    <Compile Include="ServiceManager\ConfigSampleReceived.cs" />
+    <Compile Include="ServiceManager\Events\ConfigSampleReceivedHandler.cs" />
     <Compile Include="ServiceManager\Events\ServiceEventsHandler.cs" />
     <Compile Include="Boostrapping\BoardInstaller.cs" />
+    <Compile Include="ServiceManager\GetConfigSample.cs" />
+    <Compile Include="ServiceManager\Helpers\ExecutionResult.cs" />
     <Compile Include="ServiceManager\Operations\DeleteFolders.cs" />
     <Compile Include="ServiceManager\Events\DeploymentDeletedEvent.cs" />
     <Compile Include="ServiceManager\Events\DeploymentDeletedHandler.cs" />

@@ -95,5 +95,12 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             return new EnsureFolders();
         }
+
+        public IOperation GetConfigSample(Deployment deployment)
+        {
+            var hostFileName = deployment.GetServiceHostFileName();
+            var serviceFolder = deployment.GetDeployFolder();
+            return new GetConfigSample(serviceFolder, hostFileName);
+        }
     }
 }

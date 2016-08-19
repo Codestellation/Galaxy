@@ -19,6 +19,10 @@ namespace Codestellation.Galaxy.Domain
         public Version PackageVersion { get; set; }
         public FileList KeepOnUpdate { get; set; }
 
+        public string ConfigSample { get; set; }
+
+        public string Config { get; set; }
+
         public Deployment()
         {
             ServiceFolders = new SpecialFolderDictionary();

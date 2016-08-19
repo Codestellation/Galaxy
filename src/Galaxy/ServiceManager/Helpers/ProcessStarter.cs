@@ -1,15 +1,15 @@
 ﻿using System;
-
+using System.Diagnostics;
 
 namespace Codestellation.Galaxy.ServiceManager.Helpers
 {
     public class ProcessStarter
     {
-        public static string ExecuteWithParams(string exePath, string exeParams, out string error)
+        public static ExecutionResult ExecuteWithParams(string exePath, string exeParams, bool throwOnError = true)
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             startInfo.FileName = exePath;
             startInfo.Arguments = exeParams;
             startInfo.Verb = "runas";
@@ -19,20 +19,21 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             process.StartInfo = startInfo;
             process.Start();
             var output = process.StandardOutput.ReadToEnd();
-            error = process.StandardError.ReadToEnd();
+            var error = process.StandardError.ReadToEnd();
 
             process.WaitForExit();
 
-            if (process.ExitCode != 0)
+            if (process.ExitCode != 0 && throwOnError)
             {
                 ThrowExecuteIOPException(exePath, exeParams, process.ExitCode, output);
             }
-            return output;
+
+            return new ExecutionResult(process.ExitCode, output, error);
         }
 
         private static void ThrowExecuteIOPException(string exePath, string exeParams, int resultCode, string output)
         {
-            var message = string.Format("execution of {0} with params {1} returned {2} with output {3}", exePath, exeParams, resultCode, output);
+            var message = $"execution of {exePath} with params {exeParams} returned {resultCode} with output {output}";
             throw new InvalidOperationException(message);
         }
     }

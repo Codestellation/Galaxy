@@ -19,9 +19,13 @@ namespace Codestellation.Galaxy.WebEnd.Misc
             return BuildFormControlInput(htmlHelper, property, input);
         }
 
-        public static IHtmlString LabeledTextArea<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
+        public static IHtmlString LabeledTextArea<TModel, TProperty>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property, bool readOnly = false)
         {
             Tag input = Tags.TextArea();
+            if (readOnly)
+            {
+                input.Readonly();
+            }
 
             return BuildFormControlInput(htmlHelper, property, input);
         }

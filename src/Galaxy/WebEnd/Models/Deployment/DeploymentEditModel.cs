@@ -26,6 +26,12 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
         [Display(Name = "Keep on update", Prompt = "files, folders, allowed file masks")]
         public string KeepOnUpdate { get; set; }
 
+        [Display(Name = "Service config", Prompt = "Should be valid json represents configuration")]
+        public string Config { get; set; }
+
+        [Display(Name = "Config sample")]
+        public string ConfigSample { get; set; }
+
         public DeploymentEditModel()
         {
         }
@@ -42,6 +48,9 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             KeepOnUpdate = (deployment.KeepOnUpdate ?? new FileList(new string[0])).ToString();
 
             Group = deployment.Group;
+
+            ConfigSample = deployment.ConfigSample;
+            Config = deployment.Config ?? deployment.ConfigSample;
         }
 
         public Domain.Deployment ToDeployment()
@@ -62,6 +71,7 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             deployment.PackageId = PackageId;
             deployment.Group = Group;
             deployment.KeepOnUpdate = (FileList)KeepOnUpdate;
+            deployment.Config = Config;
         }
     }
 }

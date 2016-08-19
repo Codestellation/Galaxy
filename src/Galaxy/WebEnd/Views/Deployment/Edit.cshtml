@@ -13,6 +13,8 @@
   @Html.LabeledTextBox(x => x.PackageId)
   @Html.LabeledTextBox(x => x.Group)
   @Html.LabeledTextBox(x => x.InstanceName)
+  @Html.LabeledTextArea(x => x.ConfigSample, readOnly:true)
+  @Html.LabeledTextArea(x => x.Config)
   @Html.LabeledTextArea(x => x.KeepOnUpdate)
 
 

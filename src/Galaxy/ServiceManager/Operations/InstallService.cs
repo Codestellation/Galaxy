@@ -26,13 +26,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, CommandLineArguments);
 
-            string error;
-            var result = ProcessStarter.ExecuteWithParams(exePath, CommandLineArguments, out error);
+            var result = ProcessStarter.ExecuteWithParams(exePath, CommandLineArguments);
 
             context.BuildLog.WriteLine("Exe output:");
-            context.BuildLog.WriteLine(result);
+            context.BuildLog.WriteLine(result.StdOut);
             context.BuildLog.WriteLine("Exe error:");
-            context.BuildLog.WriteLine(error);
+            context.BuildLog.WriteLine(result.StdError);
         }
 
         private string CommandLineArguments

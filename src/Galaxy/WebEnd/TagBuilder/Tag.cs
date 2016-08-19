@@ -1,15 +1,15 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using Nancy.ViewEngines.Razor;
+﻿using System.Collections.Generic;
+using System.IO;
 using Codestellation.Galaxy.WebEnd.TagBuilder.Attributes;
+using Nancy.ViewEngines.Razor;
 
 namespace Codestellation.Galaxy.WebEnd.TagBuilder
 {
     public class Tag : IHtmlString
     {
         private readonly string _name;
-        private Dictionary<string, HtmlAttribute> _attributes;
-        private List<object> _contents;
+        private readonly Dictionary<string, HtmlAttribute> _attributes;
+        private readonly List<object> _contents;
 
         public Tag(string name)
         {
@@ -128,6 +128,11 @@ namespace Codestellation.Galaxy.WebEnd.TagBuilder
         public virtual Tag Value<TValue>(TValue value)
         {
             return SetAttribute(HtmlAttribute.CreateValue(value));
+        }
+
+        public virtual Tag Readonly()
+        {
+            return SetAttribute(HtmlAttribute.Readonly);
         }
 
         protected Tag SetAttribute(HtmlAttribute attribute)

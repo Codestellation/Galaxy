@@ -39,12 +39,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
 
-            string error = "";
-            string result = "";
+            ExecutionResult result = null;
+            string handledResult = null;
 
             try
             {
-                result = ProcessStarter.ExecuteWithParams(exePath.FullName, exeParams, out error);
+                result = ProcessStarter.ExecuteWithParams(exePath.FullName, exeParams);
             }
             catch (Win32Exception ex)
             {
@@ -53,14 +53,14 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                     throw;
                 }
 
-                TryHandle(ex, out result);
+                TryHandle(ex, out handledResult);
             }
 
             context.BuildLog.WriteLine("Exe output:");
             context.BuildLog.WriteLine(result);
 
             context.BuildLog.WriteLine("Exe error:");
-            context.BuildLog.WriteLine(error);
+            context.BuildLog.WriteLine(handledResult ?? result?.StdError);
         }
 
         private void TryHandle(Win32Exception ex, out string result)
