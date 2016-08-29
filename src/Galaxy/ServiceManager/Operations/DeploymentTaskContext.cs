@@ -14,6 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public const string PublisherKey = "PublisherKey";
         public const string LogStream = "LogStream";
 
+        public const string Config = "Config";
         public const string Folders = "Folders";
 
         public readonly TextWriter BuildLog;

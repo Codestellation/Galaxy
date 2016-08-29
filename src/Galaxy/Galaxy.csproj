@@ -249,6 +249,7 @@
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
     <Compile Include="ServiceManager\ConfigSampleReceived.cs" />
+    <Compile Include="ServiceManager\Operations\DeployServiceConfig.cs" />
     <Compile Include="ServiceManager\Events\ConfigSampleReceivedHandler.cs" />
     <Compile Include="ServiceManager\Events\ServiceEventsHandler.cs" />
     <Compile Include="Boostrapping\BoardInstaller.cs" />

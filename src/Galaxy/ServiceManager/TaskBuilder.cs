@@ -29,6 +29,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
                 .Add(_operations.GetConfigSample(deployment))
                 .Add(_operations.DeployConsulConfig(deployment))
+                .Add(_operations.DeployServiceConfig(deployment))
                 .Add(_operations.StartService(deployment));
         }
 
@@ -70,7 +71,8 @@ namespace Codestellation.Galaxy.ServiceManager
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
-                .SetValue(DeploymentTaskContext.Folders, deployment.ServiceFolders.HostFolders.ToArray());
+                .SetValue(DeploymentTaskContext.Folders, deployment.ServiceFolders.HostFolders.ToArray())
+                .SetValue(DeploymentTaskContext.Config, deployment.Config);
 
             return new DeploymentTask(context);
         }
