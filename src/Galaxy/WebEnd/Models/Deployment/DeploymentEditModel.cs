@@ -50,7 +50,7 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             Group = deployment.Group;
 
             ConfigSample = deployment.ConfigSample;
-            Config = deployment.Config ?? deployment.ConfigSample;
+            Config = deployment.Config;
         }
 
         public Domain.Deployment ToDeployment()
