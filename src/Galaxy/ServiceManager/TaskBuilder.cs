@@ -27,8 +27,8 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.ClearBinaries(deployment))
                 .Add(_operations.EnsureFolders())
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
+                .Add(_operations.DeployHostConfig(deployment))
                 .Add(_operations.GetConfigSample(deployment))
-                .Add(_operations.DeployConsulConfig(deployment))
                 .Add(_operations.DeployServiceConfig(deployment))
                 .Add(_operations.StartService(deployment));
         }
