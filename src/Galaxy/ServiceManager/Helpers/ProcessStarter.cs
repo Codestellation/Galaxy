@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Helpers
 {
@@ -11,6 +12,7 @@ namespace Codestellation.Galaxy.ServiceManager.Helpers
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             startInfo.FileName = exePath;
+            startInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
             startInfo.Arguments = exeParams;
             startInfo.Verb = "runas";
             startInfo.UseShellExecute = false;
