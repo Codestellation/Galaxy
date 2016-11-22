@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using NuGet;
 
 namespace Codestellation.Galaxy.Infrastructure
@@ -13,7 +14,7 @@ namespace Codestellation.Galaxy.Infrastructure
             {
                 return new Version[0];
             }
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             var repo = PackageRepositoryFactory.Default.CreateRepository(source);
 
             var versions = repo
