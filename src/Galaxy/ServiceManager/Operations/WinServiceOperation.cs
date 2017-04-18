@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.ServiceProcess;
+using NLog;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -11,14 +11,26 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
     public abstract class WinServiceOperation : IOperation
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected readonly string ServiceName;
         private readonly ServiceController _controller;
 
         public WinServiceOperation(string serviceName)
         {
             ServiceName = serviceName;
-            ServiceController[] services = ServiceController.GetServices();
-            _controller = services.SingleOrDefault(item => item.ServiceName == ServiceName);
+            ServiceController[] candidates = ServiceController.GetServices();
+            Logger.Debug("Looking for service '{0}'", serviceName);
+            foreach (ServiceController candidate in candidates)
+            {
+                var found = candidate.ServiceName.Equals(serviceName, StringComparison.Ordinal);
+                Logger.Debug("Checking '{0}' is {1}", candidate.ServiceName, found);
+                if (found)
+                {
+                    Logger.Debug("Service found");
+                    _controller = candidate;
+                    break;
+                }
+            }
         }
 
         protected bool IsServiceExists()
@@ -32,7 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             if (_controller == null)
             {
-                var message = string.Format("Service '{0}' not found", ServiceName);
+                var message = $"Service '{ServiceName}' not found";
 
                 if (SkipIfNotFound)
                 {
