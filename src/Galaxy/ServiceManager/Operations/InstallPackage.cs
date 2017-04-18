@@ -86,6 +86,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                     File.Delete(destination);
                 }
 
+                var info = new FileInfo(destination);
+                Folder.EnsureExists(info.DirectoryName);
+
                 File.Move(origin, destination);
                 _buildLog.WriteLine("Ok");
             }
