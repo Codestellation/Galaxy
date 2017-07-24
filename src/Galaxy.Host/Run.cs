@@ -5,6 +5,7 @@ using System.Threading;
 using Codestellation.Galaxy.Host.LogManagement;
 using Codestellation.Galaxy.Host.Misc;
 using Topshelf;
+using Topshelf.HostConfigurators;
 using Topshelf.Logging;
 
 namespace Codestellation.Galaxy.Host
@@ -14,7 +15,7 @@ namespace Codestellation.Galaxy.Host
         private static ServiceProxy _serviceProxy;
         private static bool _startService = true;
 
-        public static int Service<TService>()
+        public static int Service<TService>(Action<HostConfigurator, TService> options = null)
             where TService : IService, new()
         {
             Type serviceType = typeof(TService);
@@ -27,8 +28,12 @@ namespace Codestellation.Galaxy.Host
             {
                 return 0;
             }
+            if (options == null)
+            {
+                options = (configurator, config) => { };
+            }
 
-            TopshelfExitCode code = RunServiceNormally<TService>(serviceType);
+            TopshelfExitCode code = RunServiceNormally<TService>(serviceType, options);
 
             HostLogger.Shutdown();
             return (int)code;
@@ -45,10 +50,12 @@ namespace Codestellation.Galaxy.Host
             }
         }
 
-        private static TopshelfExitCode RunServiceNormally<TService>(Type serviceType) where TService : IService, new()
+        private static TopshelfExitCode RunServiceNormally<TService>(Type serviceType, Action<HostConfigurator, TService> options)
+            where TService : IService, new()
         {
             TopshelfExitCode code = HostFactory.Run(x =>
             {
+                options(x, (TService)_serviceProxy.Service);
                 x.InitializeLoggers(serviceType.Assembly, _serviceProxy.HostConfig.Configs);
                 VersionLogger.LogVersions();
 
