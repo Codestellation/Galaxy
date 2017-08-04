@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Codestellation.Galaxy.Host.ConfigManagement;
 
 namespace Codestellation.Galaxy.Host
@@ -20,13 +20,16 @@ namespace Codestellation.Galaxy.Host
 
         public HostConfig HostConfig => HostConfig.Load();
 
-        public void Start()
+        public void SetupService()
         {
             var hostConfig = HostConfig.Load();
             hostConfig.Validate();
             Service.HostConfig = hostConfig;
             ConfigManager.TryLoadConfig(Service);
+        }
 
+        public void Start()
+        {
             Service.Start();
         }
 

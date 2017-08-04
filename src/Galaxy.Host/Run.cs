@@ -28,6 +28,9 @@ namespace Codestellation.Galaxy.Host
             {
                 return 0;
             }
+
+            _serviceProxy.SetupService();
+
             if (options == null)
             {
                 options = (configurator, config) => { };
