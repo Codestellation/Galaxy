@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Codestellation.Galaxy.Host.LogManagement;
 using Codestellation.Galaxy.Host.Misc;
 using Topshelf;
 using Topshelf.HostConfigurators;
@@ -59,7 +58,6 @@ namespace Codestellation.Galaxy.Host
             TopshelfExitCode code = HostFactory.Run(x =>
             {
                 options(x, (TService)_serviceProxy.Service);
-                x.InitializeLoggers(serviceType.Assembly, _serviceProxy.HostConfig.Configs);
                 VersionLogger.LogVersions();
 
                 x.Service<ServiceProxy>(s =>

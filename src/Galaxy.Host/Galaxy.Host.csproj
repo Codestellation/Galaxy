@@ -63,14 +63,12 @@
     </Compile>
     <Compile Include="ConfigManagement\ConfigManager.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="LogManagement\NLogManager.cs" />
     <Compile Include="Misc\DirectoryInfoConverter.cs" />
     <Compile Include="HostConfig.cs" />
     <Compile Include="IConfigAware.cs" />
     <Compile Include="ConfigManagement\ValidationError.cs" />
     <Compile Include="ConfigManagement\ValidationResult.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="LogManagement\LoggingExtensions.cs" />
     <Compile Include="Misc\ReflectionExtensions.cs" />
     <Compile Include="Run.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
