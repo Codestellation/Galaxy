@@ -35,7 +35,7 @@ namespace Codestellation.Galaxy.Host
                 options = (configurator, config) => { };
             }
 
-            TopshelfExitCode code = RunServiceNormally<TService>(serviceType, options);
+            TopshelfExitCode code = RunServiceNormally<TService>(options);
 
             HostLogger.Shutdown();
             return (int)code;
@@ -52,7 +52,7 @@ namespace Codestellation.Galaxy.Host
             }
         }
 
-        private static TopshelfExitCode RunServiceNormally<TService>(Type serviceType, Action<HostConfigurator, TService> options)
+        private static TopshelfExitCode RunServiceNormally<TService>(Action<HostConfigurator, TService> options)
             where TService : IService, new()
         {
             TopshelfExitCode code = HostFactory.Run(x =>
