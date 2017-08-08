@@ -17,9 +17,7 @@ namespace Codestellation.Galaxy.Host
         public static int Service<TService>(Action<HostConfigurator, TService> options = null)
             where TService : IService, new()
         {
-            Type serviceType = typeof(TService);
-
-            _serviceProxy = new ServiceProxy(serviceType);
+            _serviceProxy = new ServiceProxy(typeof(TService));
 
             ProcessCustomCommand();
 
@@ -35,7 +33,7 @@ namespace Codestellation.Galaxy.Host
                 options = (configurator, config) => { };
             }
 
-            TopshelfExitCode code = RunServiceNormally<TService>(options);
+            TopshelfExitCode code = RunServiceNormally(options);
 
             HostLogger.Shutdown();
             return (int)code;

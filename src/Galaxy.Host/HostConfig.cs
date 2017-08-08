@@ -8,6 +8,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Codestellation.Galaxy.Host
 {
+    [Serializable]
     public class HostConfig
     {
         private static readonly FileInfo ConfigFile = new FileInfo(Folder.ToFullPath("host.config.json"));

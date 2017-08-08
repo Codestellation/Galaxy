@@ -3,8 +3,10 @@ using Codestellation.Galaxy.Host.ConfigManagement;
 
 namespace Codestellation.Galaxy.Host
 {
-    internal class ServiceProxy
+    public class ServiceProxy : MarshalByRefObject
     {
+        public IService Service { get; }
+
         public ServiceProxy(Type serviceType, HostConfig hostConfig)
             : this(serviceType)
         {
@@ -16,15 +18,14 @@ namespace Codestellation.Galaxy.Host
             Service = (IService)Activator.CreateInstance(serviceType);
         }
 
-        public IService Service { get; }
-
-        public HostConfig HostConfig => HostConfig.Load();
-
         public void SetupService()
         {
-            var hostConfig = HostConfig.Load();
-            hostConfig.Validate();
-            Service.HostConfig = hostConfig;
+            if (Service.HostConfig == null)
+            {
+                var hostConfig = HostConfig.Load();
+                hostConfig.Validate();
+                Service.HostConfig = hostConfig;
+            }
             ConfigManager.TryLoadConfig(Service);
         }
 
