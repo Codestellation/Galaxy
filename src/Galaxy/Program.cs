@@ -19,7 +19,6 @@ namespace Codestellation.Galaxy
             var path = Path.Combine(service.HostConfig.Configs.FullName, "nlog.config");
             LogManager.Configuration = new XmlLoggingConfiguration(path);
             configurator.UseNLog(LogManager.GetLogger(typeof(Run).FullName).Factory);
-
         }
     }
 }
