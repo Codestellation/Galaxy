@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.ServiceProcess;
 using Nejdb.Bson;
@@ -23,14 +23,14 @@ namespace Codestellation.Galaxy.Domain
 
         public string Config { get; set; }
 
+        public SpecialFolderDictionary ServiceFolders { get; }
+
+        public bool HasInstanceName => !string.IsNullOrWhiteSpace(InstanceName);
+
         public Deployment()
         {
             ServiceFolders = new SpecialFolderDictionary();
         }
-
-        public SpecialFolderDictionary ServiceFolders { get; private set; }
-
-        public bool HasInstanceName => !string.IsNullOrWhiteSpace(InstanceName);
 
         public string GetServiceName()
         {
