@@ -229,10 +229,14 @@
     </Compile>
     <Compile Include="Boostrapping\SchedulerInstaller.cs" />
     <Compile Include="Boostrapping\SignalRInstaller.cs" />
+    <Compile Include="Domain\DeploymentExtensions.cs" />
     <Compile Include="Domain\Deployments\DeploymentBoard.cs" />
     <Compile Include="Domain\DeploymentTaskProcessor.cs" />
     <Compile Include="Domain\FolderOptions.cs" />
+    <Compile Include="Domain\FullPath.cs" />
+    <Compile Include="Domain\FullPathConverter.cs" />
     <Compile Include="Domain\Notifications\OperationProgressNotification.cs" />
+    <Compile Include="Domain\ServiceFolders.cs" />
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
     <Compile Include="ServiceManager\ConfigSampleReceived.cs" />
@@ -261,7 +265,6 @@
     <Compile Include="WebEnd\Models\Deployment\DeploymentEditModel.cs" />
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\FeedBoard.cs" />
-    <Compile Include="Domain\SpecialFolderDictionary.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\Notifications\Severity.cs" />
     <Compile Include="Domain\Notifications\Notification.cs" />
@@ -269,7 +272,6 @@
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\Options.cs" />
-    <Compile Include="Domain\SpecialFolder.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Boostrapping\EmisstarInstaller.cs" />
     <Compile Include="Infrastructure\FileResponse.cs" />

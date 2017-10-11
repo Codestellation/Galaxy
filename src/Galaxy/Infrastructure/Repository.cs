@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
@@ -6,6 +6,7 @@ using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Host;
 using Codestellation.Quarks.IO;
 using Nejdb;
+using Newtonsoft.Json.Linq;
 using NLog;
 
 namespace Codestellation.Galaxy.Infrastructure
@@ -20,12 +21,11 @@ namespace Codestellation.Galaxy.Infrastructure
 
         private Dictionary<Type, Collection> _collections;
 
-        public static bool ClearUsersOnStart;
-        private readonly DirectoryInfo _dataFoler;
+        private readonly DirectoryInfo _dataFolder;
 
         public Repository(HostConfig config)
         {
-            _dataFoler = config.Data;
+            _dataFolder = config.Data;
         }
 
         public void Start()
@@ -38,11 +38,43 @@ namespace Codestellation.Galaxy.Infrastructure
             var dbPath = GetDatabasePath();
 
             _database.Open(dbPath, Database.DefaultOpenMode | OpenMode.SyncTransactionToStorage);
-            CreateCollection("users", typeof(User), ClearUsersOnStart);
+            CreateCollection("users", typeof(User));
             CreateCollection("feeds", typeof(NugetFeed));
             CreateCollection("deployments", typeof(Deployment));
             CreateCollection("options", typeof(Options));
             CreateCollection("notification", typeof(Notification));
+            MigrateDeployments();
+        }
+
+        private void MigrateDeployments()
+        {
+            var deployments = _collections[typeof(Deployment)];
+
+            using (Query<JObject> query = deployments.CreateQuery<JObject>())
+            using (Cursor<JObject> cursor = query.Execute())
+            {
+                foreach (JObject jDeployment in cursor)
+                {
+                    if (jDeployment.TryGetValue("ServiceFolders", out JToken jFolders))
+                    {
+                        dynamic serviceFolders = jFolders;
+                        var deployment = jDeployment.ToObject<Deployment>(_database.Serializer);
+
+                        deployment.Folders.BackupFolder = (FullPath)(string)serviceFolders.BackupFolder.FullPath;
+                        deployment.Folders.Configs = (FullPath)(string)serviceFolders.Configs.FullPath;
+                        deployment.Folders.Data = (FullPath)(string)serviceFolders.Data.FullPath;
+                        deployment.Folders.DeployFolder = (FullPath)(string)serviceFolders.DeployFolder.FullPath;
+                        deployment.Folders.DeployLogsFolder = (FullPath)(string)serviceFolders.DeployLogsFolder.FullPath;
+                        deployment.Folders.Logs = (FullPath)(string)serviceFolders.Logs.FullPath;
+
+                        using (var tx = deployments.BeginTransaction())
+                        {
+                            deployments.Save(deployment, false);
+                            tx.Commit();
+                        }
+                    }
+                }
+            }
         }
 
         private void CreateCollection(string collectionName, Type entityType, bool clear = false)
@@ -78,27 +110,6 @@ namespace Codestellation.Galaxy.Infrastructure
             _library.Dispose();
         }
 
-        private string GetDatabasePath()
-        {
-            return MigrateOldData();
-        }
-
-        private string MigrateOldData()
-        {
-            const string databaseName = "galaxy.db";
-            var newFolder = Folder.Combine(_dataFoler.FullName, "database");
-
-            //TODO: Delete this code when migration completes
-            var oldFolder = Folder.Combine("data", "database");
-            if (Directory.Exists(oldFolder) && !oldFolder.Equals(newFolder, StringComparison.OrdinalIgnoreCase))
-            {
-                Folder.EnsureExists(_dataFoler.FullName);
-                Directory.Move(oldFolder, newFolder);
-            }
-            Folder.EnsureExists(newFolder);
-            var dbPath = Path.Combine(newFolder, databaseName);
-            Logger.Debug("Path to database: {0}", dbPath);
-            return dbPath;
-        }
+        private string GetDatabasePath() => Folder.Combine(_dataFolder.FullName, "database", "galaxy.db");
     }
 }

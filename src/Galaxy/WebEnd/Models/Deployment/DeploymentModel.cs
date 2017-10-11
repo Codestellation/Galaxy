@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nejdb.Bson;
@@ -50,14 +50,15 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
             State = deployment.GetServiceState();
 
             Group = deployment.Group;
-            Folders = deployment.ServiceFolders.ToDictionary(x => x.Key, x => x.Value.FullPath);
+            Folders = deployment.Folders.ToDictionary();
         }
 
-        public DeploymentModel(Domain.Deployment deployment,
+        public DeploymentModel(
+            Domain.Deployment deployment,
             IEnumerable<KeyValuePair<ObjectId, string>> allFeeds,
             IEnumerable<Version> packageVersions)
             :
-                this(deployment)
+            this(deployment)
         {
             _allFeeds = allFeeds;
             PackageVersions = packageVersions.OrderByDescending(x => x).Select(item => new KeyValuePair<Version, string>(item, item.ToString()));

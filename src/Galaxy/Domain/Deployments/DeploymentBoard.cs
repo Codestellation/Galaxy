@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Host;
@@ -72,13 +72,12 @@ namespace Codestellation.Galaxy.Domain.Deployments
 
         private void FillServiceFolders(Deployment deployment)
         {
-            var serviceFolders = deployment.ServiceFolders;
+            var serviceFolders = deployment.Folders;
 
             var subfolder = BuildSubfolder(deployment);
 
             var deployFolderPath = Path.Combine(_options.GetDeployFolder(), subfolder);
-            var specialFolder = new SpecialFolder(SpecialFolderDictionary.DeployFolder, deployFolderPath);
-            serviceFolders.Add(specialFolder);
+            serviceFolders.DeployFolder = (FullPath)deployFolderPath;
 
             BuildFolders(deployment);
         }
@@ -95,12 +94,11 @@ namespace Codestellation.Galaxy.Domain.Deployments
         private void BuildFolders(Deployment deployment)
         {
             string subFolder = BuildSubfolder(deployment);
-
-            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.DeployLogsFolder, Path.Combine(_config.Logs.FullName, "deploy-logs", subFolder)));
-            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.BackupFolder, Path.Combine(_config.Data.FullName, "backups", subFolder)));
-            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Logs, Path.Combine(_options.FolderOptions.Logs, subFolder)));
-            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Configs, Path.Combine(_options.FolderOptions.Configs, subFolder)));
-            deployment.ServiceFolders.Add(new SpecialFolder(SpecialFolderDictionary.Data, Path.Combine(_options.FolderOptions.Data, subFolder)));
+            deployment.Folders.DeployLogsFolder = (FullPath)Path.Combine(_config.Logs.FullName, "deploy-logs", subFolder);
+            deployment.Folders.BackupFolder = (FullPath)Path.Combine(_config.Data.FullName, "backups", subFolder);
+            deployment.Folders.Logs = (FullPath)Path.Combine(_options.FolderOptions.Logs, subFolder);
+            deployment.Folders.Configs = (FullPath)Path.Combine(_options.FolderOptions.Configs, subFolder);
+            deployment.Folders.Data = (FullPath)Path.Combine(_options.FolderOptions.Data, subFolder);
         }
 
         private static string BuildSubfolder(Deployment deployment)
@@ -112,8 +110,8 @@ namespace Codestellation.Galaxy.Domain.Deployments
             }
 
             var name = (deployment.HasInstanceName
-                ? $"{deployment.PackageId}-{deployment.InstanceName}"
-                : deployment.PackageId)
+                    ? $"{deployment.PackageId}-{deployment.InstanceName}"
+                    : deployment.PackageId)
                 .Replace(" ", "-").ToLowerInvariant();
 
             subFolder = Path.Combine(subFolder, name);

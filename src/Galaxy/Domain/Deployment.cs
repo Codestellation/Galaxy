@@ -23,13 +23,13 @@ namespace Codestellation.Galaxy.Domain
 
         public string Config { get; set; }
 
-        public SpecialFolderDictionary ServiceFolders { get; }
+        public ServiceFolders Folders { get; }
 
         public bool HasInstanceName => !string.IsNullOrWhiteSpace(InstanceName);
 
         public Deployment()
         {
-            ServiceFolders = new SpecialFolderDictionary();
+            Folders = new ServiceFolders();
         }
 
         public string GetServiceName()
@@ -46,21 +46,6 @@ namespace Codestellation.Galaxy.Domain
                 result += $"{result} (Instance: {InstanceName})";
             }
             return result;
-        }
-
-        public string GetDeployFolder()
-        {
-            return ServiceFolders[SpecialFolderDictionary.DeployFolder].FullPath;
-        }
-
-        public string GetDeployLogFolder()
-        {
-            return ServiceFolders[SpecialFolderDictionary.DeployLogsFolder].FullPath;
-        }
-
-        public string GetBackupFolder()
-        {
-            return ServiceFolders[SpecialFolderDictionary.BackupFolder].FullPath;
         }
 
         public string GetServiceState()

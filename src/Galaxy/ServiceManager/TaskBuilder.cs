@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+using System.IO;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
@@ -29,7 +28,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
                 .Add(_operations.DeployHostConfig(deployment))
                 .Add(_operations.GetConfigSample(deployment))
-                .Add(_operations.DeployServiceConfig(deployment))
+                .Add(_operations.DeployServiceConfig())
                 .Add(_operations.StartService(deployment));
         }
 
@@ -71,7 +70,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
-                .SetValue(DeploymentTaskContext.Folders, deployment.ServiceFolders.HostFolders.ToArray())
+                .SetValue(DeploymentTaskContext.Folders, deployment.Folders)
                 .SetValue(DeploymentTaskContext.Config, deployment.Config);
 
             return new DeploymentTask(context);
@@ -105,6 +104,18 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.DeleteFolders(deployment))
                 .Add(_operations.UninstallPackage(deployment))
                 .Add(_operations.PublishDeletedEvent(deployment));
+        }
+
+        public DeploymentTask MoveFolder(Deployment deployment)
+        {
+            return CreateDeployTask("Move Folder", deployment)
+                .Add(_operations.StopService(deployment, true))
+                .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
+                .Add(_operations.EnsureFolders())
+                .Add(_operations.DeployHostConfig(deployment))
+                .Add(_operations.DeployServiceConfig())
+                .Add(_operations.StartService(deployment))
+                .Add(_operations.InstallService(deployment));
         }
     }
 }

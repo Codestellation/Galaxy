@@ -1,4 +1,3 @@
-using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
@@ -76,7 +75,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation DeleteFolders(Deployment deployment)
         {
-            var folders = deployment.ServiceFolders.Values.Select(x => x.FullPath).ToArray();
+            var folders = deployment.Folders.ToArray();
             return new DeleteFolders(folders);
         }
 
@@ -87,8 +86,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public IOperation DeployHostConfig(Deployment deployment)
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            return new DeployHostConfig(serviceFolder);
+            return new DeployHostConfig();
         }
 
         public IOperation EnsureFolders()
@@ -103,7 +101,7 @@ namespace Codestellation.Galaxy.ServiceManager
             return new GetConfigSample(serviceFolder, hostFileName);
         }
 
-        public IOperation DeployServiceConfig(Deployment deployment)
+        public IOperation DeployServiceConfig()
         {
             return new DeployServiceConfig();
         }

@@ -1,5 +1,4 @@
 using System.IO;
-using System.Linq;
 using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -19,10 +18,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             context.BuildLog.WriteLine(config);
 
             var configFolder = context
-                .GetValue<SpecialFolder[]>(DeploymentTaskContext.Folders)
-                .Single(x => x.Purpose == SpecialFolderDictionary.Configs);
+                .GetValue<ServiceFolders>(DeploymentTaskContext.Folders)
+                .Configs
+                .ToString();
 
-            var configPath = Path.Combine(configFolder.FullPath, "config.json");
+            var configPath = Path.Combine(configFolder, "config.json");
 
             context.BuildLog.WriteLine("Write service config to '{0}'", configPath);
             File.WriteAllText(configPath, config);
