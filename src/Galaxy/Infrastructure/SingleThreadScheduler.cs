@@ -7,7 +7,7 @@ namespace Codestellation.Galaxy.Infrastructure
 {
     public class SingleThreadScheduler : TaskScheduler
     {
-        public static readonly SingleThreadScheduler Instance = new SingleThreadScheduler();
+        public static readonly SingleThreadScheduler MainScheduler = new SingleThreadScheduler();
 
         private readonly Queue<Task> _tasks;
         private bool _running;

@@ -239,8 +239,8 @@
     <Compile Include="Domain\Notifications\OperationProgressNotification.cs" />
     <Compile Include="Domain\ServiceFolders.cs" />
     <Compile Include="Infrastructure\IMainRequest.cs" />
-    <Compile Include="Infrastructure\ITaskRequest.cs" />
     <Compile Include="Infrastructure\ServiceVersion.cs" />
+    <Compile Include="Infrastructure\SynchronizedHandler.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
     <Compile Include="ServiceManager\ConfigSampleReceived.cs" />
     <Compile Include="ServiceManager\Operations\DeployServiceConfig.cs" />
@@ -262,6 +262,15 @@
     <Compile Include="WebEnd\Api\Response.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\ServiceStatus.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\SystemInfo.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\CreateDeploymentModelHandler.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\CreateDeploymentModelRequest.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\CreateDeploymentModelResponse.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\DeploymentDetailsHandler.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\DeploymentDetailsRequest.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\DeploymentDetailsResponse.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\DeploymentListHandler.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\DeploymentListRequest.cs" />
+    <Compile Include="WebEnd\Controllers\Deployment\DeploymentListResponse.cs" />
     <Compile Include="WebEnd\Models\Deployment\DeploymentEditModel.cs" />
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\FileList.cs" />
@@ -403,7 +412,6 @@
   <ItemGroup>
     <Folder Include="WebEnd\Api\Feeds\" />
     <Folder Include="WebEnd\Api\Tasks\" />
-    <Folder Include="WebEnd\Infrastructure\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

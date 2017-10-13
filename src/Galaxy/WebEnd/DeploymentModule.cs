@@ -1,37 +1,60 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Events;
+using Codestellation.Galaxy.WebEnd.Controllers.Deployment;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Galaxy.WebEnd.Models.Deployment;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
+using MediatR;
 using Nancy.ModelBinding;
 using Nancy.Responses;
+using Nancy.Security;
 using Nejdb;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd
 {
-    public class DeploymentModule : CrudModule
+    public class DeploymentModule : ModuleBase
     {
+        private readonly IMediator _mediator;
         private readonly PackageBoard _packageBoard;
 
         private readonly DeploymentBoard _deploymentBoard;
+
         private readonly IPublisher _publisher;
+
         private readonly Collection _feedCollection;
+
         public const string Path = "deployment";
 
-        public DeploymentModule(Repository repository, PackageBoard packageBoard, DeploymentBoard deploymentBoard, IPublisher publisher)
+        public DeploymentModule(IMediator mediator, Repository repository, PackageBoard packageBoard, DeploymentBoard deploymentBoard, IPublisher publisher)
             : base(Path)
         {
             _feedCollection = repository.GetCollection<NugetFeed>();
+            _mediator = mediator;
             _packageBoard = packageBoard;
             _deploymentBoard = deploymentBoard;
             _publisher = publisher;
+
+            this.RequiresAuthentication();
+
+            Get["/", true] = GetList;
+            Get["/details/{id}", true] = GetDetails;
+
+            Get["/create", true] = GetCreate;
+            Post["/create", true] = (parameters, token) => ProcessRequest(() => PostCreate(parameters), token);
+
+            Get["/edit/{id}", true] = (parameters, token) => ProcessRequest(() => GetEdit(parameters), token);
+            Post["/edit/{id}", true] = (parameters, token) => ProcessRequest(() => PostEdit(parameters), token);
+
+            Post["/delete/{id}", true] = (parameters, token) => ProcessRequest(() => PostDelete(parameters), token);
 
             Post["/install/{id}", true] = (parameters, token) => ProcessRequest(() => PostInstall(parameters), token);
             Post["/start/{id}", true] = (parameters, token) => ProcessRequest(() => PostStart(parameters), token);
@@ -41,6 +64,24 @@ namespace Codestellation.Galaxy.WebEnd
 
             Get["/build-log/{id}", true] = (parameters, token) => ProcessRequest(() => GetBuildLogs(parameters), token);
             Get["/build-log/{id}/{filename}", true] = (parameters, token) => ProcessRequest(() => GetBuildLog(parameters), token);
+        }
+
+        private async Task<dynamic> GetList(dynamic parameters, CancellationToken token)
+        {
+            var request = new DeploymentListRequest();
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+            return View["list", response.Model];
+        }
+
+        private async Task<dynamic> GetDetails(dynamic parameters, CancellationToken token)
+        {
+            var id = new ObjectId(parameters.id);
+            var request = new DeploymentDetailsRequest(id);
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+
+            return response.Model == null
+                ? RedirectToList()
+                : View["details", response.Model];
         }
 
         private object GetBuildLog(dynamic parameters)
@@ -66,29 +107,15 @@ namespace Codestellation.Galaxy.WebEnd
             return new BuildLogsModel(deployment.Id, files);
         }
 
-        protected override CrudOperations SupportedOperations =>
-            CrudOperations.GetList |
-            CrudOperations.GetCreate |
-            CrudOperations.PostCreate |
-            CrudOperations.GetEdit |
-            CrudOperations.PostEdit |
-            CrudOperations.PostDelete |
-            CrudOperations.GetDetails;
-
-        protected override object GetList(dynamic parameters)
+        protected async Task<dynamic> GetCreate(dynamic parameters, CancellationToken token)
         {
-            var feeds = _feedCollection.PerformQuery<NugetFeed>();
-            return View["list", new DeploymentListModel(feeds, _deploymentBoard)];
+            var request = new CreateDeploymentModelRequest();
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+
+            return View["edit", response.Model];
         }
 
-        protected override object GetCreate(dynamic parameters)
-        {
-            var allFeeds = GetAvailableFeeds();
-
-            return View["edit", new DeploymentEditModel { AllFeeds = allFeeds }];
-        }
-
-        protected override object PostCreate(dynamic parameters)
+        protected object PostCreate(dynamic parameters)
         {
             var item = this.Bind<DeploymentEditModel>();
             var deployment = item.ToDeployment();
@@ -98,7 +125,7 @@ namespace Codestellation.Galaxy.WebEnd
             return RedirectToList();
         }
 
-        protected override object GetEdit(dynamic parameters)
+        protected object GetEdit(dynamic parameters)
         {
             var deployment = GetDeployment(parameters);
 
@@ -109,7 +136,7 @@ namespace Codestellation.Galaxy.WebEnd
             return View["Edit", deploymentEditModel];
         }
 
-        protected override object PostEdit(dynamic parameters)
+        protected object PostEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
             var model = this.Bind<DeploymentEditModel>();
@@ -123,26 +150,12 @@ namespace Codestellation.Galaxy.WebEnd
             return RedirectToDetails(id);
         }
 
-        protected override object PostDelete(dynamic parameters)
+        private object PostDelete(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
             var anEvent = new DeleteDeploymentEvent(id);
             _publisher.Publish(anEvent);
 
-            return RedirectToList();
-        }
-
-        protected override object GetDetails(dynamic parameters)
-        {
-            var id = new ObjectId(parameters.id);
-
-            if (_deploymentBoard.TryGetDeployment(id, out Deployment deployment))
-            {
-                deployment = _deploymentBoard.GetDeployment(id);
-                var feed = _feedCollection.Load<NugetFeed>(deployment.FeedId);
-                var versions = _packageBoard.GetPackageVersions(feed.Uri, deployment.PackageId);
-                return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
-            }
             return RedirectToList();
         }
 

@@ -28,6 +28,9 @@ namespace Codestellation.Galaxy.Infrastructure
             _dataFolder = config.Data;
         }
 
+        public Collection Feeds => _collections[typeof(NugetFeed)];
+        public Collection Deployments => _collections[typeof(Deployment)];
+
         public void Start()
         {
             _library = Library.Create();

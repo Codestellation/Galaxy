@@ -21,7 +21,7 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
 
             if (tuple.Message is IMainRequest)
             {
-                scheduler = SingleThreadScheduler.Instance;
+                scheduler = SingleThreadScheduler.MainScheduler;
             }
             Task.Factory.StartNew(() => InternalInvoke(handlerTuple), CancellationToken.None, TaskCreationOptions.None, scheduler);
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,12 +11,11 @@ namespace Codestellation.Galaxy.WebEnd
     {
         public ModuleBase()
         {
-
         }
 
-        public ModuleBase(string modulePath) : base(modulePath)
+        public ModuleBase(string modulePath)
+            : base(modulePath)
         {
-            
         }
 
         protected Task<object> ProcessRequest(Func<object> processor, CancellationToken cancellationToken)
@@ -24,13 +23,13 @@ namespace Codestellation.Galaxy.WebEnd
             Context.Culture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            
+
             return Task.Factory.StartNew(processor, cancellationToken, TaskCreationOptions.None, Scheduler);
         }
 
         public TaskScheduler Scheduler
         {
-            get { return SingleThreadScheduler.Instance; }
+            get { return SingleThreadScheduler.MainScheduler; }
         }
     }
 }
