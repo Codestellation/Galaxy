@@ -1,4 +1,5 @@
 using System.IO;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
 
@@ -6,47 +7,38 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class BackupService : IOperation
     {
-        private readonly string _serviceName;
-        private readonly string _serviceFolder;
-        private readonly string _backupFolder;
         private TextWriter _buildLog;
-
-        public BackupService(string serviceName, string serviceFolder, string backupFolder)
-        {
-            _serviceName = serviceName;
-            _serviceFolder = serviceFolder;
-            _backupFolder = backupFolder;
-        }
 
         public void Execute(DeploymentTaskContext context)
         {
             _buildLog = context.BuildLog;
+            var folders = context.GetValue<ServiceFolders>(DeploymentTaskContext.Folders);
+            var backupFolder = folders.BackupFolder;
 
-            // TODO: create base operation class and move all the necessary folder creation there
-            Folder.EnsureExists(_backupFolder);
+            Folder.EnsureExists((string)backupFolder);
 
-            if (IsNothingToBackup())
+            if (IsNothingToBackup(folders.DeployFolder))
             {
-                _buildLog.WriteLine("Empty service folder for {0}. Nothing to backup", _serviceName);
+                _buildLog.WriteLine("Nothing to backup");
                 return;
             }
 
-            Backup();
+            Backup(folders.DeployFolder, folders.BackupFolder);
         }
 
-        private bool IsNothingToBackup()
+        private bool IsNothingToBackup(FullPath deployFolder)
         {
-            return !Folder.Exists(_serviceFolder);
+            return !Folder.Exists((string)deployFolder);
         }
 
-        private void Backup()
+        private void Backup(FullPath deployFolder, FullPath backupFolder)
         {
             var timestamp = Clock.UtcNow.ToString("yyyy-MM-dd HH-mm-ss");
-            var currentBackupFolder = Path.Combine(_backupFolder, timestamp);
+            var currentBackupFolder = Path.Combine((string)backupFolder, timestamp);
 
-            Folder.Copy(_serviceFolder, currentBackupFolder);
+            Folder.Copy((string)deployFolder, currentBackupFolder);
 
-            _buildLog.WriteLine("{0} backed up to {1}", _serviceName, currentBackupFolder);
+            _buildLog.WriteLine("Successfully backed up to {0}", currentBackupFolder);
         }
     }
 }

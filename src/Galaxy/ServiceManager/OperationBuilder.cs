@@ -7,10 +7,7 @@ namespace Codestellation.Galaxy.ServiceManager
     {
         public IOperation BackupService(Deployment deployment)
         {
-            var serviceName = deployment.GetServiceName();
-            var serviceFolder = deployment.GetDeployFolder();
-            var backupFolder = deployment.GetBackupFolder();
-            return new BackupService(serviceName, serviceFolder, backupFolder);
+            return new BackupService();
         }
 
         public IOperation ClearBinaries(Deployment deployment, FileList keepOnUpdate = null)
