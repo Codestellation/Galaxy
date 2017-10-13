@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Galaxy.Infrastructure;
@@ -13,15 +13,13 @@ namespace Codestellation.Galaxy.WebEnd
 {
     public class FeedModule : CrudModule
     {
-        private readonly FeedBoard _feedBoard;
         private readonly DeploymentBoard _deploymentBoard;
         private readonly Collection _feeds;
         public const string Path = "feed";
 
-        public FeedModule(FeedBoard feedBoard, Repository repository, DeploymentBoard deploymentBoard)
+        public FeedModule(Repository repository, DeploymentBoard deploymentBoard)
             : base(Path)
         {
-            _feedBoard = feedBoard;
             _deploymentBoard = deploymentBoard;
             _feeds = repository.GetCollection<NugetFeed>();
         }
@@ -33,7 +31,8 @@ namespace Codestellation.Galaxy.WebEnd
 
         protected override object GetList(dynamic parameters)
         {
-            return View["list", new FeedListModel(_feedBoard, _deploymentBoard)];
+            NugetFeed[] feeds = _feeds.PerformQuery<NugetFeed>();
+            return View["list", new FeedListModel(feeds, _deploymentBoard)];
         }
 
         protected override object GetCreate(dynamic parameters)
@@ -47,15 +46,13 @@ namespace Codestellation.Galaxy.WebEnd
             var feed = model.ToFeed();
             _feeds.Save(feed, false);
 
-            _feedBoard.AddFeed(feed);
-
             return new RedirectResponse("/feed");
         }
 
         protected override object GetEdit(dynamic parameters)
         {
             var id = new ObjectId(parameters.id);
-            var feed = _feedBoard.GetFeed(id);
+            var feed = _feeds.Load<NugetFeed>(id);
             var model = new FeedModel(feed, false);
             return View["Edit", model];
         }
@@ -64,14 +61,15 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
             FeedModel model = this.Bind();
+            using (var tx = _feeds.BeginTransaction())
+            {
+                var currentFeed = _feeds.Load<NugetFeed>(id);
+                var updatedFeed = model.ToFeed();
+                currentFeed.Merge(updatedFeed);
+                _feeds.Save(currentFeed, false);
 
-            var currentFeed = _feedBoard.GetFeed(id);
-            var updatedFeed = model.ToFeed();
-
-            currentFeed.Merge(updatedFeed);
-
-            _feeds.Save(currentFeed, false);
-
+                tx.Commit();
+            }
             return new RedirectResponse("/feed");
         }
 
@@ -85,10 +83,7 @@ namespace Codestellation.Galaxy.WebEnd
             {
                 return new TextResponse(HttpStatusCode.BadRequest, "Feed use. Remove it from deployments to delete");
             }
-        
-            _feedBoard.RemoveFeed(id);
             _feeds.Delete(id);
-
             return "Ok";
         }
     }

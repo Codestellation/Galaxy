@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
@@ -11,23 +11,24 @@ using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;
 using Nancy.ModelBinding;
 using Nancy.Responses;
+using Nejdb;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd
 {
     public class DeploymentModule : CrudModule
     {
-        private readonly FeedBoard _feedBoard;
         private readonly PackageBoard _packageBoard;
 
         private readonly DeploymentBoard _deploymentBoard;
         private readonly IPublisher _publisher;
+        private readonly Collection _feedCollection;
         public const string Path = "deployment";
 
-        public DeploymentModule(FeedBoard feedBoard, PackageBoard packageBoard, DeploymentBoard deploymentBoard, IPublisher publisher)
+        public DeploymentModule(Repository repository, PackageBoard packageBoard, DeploymentBoard deploymentBoard, IPublisher publisher)
             : base(Path)
         {
-            _feedBoard = feedBoard;
+            _feedCollection = repository.GetCollection<NugetFeed>();
             _packageBoard = packageBoard;
             _deploymentBoard = deploymentBoard;
             _publisher = publisher;
@@ -65,23 +66,19 @@ namespace Codestellation.Galaxy.WebEnd
             return new BuildLogsModel(deployment.Id, files);
         }
 
-        protected override CrudOperations SupportedOperations
-        {
-            get
-            {
-                return CrudOperations.GetList |
-                    CrudOperations.GetCreate |
-                    CrudOperations.PostCreate |
-                    CrudOperations.GetEdit |
-                    CrudOperations.PostEdit |
-                    CrudOperations.PostDelete |
-                    CrudOperations.GetDetails;
-            }
-        }
+        protected override CrudOperations SupportedOperations =>
+            CrudOperations.GetList |
+            CrudOperations.GetCreate |
+            CrudOperations.PostCreate |
+            CrudOperations.GetEdit |
+            CrudOperations.PostEdit |
+            CrudOperations.PostDelete |
+            CrudOperations.GetDetails;
 
         protected override object GetList(dynamic parameters)
         {
-            return View["list", new DeploymentListModel(_feedBoard, _deploymentBoard)];
+            var feeds = _feedCollection.PerformQuery<NugetFeed>();
+            return View["list", new DeploymentListModel(feeds, _deploymentBoard)];
         }
 
         protected override object GetCreate(dynamic parameters)
@@ -139,27 +136,22 @@ namespace Codestellation.Galaxy.WebEnd
         {
             var id = new ObjectId(parameters.id);
 
-            Deployment deployment;
-
-            if (_deploymentBoard.TryGetDeployment(id, out deployment))
+            if (_deploymentBoard.TryGetDeployment(id, out Deployment deployment))
             {
                 deployment = _deploymentBoard.GetDeployment(id);
-                var feed = _feedBoard.GetFeed(deployment.FeedId);
+                var feed = _feedCollection.Load<NugetFeed>(deployment.FeedId);
                 var versions = _packageBoard.GetPackageVersions(feed.Uri, deployment.PackageId);
                 return View["details", new DeploymentModel(deployment, GetAvailableFeeds(), versions)];
             }
-            else
-            {
-                return RedirectToList();
-            }
+            return RedirectToList();
         }
 
         private KeyValuePair<ObjectId, string>[] GetAvailableFeeds()
         {
             var allFeeds =
-                _feedBoard
-                    .Feeds
-                    .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), _feedBoard.Feeds.Count);
+                _feedCollection
+                    .PerformQuery<NugetFeed>()
+                    .ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name));
 
             return allFeeds;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
@@ -8,16 +8,16 @@ using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd.Models.Deployment
 {
-    public class DeploymentListModel 
+    public class DeploymentListModel
     {
         public readonly DeploymentListItemModel[] Deployments;
         public readonly KeyValuePair<ObjectId, string>[] AllFeeds;
 
-        public DeploymentListModel(FeedBoard feedBoard, DeploymentBoard deploymentBoard)
+        public DeploymentListModel(NugetFeed[] feeds, DeploymentBoard deploymentBoard)
         {
-            AllFeeds = feedBoard.Feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name), feedBoard.Feeds.Count);
+            AllFeeds = feeds.ConvertToArray(feed => new KeyValuePair<ObjectId, string>(feed.Id, feed.Name));
             Deployments = deploymentBoard.Deployments.ConvertToArray(x => new DeploymentListItemModel(x, AllFeeds), deploymentBoard.Deployments.Count);
-            
+
             Groups = Deployments
                 .Select(GetGroup)
                 .Distinct()
@@ -27,10 +27,7 @@ namespace Codestellation.Galaxy.WebEnd.Models.Deployment
 
         public string[] Groups { get; set; }
 
-        public int Count
-        {
-            get { return Deployments.Length; }
-        }
+        public int Count => Deployments.Length;
 
         public IEnumerable<DeploymentListItemModel> GetModelsByGroup(string serviceGroup)
         {

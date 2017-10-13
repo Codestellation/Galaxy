@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
+using Codestellation.Galaxy.Infrastructure;
+using Nejdb;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
@@ -16,14 +18,14 @@ namespace Codestellation.Galaxy.ServiceManager.Events
         IHandler<DeployServiceEvent>
     {
         private readonly DeploymentBoard _deploymentBoard;
-        private readonly FeedBoard _feedBoard;
         private readonly DeploymentTaskProcessor _taskProcessor;
         private readonly TaskBuilder _builder;
+        private readonly Collection _feedCollection;
 
-        public ServiceEventsHandler(DeploymentBoard deploymentBoard, FeedBoard feedBoard, DeploymentTaskProcessor taskProcessor, TaskBuilder builder)
+        public ServiceEventsHandler(Repository repository, DeploymentBoard deploymentBoard, DeploymentTaskProcessor taskProcessor, TaskBuilder builder)
         {
+            _feedCollection = repository.GetCollection<NugetFeed>();
             _deploymentBoard = deploymentBoard;
-            _feedBoard = feedBoard;
             _taskProcessor = taskProcessor;
             _builder = builder;
         }
@@ -67,7 +69,8 @@ namespace Codestellation.Galaxy.ServiceManager.Events
         {
             var deployment = _deploymentBoard.GetDeployment(deploymentId);
 
-            var targetFeed = _feedBoard.Feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
+            var feeds = _feedCollection.PerformQuery<NugetFeed>();
+            var targetFeed = feeds.FirstOrDefault(item => item.Id.Equals(deployment.FeedId));
 
             var task = buildTask(deployment, targetFeed);
 

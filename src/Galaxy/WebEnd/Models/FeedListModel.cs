@@ -1,31 +1,26 @@
-﻿using System.Linq;
+using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Deployments;
 using Codestellation.Quarks.Collections;
 
 namespace Codestellation.Galaxy.WebEnd.Models
 {
-    public class FeedListModel 
+    public class FeedListModel
     {
-        private FeedModel[] _feeds;
+        private readonly FeedModel[] _feeds;
 
-        public FeedListModel(FeedBoard feedBoard, DeploymentBoard deploymentBoard)
+        public FeedListModel(NugetFeed[] feeds, DeploymentBoard deploymentBoard)
         {
-            _feeds = feedBoard.Feeds.ConvertToArray(x =>
-            {
-                var inUse = deploymentBoard.Deployments.Any(deployment => deployment.FeedId.Equals(x.Id));
-                return new FeedModel(x, inUse);
-            }, feedBoard.Feeds.Count);
+            _feeds = feeds.ConvertToArray(
+                x =>
+                {
+                    var inUse = deploymentBoard.Deployments.Any(deployment => deployment.FeedId.Equals(x.Id));
+                    return new FeedModel(x, inUse);
+                });
         }
 
-        public FeedModel[] Feeds
-        {
-            get { return _feeds; }
-        }
+        public FeedModel[] Feeds => _feeds;
 
-        public int FeedCount
-        {
-            get { return _feeds.Length; }
-        }
+        public int FeedCount => _feeds.Length;
     }
 }

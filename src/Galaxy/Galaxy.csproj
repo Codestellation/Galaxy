@@ -264,7 +264,6 @@
     <Compile Include="WebEnd\Models\Jobs\JobListModel.cs" />
     <Compile Include="WebEnd\Models\Deployment\DeploymentEditModel.cs" />
     <Compile Include="Configuration\ServiceConfig.cs" />
-    <Compile Include="Domain\FeedBoard.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\Notifications\Severity.cs" />
     <Compile Include="Domain\Notifications\Notification.cs" />

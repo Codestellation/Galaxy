@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -67,7 +67,7 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
                     .Named("DefaultErrorHandler")
                     .IsDefault()
                     .LifestyleSingleton()
-                );
+            );
             base.ConfigureApplicationContainer(container);
 
             //This should be the assembly your views are embedded in
@@ -83,7 +83,6 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
 
             CreateDefaultUser(repository);
             LoadOptions(container, repository);
-            FillDashBoard(container, repository);
 
             container.Resolve<ISchedulerController>().Start();
 
@@ -106,20 +105,6 @@ namespace Codestellation.Galaxy.WebEnd.Bootstrap
                     Component
                         .For<Options>()
                         .Instance(options));
-            }
-        }
-
-        private void FillDashBoard(IWindsorContainer container, Repository repository)
-        {
-            var feedBoard = container.Resolve<FeedBoard>();
-
-            using (var query = repository.GetCollection<NugetFeed>().CreateQuery<NugetFeed>())
-            using (var cursor = query.Execute())
-            {
-                foreach (var feed in cursor)
-                {
-                    feedBoard.AddFeed(feed);
-                }
             }
         }
 
