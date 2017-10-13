@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,10 +14,10 @@ namespace Codestellation.Galaxy.Infrastructure
 
         public SingleThreadScheduler()
         {
-            _tasks = new Queue<Task>(10000);
+            _tasks = new Queue<Task>(100);
         }
 
-        protected override sealed void QueueTask(Task task)
+        protected sealed override void QueueTask(Task task)
         {
             lock (_tasks)
             {
@@ -47,10 +47,7 @@ namespace Codestellation.Galaxy.Infrastructure
                         _running = false;
                         break;
                     }
-                    else
-                    {
-                        item = _tasks.Dequeue();
-                    }
+                    item = _tasks.Dequeue();
                 }
 
                 TryExecuteTask(item);
@@ -58,22 +55,13 @@ namespace Codestellation.Galaxy.Infrastructure
         }
 
         // Do not support inlining
-        protected override sealed bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
-        {
-            return false;
-        }
+        protected sealed override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued) => false;
 
-        protected override sealed bool TryDequeue(Task task)
-        {
-            return false;
-        }
+        protected sealed override bool TryDequeue(Task task) => false;
 
-        public override sealed int MaximumConcurrencyLevel
-        {
-            get { return 1; }
-        }
+        public sealed override int MaximumConcurrencyLevel => 1;
 
-        protected override sealed IEnumerable<Task> GetScheduledTasks()
+        protected sealed override IEnumerable<Task> GetScheduledTasks()
         {
             lock (_tasks)
             {
