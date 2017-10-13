@@ -1,10 +1,9 @@
-using Codestellation.Galaxy.Infrastructure.Emisstar;
+using Codestellation.Galaxy.Infrastructure;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
-    [Synchronized]
-    public class ConfigSampleReceived
+    public class ConfigSampleReceived : IMainRequest
     {
         public ObjectId DeploymentId { get; }
         public string Sample { get; }

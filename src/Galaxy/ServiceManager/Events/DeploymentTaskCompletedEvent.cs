@@ -1,10 +1,9 @@
-﻿using Codestellation.Galaxy.Infrastructure.Emisstar;
+using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    [Synchronized]
-    public class DeploymentTaskCompletedEvent 
+    public class DeploymentTaskCompletedEvent : IMainRequest
     {
         public readonly OperationResult Result;
         public readonly DeploymentTask Task;
@@ -15,9 +14,6 @@ namespace Codestellation.Galaxy.ServiceManager.Events
             Task = task;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}:{1}", Task.Name, Result);
-        }
+        public override string ToString() => $"{Task.Name}:{Result}";
     }
 }

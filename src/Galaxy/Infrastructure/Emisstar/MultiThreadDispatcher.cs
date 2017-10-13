@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Codestellation.Emisstar.Impl;
 
@@ -19,7 +19,7 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
             MessageHandlerTuple handlerTuple = tuple;
             var scheduler = _preserveOrderScheduler;
 
-            if (MarkedSynchronized(tuple))
+            if (tuple.Message is IMainRequest)
             {
                 scheduler = SingleThreadScheduler.Instance;
             }
@@ -29,17 +29,6 @@ namespace Codestellation.Galaxy.Infrastructure.Emisstar
         private void InternalInvoke(MessageHandlerTuple handlerTuple)
         {
             base.Invoke(ref handlerTuple);
-        }
-
-        private static bool MarkedSynchronized(MessageHandlerTuple tuple)
-        {
-            //cache it later
-            return
-                tuple
-                    .Message
-                    .GetType()
-                    .GetCustomAttributes(typeof(SynchronizedAttribute), false)
-                    .Length > 0;
         }
     }
 }

@@ -1,10 +1,9 @@
-using Codestellation.Galaxy.Infrastructure.Emisstar;
+using Codestellation.Galaxy.Infrastructure;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    [Synchronized]
-    public class InstallServiceEvent
+    public class InstallServiceEvent : IMainRequest
     {
         public readonly ObjectId DeploymentId;
 
