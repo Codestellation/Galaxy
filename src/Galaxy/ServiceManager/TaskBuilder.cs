@@ -20,57 +20,63 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
         {
-            return CreateDeployTask("UpdateService", deployment)
-                .Add(_operations.StopService(deployment, true))
+            return CreateDeployTask("UpdateService", deployment, deploymentFeed)
+                .Add(_operations.StopService())
                 .Add(_operations.BackupService())
                 .Add(_operations.ClearBinaries())
                 .Add(_operations.EnsureFolders())
-                .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
+                .Add(_operations.InstallPackage())
                 .Add(_operations.DeployHostConfig())
-                .Add(_operations.GetConfigSample(deployment))
+                .Add(_operations.GetConfigSample())
                 .Add(_operations.DeployServiceConfig())
-                .Add(_operations.StartService(deployment));
+                .Add(_operations.StartService());
         }
 
-        public DeploymentTask InstallServiceTask(Deployment deployment)
+        public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed feed)
         {
-            return CreateDeployTask("InstallService", deployment)
-                .Add(_operations.InstallService(deployment));
+            return CreateDeployTask("InstallService", deployment, feed)
+                .Add(_operations.InstallService());
         }
 
-        public DeploymentTask UninstallServiceTask(Deployment deployment)
+        public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed feed)
         {
-            return CreateDeployTask("UninstallService", deployment)
-                .Add(_operations.StopService(deployment, true))
-                .Add(_operations.UninstallService(deployment));
+            return CreateDeployTask("UninstallService", deployment, feed)
+                .Add(_operations.StopService())
+                .Add(_operations.UninstallService());
         }
 
-        public DeploymentTask StartServiceTask(Deployment deployment)
+        public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed feed)
         {
-            var startServiceTask = CreateDeployTask("StartService", deployment)
-                .Add(_operations.StartService(deployment));
+            var startServiceTask = CreateDeployTask("StartService", deployment, feed)
+                .Add(_operations.StartService());
             startServiceTask.Context.SetValue(DeploymentTaskContext.ForceStartService, true);
             return startServiceTask;
         }
 
-        public DeploymentTask StopServiceTask(Deployment deployment)
+        public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed feed)
         {
-            return CreateDeployTask("StopService", deployment)
-                .Add(_operations.StopService(deployment, false));
+            return CreateDeployTask("StopService", deployment, feed).Add(_operations.StopService());
         }
 
-        private DeploymentTask CreateDeployTask(string name, Deployment deployment, Stream logStream = null)
+        private DeploymentTask CreateDeployTask(string name, Deployment deployment, NugetFeed deploymentFeed, object parameters = null, Stream logStream = null)
         {
             var actualLogStream = logStream ?? BuildDefaultLogStream(name, deployment);
             var streamWriter = new StreamWriter(actualLogStream);
 
             var context = new DeploymentTaskContext(streamWriter)
             {
-                Folders = deployment.Folders
+                Parameters = parameters ?? new object(),
+                DeploymentId = deployment.Id,
+                Folders = deployment.Folders,
+                ServiceFileName = $"{deployment.PackageId}.exe",
+                InstanceName = deployment.InstanceName,
+                ServiceName = string.IsNullOrWhiteSpace(deployment.InstanceName)
+                    ? deployment.PackageId
+                    : $"{deployment.PackageId}${deployment.InstanceName}",
+                PackageDetails = new PackageDetails(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion)
             };
             context
                 .SetValue(DeploymentTaskContext.TaskName, name)
-                .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _mediator)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
                 .SetValue(DeploymentTaskContext.Config, deployment.Config);
@@ -80,44 +86,44 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private static FileStream BuildDefaultLogStream(string name, Deployment deployment)
         {
-            var deployLogFolder = deployment.GetDeployLogFolder();
-            Folder.EnsureExists(deployLogFolder);
+            FullPath deployLogFolder = deployment.Folders.DeployFolder;
+            Folder.EnsureExists((string)deployLogFolder);
 
             var filename = $"{name}.{Clock.UtcNow.ToLocalTime():yyyy-MM-dd_HH.mm.ss}.log";
-            var fullPath = Path.Combine(deployLogFolder, filename);
+            var fullPath = Path.Combine((string)deployLogFolder, filename);
             var defaultStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
             return defaultStream;
         }
 
-        public DeploymentTask RestoreFromBackup(Deployment deployment, string backupFolder)
+        public DeploymentTask RestoreFromBackup(Deployment deployment, NugetFeed feed, object parameters = null)
         {
-            return CreateDeployTask("Restore From Backup", deployment)
-                .Add(_operations.StopService(deployment, true))
+            return CreateDeployTask("Restore From Backup", deployment, feed, parameters)
+                .Add(_operations.StopService())
                 .Add(_operations.BackupService())
                 .Add(_operations.ClearBinaries())
-                .Add(_operations.RestoreFrom(deployment, backupFolder));
+                .Add(_operations.RestoreFrom());
         }
 
-        public DeploymentTask DeleteDeploymentTask(Deployment deployment)
+        public DeploymentTask DeleteDeploymentTask(Deployment deployment, NugetFeed feed)
         {
-            return CreateDeployTask("DeleteDeployment", deployment, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it!
-                .Add(_operations.StopService(deployment, skipIfNotFound: true))
-                .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
+            return CreateDeployTask("DeleteDeployment", deployment, feed, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it!
+                .Add(_operations.StopService())
+                .Add(_operations.UninstallService())
                 .Add(_operations.DeleteFolders())
-                .Add(_operations.UninstallPackage(deployment))
-                .Add(_operations.PublishDeletedEvent(deployment));
+                .Add(_operations.UninstallPackage())
+                .Add(_operations.PublishDeletedEvent());
         }
 
-        public DeploymentTask MoveFolder(Deployment deployment)
+        public DeploymentTask MoveFolder(Deployment deployment, NugetFeed feed)
         {
-            return CreateDeployTask("Move Folder", deployment)
-                .Add(_operations.StopService(deployment, true))
-                .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
+            return CreateDeployTask("Move Folder", deployment, feed)
+                .Add(_operations.StopService())
+                .Add(_operations.UninstallService())
                 .Add(_operations.EnsureFolders())
                 .Add(_operations.DeployHostConfig())
                 .Add(_operations.DeployServiceConfig())
-                .Add(_operations.StartService(deployment))
-                .Add(_operations.InstallService(deployment));
+                .Add(_operations.StartService())
+                .Add(_operations.InstallService());
         }
     }
 }

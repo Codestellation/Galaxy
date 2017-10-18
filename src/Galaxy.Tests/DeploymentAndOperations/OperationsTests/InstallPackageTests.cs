@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Content;
 using Codestellation.Quarks.IO;
@@ -36,12 +37,19 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             var packageDetails = new PackageDetails("TestNugetPackage", _nugetFeedFolder, version10);
 
-            var op = new InstallPackage(_targetPath, packageDetails);
+            var op = new InstallPackage();
             var stringWriter = new StringWriter();
-            var buildLog = new DeploymentTaskContext(stringWriter);
+            var context = new DeploymentTaskContext(stringWriter)
+            {
+                Folders = new ServiceFolders
+                {
+                    DeployFolder = (FullPath)_targetPath
+                },
+                PackageDetails = packageDetails
+            };
 
             //when
-            op.Execute(buildLog);
+            op.Execute(context);
 
             //then
             string[] sampleFiles =

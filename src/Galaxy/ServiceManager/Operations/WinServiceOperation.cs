@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ServiceProcess;
 using NLog;
 
@@ -12,17 +12,20 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     public abstract class WinServiceOperation : IOperation
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        protected readonly string ServiceName;
-        private readonly ServiceController _controller;
 
-        public WinServiceOperation(string serviceName)
+        protected DeploymentTaskContext Context { get; private set; }
+        protected string ServiceName { get; private set; }
+        private ServiceController _controller;
+
+        public void Execute(DeploymentTaskContext context)
         {
-            ServiceName = serviceName;
+            Context = context;
+            ServiceName = context.ServiceName;
             ServiceController[] candidates = ServiceController.GetServices();
-            Logger.Debug("Looking for service '{0}'", serviceName);
+            Logger.Debug("Looking for service '{0}'", ServiceName);
             foreach (ServiceController candidate in candidates)
             {
-                var found = candidate.ServiceName.Equals(serviceName, StringComparison.Ordinal);
+                var found = candidate.ServiceName.Equals(ServiceName, StringComparison.Ordinal);
                 Logger.Debug("Checking '{0}' is {1}", candidate.ServiceName, found);
                 if (found)
                 {
@@ -31,30 +34,26 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                     break;
                 }
             }
+
+            ExecuteInternal(context);
         }
+
+        protected abstract void ExecuteInternal(DeploymentTaskContext context);
 
         protected bool IsServiceExists()
         {
             return _controller != null;
         }
 
-        public bool SkipIfNotFound { get; set; }
-
         protected void Execute(Action<ServiceController> controllerAction)
         {
             if (_controller == null)
             {
-                var message = $"Service '{ServiceName}' not found";
-
-                if (SkipIfNotFound)
-                {
-                    return;
-                }
-                throw new InvalidOperationException(message);
+                var message = $"Service '{ServiceName}' not found. Action skipped.";
+                Context.BuildLog.WriteAsync(message);
+                return;
             }
             controllerAction(_controller);
         }
-
-        public abstract void Execute(DeploymentTaskContext context);
     }
 }

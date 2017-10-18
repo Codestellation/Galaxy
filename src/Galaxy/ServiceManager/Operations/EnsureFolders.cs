@@ -1,4 +1,3 @@
-using Codestellation.Galaxy.Domain;
 using Codestellation.Quarks.IO;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations

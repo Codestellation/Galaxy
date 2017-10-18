@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
+using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Quarks.Collections;
@@ -49,18 +50,13 @@ namespace Codestellation.Galaxy.WebEnd
             return new BackupListModel(deployment.Id, folders);
         }
 
-        private async Task<dynamic> RestoreBackup(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> RestoreBackup(dynamic parameters, CancellationToken token)
         {
             var id = new ObjectId(parameters.id);
-            Deployment deployment = await GetDeployment(id).ConfigureAwait(false);
             string name = Request.Query.name;
-
-            var backupFolder = deployment.Folders.BackupFolder;
-            var folder = Folder.Combine((string)backupFolder, name);
-            var task = _taskBuilder.RestoreFromBackup(deployment, folder);
-
-            task.Process();
-            return string.Empty;
+            var request = new RestoreServiceRequest(id, name);
+            await _mediator.Send(request, token).ConfigureAwait(false);
+            return "ok";
         }
 
         private async Task<dynamic> GetBuildLogs(dynamic parameters, CancellationToken cancellationToken)

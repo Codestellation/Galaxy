@@ -31,19 +31,18 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             _basePath = Folder.Combine(_nugetFeedFolder, "extracted");
 
-            var packageDetails = new PackageDetails("Codestellation.Galaxy.Host", _nugetFeedFolder, version10);
-            var installPackage = new InstallPackage(_basePath, packageDetails, FileList.Empty);
-
             var stringWriter = new StringWriter();
 
             _context = new DeploymentTaskContext(stringWriter)
             {
                 Folders = new ServiceFolders
                 {
-                    DeployFolder = (FullPath)_basePath
-                }
+                    DeployFolder = (FullPath)_basePath,
+                },
+                PackageDetails = new PackageDetails("Codestellation.Galaxy.Host", _nugetFeedFolder, version10)
             };
-            installPackage.Execute(_context);
+
+            new InstallPackage().Execute(_context);
         }
 
         [Test]

@@ -24,7 +24,7 @@ namespace Codestellation.Galaxy.ServiceManager
             return this;
         }
 
-        public ObjectId DeploymentId => Context.GetValue<ObjectId>(DeploymentTaskContext.DeploymentId);
+        public ObjectId DeploymentId => Context.DeploymentId;
 
         public string Name => Context.GetValue<string>(DeploymentTaskContext.TaskName);
 

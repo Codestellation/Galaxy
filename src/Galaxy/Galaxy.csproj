@@ -221,7 +221,6 @@
     </Compile>
     <Compile Include="Boostrapping\SchedulerInstaller.cs" />
     <Compile Include="Boostrapping\SignalRInstaller.cs" />
-    <Compile Include="Domain\DeploymentExtensions.cs" />
     <Compile Include="Domain\DeploymentTaskProcessor.cs" />
     <Compile Include="Domain\FolderOptions.cs" />
     <Compile Include="Domain\FullPath.cs" />
@@ -231,6 +230,7 @@
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\SynchronizedHandler.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
+    <Compile Include="ServiceManager\Events\RestoreServiceRequest.cs" />
     <Compile Include="ServiceManager\SetConfigSampleRequest.cs" />
     <Compile Include="ServiceManager\Operations\DeployServiceConfig.cs" />
     <Compile Include="ServiceManager\Events\ConfigSampleReceivedHandler.cs" />

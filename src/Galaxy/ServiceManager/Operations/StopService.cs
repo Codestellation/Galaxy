@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
@@ -10,19 +10,11 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StopService : WinServiceOperation
     {
-        private DeploymentTaskContext _context;
         private Process _process;
         private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(1);
 
-        public StopService(string serviceName)
-            : base(serviceName)
+        protected override void ExecuteInternal(DeploymentTaskContext context)
         {
-        }
-
-        public override void Execute(DeploymentTaskContext context)
-        {
-            _context = context;
-
             Execute(StopServiceAction);
         }
 
@@ -32,15 +24,15 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             TryFindProcess();
 
-            _context.SetValue(DeploymentTaskContext.ServiceStatus, status);
+            Context.SetValue(DeploymentTaskContext.ServiceStatus, status);
 
             if (status == ServiceControllerStatus.Stopped || status == ServiceControllerStatus.StopPending)
             {
-                _context.BuildLog.WriteLine("Service '{0}' at state '{1}'. Stop skipped.", ServiceName, status.AsString());
+                Context.BuildLog.WriteLine("Service '{0}' at state '{1}'. Stop skipped.", ServiceName, status.AsString());
             }
             else
             {
-                _context.BuildLog.WriteLine("Stopping service '{0}'", ServiceName);
+                Context.BuildLog.WriteLine("Stopping service '{0}'", ServiceName);
                 sc.Stop();
             }
 
@@ -62,8 +54,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 return;
             }
-            var message = string.Format(
-                "Process {0}-{1} did not exit after period {2}. Possible hang up?.", _process.Id, _process.ProcessName, Timeout);
+            var message = $"Process {_process.Id}-{_process.ProcessName} did not exit after period {Timeout}. Possible hang up?.";
             throw new TimeoutException(message);
         }
 

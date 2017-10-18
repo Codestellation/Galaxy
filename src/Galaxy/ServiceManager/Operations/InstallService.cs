@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Codestellation.Galaxy.ServiceManager.Helpers;
 using Codestellation.Quarks.IO;
@@ -7,22 +7,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class InstallService : IOperation
     {
-        private readonly string _serviceFolder;
-        private readonly string _hostFileName;
-        private readonly string _instance;
-        private DeploymentTaskContext _context;
-
-        public InstallService(string serviceFolder, string hostFileName, string instance)
-        {
-            _serviceFolder = serviceFolder;
-            _hostFileName = hostFileName;
-            _instance = instance;
-        }
+        private string _instance;
 
         public void Execute(DeploymentTaskContext context)
         {
-            _context = context;
-            var exePath = Folder.Combine(_serviceFolder, _hostFileName);
+            _instance = context.InstanceName;
+            var exePath = Folder.Combine((string)context.Folders.DeployFolder, context.ServiceFileName);
 
             context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, CommandLineArguments);
 
@@ -34,16 +24,13 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             context.BuildLog.WriteLine(result.StdError);
         }
 
-        private string CommandLineArguments
-        {
-            get { return "install " + ArgumentsString; }
-        }
+        private string CommandLineArguments => "install " + ArgumentsString;
 
         private string ArgumentsString
         {
             get
             {
-                var arguments = Arguments.Select(x => string.Format("-{0}:{1}", x.Key, x.Value));
+                var arguments = Arguments.Select(x => $"-{x.Key}:{x.Value}");
                 return string.Join(" ", arguments);
             }
         }

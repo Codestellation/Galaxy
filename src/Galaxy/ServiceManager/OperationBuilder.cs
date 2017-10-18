@@ -1,4 +1,3 @@
-using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.ServiceManager
@@ -15,57 +14,39 @@ namespace Codestellation.Galaxy.ServiceManager
             return new ClearBinaries();
         }
 
-        public IOperation InstallPackage(Deployment deployment, NugetFeed deploymentFeed, FileList keepOnUpdate)
+        public IOperation InstallPackage()
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            var packageId = deployment.PackageId;
-            var feedUri = deploymentFeed.Uri;
-            var packageVersion = deployment.PackageVersion;
-            var packageDetails = new PackageDetails(packageId, feedUri, packageVersion);
-            return new InstallPackage(serviceFolder, packageDetails, keepOnUpdate);
+            return new InstallPackage();
         }
 
-        public IOperation UninstallPackage(Deployment deployment)
+        public IOperation UninstallPackage()
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            return new UninstallPackage(serviceFolder);
+            return new UninstallPackage();
         }
 
-        public IOperation StartService(Deployment deployment)
+        public IOperation StartService()
         {
-            var serviceName = deployment.GetServiceName();
-            return new StartService(serviceName);
+            return new StartService();
         }
 
-        public IOperation StopService(Deployment deployment, bool skipIfNotFound)
+        public IOperation StopService()
         {
-            var serviceName = deployment.GetServiceName();
-            return new StopService(serviceName) { SkipIfNotFound = skipIfNotFound };
+            return new StopService();
         }
 
-        public IOperation InstallService(Deployment deployment)
+        public IOperation InstallService()
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            var hostFileName = deployment.GetServiceHostFileName();
-            var instanceName = deployment.InstanceName;
-            return new InstallService(serviceFolder, hostFileName, instanceName);
+            return new InstallService();
         }
 
-        public IOperation UninstallService(Deployment deployment, bool skipIfNotFound = false)
+        public IOperation UninstallService()
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            var hostFileName = deployment.GetServiceHostFileName();
-            var instanceName = deployment.InstanceName;
-            return new UninstallService(serviceFolder, hostFileName, instanceName)
-            {
-                SkipIfNotFound = skipIfNotFound
-            };
+            return new UninstallService();
         }
 
-        public IOperation RestoreFrom(Deployment deployment, string backupFolder)
+        public IOperation RestoreFrom()
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            return new RestoreFromBackup(serviceFolder, backupFolder);
+            return new RestoreFromBackup();
         }
 
         public IOperation DeleteFolders()
@@ -73,9 +54,9 @@ namespace Codestellation.Galaxy.ServiceManager
             return new DeleteFolders();
         }
 
-        public IOperation PublishDeletedEvent(Deployment deployment)
+        public IOperation PublishDeletedEvent()
         {
-            return new PublishDeploymentDeletedEvent(deployment);
+            return new PublishDeploymentDeletedEvent();
         }
 
         public IOperation DeployHostConfig()
@@ -88,11 +69,9 @@ namespace Codestellation.Galaxy.ServiceManager
             return new EnsureFolders();
         }
 
-        public IOperation GetConfigSample(Deployment deployment)
+        public IOperation GetConfigSample()
         {
-            var hostFileName = deployment.GetServiceHostFileName();
-            var serviceFolder = deployment.GetDeployFolder();
-            return new GetConfigSample(serviceFolder, hostFileName);
+            return new GetConfigSample();
         }
 
         public IOperation DeployServiceConfig()

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Quarks.IO;
@@ -8,48 +8,38 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class InstallPackage : IOperation
     {
-        private readonly string _destination;
-        private readonly PackageDetails _packageDetails;
-        private readonly FileList _skipList;
         private TextWriter _buildLog;
-
-        public InstallPackage(string destination, PackageDetails packageDetails, FileList skipList)
-        {
-            _destination = destination;
-            _packageDetails = packageDetails;
-            _skipList = skipList;
-        }
-
-        public InstallPackage(string destination, PackageDetails details)
-            : this(destination, details, FileList.Empty)
-        {
-        }
+        private string _destination;
+        private FileList _skipList;
 
         public void Execute(DeploymentTaskContext context)
         {
             _buildLog = context.BuildLog;
-            Install();
+            Install(context);
         }
 
-        private void Install()
+        private void Install(DeploymentTaskContext context)
         {
-            string packageId = _packageDetails.PackageId;
+            PackageDetails packageDetails = context.PackageDetails;
+            string packageId = packageDetails.PackageId;
+            _skipList = context.KeepOnUpdate;
+            _destination = (string)context.Folders.DeployFolder;
 
-            var repository = PackageRepositoryFactory.Default.CreateRepository(_packageDetails.FeedUri);
+            var repository = PackageRepositoryFactory.Default.CreateRepository(packageDetails.FeedUri);
 
             var manager = new PackageManager(repository, _destination);
 
-            _buildLog.WriteLine("Install '{0}' from '{1}' to '{2}'.", packageId, _packageDetails.FeedUri, _destination);
+            _buildLog.WriteLine("Install '{0}' from '{1}' to '{2}'.", packageId, packageDetails.FeedUri, _destination);
 
             manager.PackageInstalled += MoveFilesToDestination;
 
-            if (_packageDetails.Version == null)
+            if (packageDetails.Version == null)
             {
                 manager.InstallPackage(packageId);
             }
             else
             {
-                manager.InstallPackage(packageId, new SemanticVersion(_packageDetails.Version));
+                manager.InstallPackage(packageId, new SemanticVersion(packageDetails.Version));
             }
         }
 

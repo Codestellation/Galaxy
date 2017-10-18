@@ -2,7 +2,6 @@ using System.IO;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using MediatR;
-using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 {
@@ -40,7 +39,6 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
             var streamWriter = new StreamWriter(stream);
             var context = new DeploymentTaskContext(streamWriter)
                 .SetValue(DeploymentTaskContext.TaskName, name)
-                .SetValue(DeploymentTaskContext.DeploymentId, new ObjectId())
                 .SetValue(DeploymentTaskContext.PublisherKey, mediator)
                 .SetValue(DeploymentTaskContext.LogStream, stream);
             return context;

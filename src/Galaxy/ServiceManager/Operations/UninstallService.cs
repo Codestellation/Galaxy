@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using Codestellation.Galaxy.ServiceManager.Helpers;
@@ -7,35 +7,23 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class UninstallService : WinServiceOperation
     {
-        private readonly string _serviceFolder;
-        private readonly string _hostFileName;
-        private readonly string _instance;
-
-        public UninstallService(string serviceFolder, string hostFileName, string instance)
-            : base(instance)
+        protected override void ExecuteInternal(DeploymentTaskContext context)
         {
-            _serviceFolder = serviceFolder;
-            _hostFileName = hostFileName;
-            _instance = instance;
-        }
+            var exePath = new FileInfo(Path.Combine((string)context.Folders.DeployFolder, context.ServiceFileName));
 
-        public override void Execute(DeploymentTaskContext context)
-        {
-            var exePath = new FileInfo(Path.Combine(_serviceFolder, _hostFileName));
-
-            if (!exePath.Exists && SkipIfNotFound)
+            if (!exePath.Exists)
             {
                 context.BuildLog.WriteLine("Service executable '{0}' not found. Uninstall skipped", exePath.FullName);
                 return;
             }
 
-            if (!IsServiceExists() && SkipIfNotFound)
+            if (!IsServiceExists())
             {
                 context.BuildLog.WriteLine("Service '{0}' are not installed. Uninstall skipped", exePath.FullName);
                 return;
             }
 
-            var exeParams = string.Format("uninstall -instance:{0}", _instance);
+            var exeParams = $"uninstall -instance:{context.InstanceName}";
 
             context.BuildLog.WriteLine("Executing '{0} {1}'", exePath, exeParams);
 
@@ -48,11 +36,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             }
             catch (Win32Exception ex)
             {
-                if (!SkipIfNotFound)
-                {
-                    throw;
-                }
-
                 TryHandle(ex, out handledResult);
             }
 

@@ -1,40 +1,32 @@
-﻿using System.ServiceProcess;
+using System.ServiceProcess;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class StartService : WinServiceOperation
     {
-        public StartService(string serviceName)
-            : base(serviceName)
-        {
-
-        }
-
-        public override void Execute(DeploymentTaskContext context)
+        protected override void ExecuteInternal(DeploymentTaskContext context)
         {
             var startService = false;
-            ServiceControllerStatus status;
-            if (context.TryGetValue(DeploymentTaskContext.ServiceStatus, out status))
+            if (context.TryGetValue(DeploymentTaskContext.ServiceStatus, out ServiceControllerStatus status))
             {
                 startService = status == ServiceControllerStatus.Running ||
-                               status == ServiceControllerStatus.StartPending;
+                    status == ServiceControllerStatus.StartPending;
             }
 
-            bool forceStart;
-            if (context.TryGetValue(DeploymentTaskContext.ForceStartService, out forceStart))
+            if (context.TryGetValue(DeploymentTaskContext.ForceStartService, out bool forceStart))
             {
                 startService = startService || forceStart;
             }
 
-
             if (startService)
             {
                 context.BuildLog.WriteLine("Starting service {0}", ServiceName);
-                Execute(sc =>
-                {
-                    sc.Start();
-                    sc.WaitForStatus(ServiceControllerStatus.StartPending);
-                });
+                Execute(
+                    sc =>
+                    {
+                        sc.Start();
+                        sc.WaitForStatus(ServiceControllerStatus.StartPending);
+                    });
             }
             else
             {

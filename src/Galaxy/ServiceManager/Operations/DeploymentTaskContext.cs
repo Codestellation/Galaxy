@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
 using MediatR;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -11,7 +12,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public const string ServiceStatus = "ServiceStatus";
         public const string ForceStartService = "ForceStartService";
-        public const string DeploymentId = "DeploymentId";
+        public ObjectId DeploymentId { get; set; }
         public const string PublisherKey = "PublisherKey";
         public const string LogStream = "LogStream";
 
@@ -20,9 +21,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public readonly TextWriter BuildLog;
         private readonly Dictionary<object, object> _data;
 
+        public dynamic Parameters { get; set; }
         public ServiceFolders Folders { get; set; }
         public FileList KeepOnUpdate { get; set; }
-
+        public string ServiceFileName { get; set; }
+        public string ServiceName { get; set; }
+        public string InstanceName { get; set; }
 
         public DeploymentTaskContext(TextWriter buildLog)
         {
@@ -54,5 +58,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         }
 
         public IMediator Mediator => (IMediator)_data[PublisherKey];
+        public PackageDetails PackageDetails { get; set; }
     }
 }

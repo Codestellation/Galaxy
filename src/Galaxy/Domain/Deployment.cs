@@ -32,6 +32,7 @@ namespace Codestellation.Galaxy.Domain
             Folders = new ServiceFolders();
         }
 
+        //TODO: Think how to remove it
         public string GetServiceName()
         {
             //NOTE: instance name may change. Do not cache it
@@ -60,7 +61,5 @@ namespace Codestellation.Galaxy.Domain
 
             return controller.Status.ToString();
         }
-
-        public string GetServiceHostFileName() => $"{PackageId}.exe";
     }
 }
