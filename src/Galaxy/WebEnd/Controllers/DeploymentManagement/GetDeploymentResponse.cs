@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Codestellation.Galaxy.WebEnd.Controllers.Deployment
+namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
 {
     public class GetDeploymentResponse
     {

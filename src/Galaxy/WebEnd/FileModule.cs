@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
-using Codestellation.Galaxy.WebEnd.Controllers.Deployment;
+using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Quarks.Collections;
 using Codestellation.Quarks.IO;

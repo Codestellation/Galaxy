@@ -1,7 +1,7 @@
 using MediatR;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Controllers.Deployment
+namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
 {
     public class GetDeploymentRequest : IRequest<GetDeploymentResponse>
     {

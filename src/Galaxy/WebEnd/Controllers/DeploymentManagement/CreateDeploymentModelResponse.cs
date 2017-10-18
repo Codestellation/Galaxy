@@ -1,7 +1,7 @@
 ﻿using System;
-using Codestellation.Galaxy.WebEnd.Models.Deployment;
+using Codestellation.Galaxy.WebEnd.Models.DeploymentManangement;
 
-namespace Codestellation.Galaxy.WebEnd.Controllers.Deployment
+namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
 {
     public class CreateDeploymentModelResponse
     {

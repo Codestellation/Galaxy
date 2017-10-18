@@ -4,7 +4,7 @@ using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Models.Deployment
+namespace Codestellation.Galaxy.WebEnd.Models.DeploymentManangement
 {
     public class DeploymentModel
     {

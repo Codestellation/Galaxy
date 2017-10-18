@@ -2,11 +2,11 @@
 using System.Linq;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.WebEnd.Models.Deployment;
+using Codestellation.Galaxy.WebEnd.Models.DeploymentManangement;
 using MediatR;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.WebEnd.Controllers.Deployment
+namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
 {
     public class CreateDeploymentModelHandler : IRequestHandler<CreateDeploymentModelRequest, CreateDeploymentModelResponse>
     {

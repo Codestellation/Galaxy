@@ -1,9 +1,9 @@
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.WebEnd.Models.Deployment;
+using Codestellation.Galaxy.WebEnd.Models.DeploymentManangement;
 using MediatR;
 
-namespace Codestellation.Galaxy.WebEnd.Controllers.Deployment
+namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
 {
     public class DeploymentListHandler : IRequestHandler<DeploymentListRequest, DeploymentListResponse>
     {
