@@ -5,16 +5,14 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class OperationBuilder
     {
-        public IOperation BackupService(Deployment deployment)
+        public IOperation BackupService()
         {
             return new BackupService();
         }
 
-        public IOperation ClearBinaries(Deployment deployment, FileList keepOnUpdate = null)
+        public IOperation ClearBinaries()
         {
-            var serviceFolder = deployment.GetDeployFolder();
-            keepOnUpdate = keepOnUpdate ?? deployment.KeepOnUpdate.Clone();
-            return new ClearBinaries(serviceFolder, keepOnUpdate);
+            return new ClearBinaries();
         }
 
         public IOperation InstallPackage(Deployment deployment, NugetFeed deploymentFeed, FileList keepOnUpdate)
@@ -70,10 +68,9 @@ namespace Codestellation.Galaxy.ServiceManager
             return new RestoreFromBackup(serviceFolder, backupFolder);
         }
 
-        public IOperation DeleteFolders(Deployment deployment)
+        public IOperation DeleteFolders()
         {
-            var folders = deployment.Folders.ToArray();
-            return new DeleteFolders(folders);
+            return new DeleteFolders();
         }
 
         public IOperation PublishDeletedEvent(Deployment deployment)
@@ -81,7 +78,7 @@ namespace Codestellation.Galaxy.ServiceManager
             return new PublishDeploymentDeletedEvent(deployment);
         }
 
-        public IOperation DeployHostConfig(Deployment deployment)
+        public IOperation DeployHostConfig()
         {
             return new DeployHostConfig();
         }

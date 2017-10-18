@@ -22,11 +22,11 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             return CreateDeployTask("UpdateService", deployment)
                 .Add(_operations.StopService(deployment, true))
-                .Add(_operations.BackupService(deployment))
-                .Add(_operations.ClearBinaries(deployment))
+                .Add(_operations.BackupService())
+                .Add(_operations.ClearBinaries())
                 .Add(_operations.EnsureFolders())
                 .Add(_operations.InstallPackage(deployment, deploymentFeed, deployment.KeepOnUpdate.Clone()))
-                .Add(_operations.DeployHostConfig(deployment))
+                .Add(_operations.DeployHostConfig())
                 .Add(_operations.GetConfigSample(deployment))
                 .Add(_operations.DeployServiceConfig())
                 .Add(_operations.StartService(deployment));
@@ -64,13 +64,15 @@ namespace Codestellation.Galaxy.ServiceManager
             var actualLogStream = logStream ?? BuildDefaultLogStream(name, deployment);
             var streamWriter = new StreamWriter(actualLogStream);
 
-            var context = new DeploymentTaskContext(streamWriter);
+            var context = new DeploymentTaskContext(streamWriter)
+            {
+                Folders = deployment.Folders
+            };
             context
                 .SetValue(DeploymentTaskContext.TaskName, name)
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
                 .SetValue(DeploymentTaskContext.PublisherKey, _mediator)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
-                .SetValue(DeploymentTaskContext.Folders, deployment.Folders)
                 .SetValue(DeploymentTaskContext.Config, deployment.Config);
 
             return new DeploymentTask(context);
@@ -91,8 +93,8 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             return CreateDeployTask("Restore From Backup", deployment)
                 .Add(_operations.StopService(deployment, true))
-                .Add(_operations.BackupService(deployment))
-                .Add(_operations.ClearBinaries(deployment, FileList.Empty))
+                .Add(_operations.BackupService())
+                .Add(_operations.ClearBinaries())
                 .Add(_operations.RestoreFrom(deployment, backupFolder));
         }
 
@@ -101,7 +103,7 @@ namespace Codestellation.Galaxy.ServiceManager
             return CreateDeployTask("DeleteDeployment", deployment, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it!
                 .Add(_operations.StopService(deployment, skipIfNotFound: true))
                 .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
-                .Add(_operations.DeleteFolders(deployment))
+                .Add(_operations.DeleteFolders())
                 .Add(_operations.UninstallPackage(deployment))
                 .Add(_operations.PublishDeletedEvent(deployment));
         }
@@ -112,7 +114,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 .Add(_operations.StopService(deployment, true))
                 .Add(_operations.UninstallService(deployment, skipIfNotFound: true))
                 .Add(_operations.EnsureFolders())
-                .Add(_operations.DeployHostConfig(deployment))
+                .Add(_operations.DeployHostConfig())
                 .Add(_operations.DeployServiceConfig())
                 .Add(_operations.StartService(deployment))
                 .Add(_operations.InstallService(deployment));

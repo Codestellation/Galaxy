@@ -7,9 +7,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         public void Execute(DeploymentTaskContext context)
         {
-            var folders = context.GetValue<ServiceFolders>(DeploymentTaskContext.Folders);
-
-            foreach (string specialFolder in folders.ToArray())
+            foreach (string specialFolder in context.Folders.ToArray())
             {
                 if (Folder.Exists(specialFolder))
                 {

@@ -8,23 +8,20 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class ClearBinaries : IOperation
     {
-        private readonly FileList _keepOnUpdate;
-        private readonly List<DirectoryInfo> _skippedFolders;
-        private readonly DirectoryInfo _baseFolderInfo;
-
-        public ClearBinaries(string basePath, FileList keepOnUpdate)
-        {
-            _keepOnUpdate = keepOnUpdate;
-            _skippedFolders = new List<DirectoryInfo>();
-            _baseFolderInfo = new DirectoryInfo(basePath);
-        }
+        private FileList _keepOnUpdate;
+        private List<DirectoryInfo> _skippedFolders;
+        private DirectoryInfo _deployFolderInfo;
 
         public void Execute(DeploymentTaskContext context)
         {
+            _skippedFolders = new List<DirectoryInfo>();
+            _keepOnUpdate = context.KeepOnUpdate;
+            _deployFolderInfo = new DirectoryInfo((string)context.Folders.DeployFolder);
+
             var buildLog = context.BuildLog;
-            if (!_baseFolderInfo.Exists)
+            if (!_deployFolderInfo.Exists)
             {
-                buildLog.WriteLine("Directory '{0}' does not exists. Clear binaries skipped", _baseFolderInfo.FullName);
+                buildLog.WriteLine("Directory '{0}' does not exists. Clear binaries skipped", _deployFolderInfo.FullName);
                 return;
             }
 
@@ -34,8 +31,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private void Delete(TextWriter buildLog)
         {
             var entries = Directory
-                .EnumerateFileSystemEntries(_baseFolderInfo.FullName, "*.*", SearchOption.AllDirectories)
-                .Except(new[] { _baseFolderInfo.FullName });
+                .EnumerateFileSystemEntries(_deployFolderInfo.FullName, "*.*", SearchOption.AllDirectories)
+                .Except(new[] { _deployFolderInfo.FullName });
 
             foreach (var path in entries)
             {
@@ -97,7 +94,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         private bool InSkippedFolder(FileInfo fileInfo)
         {
             var currentParent = fileInfo.Directory;
-            while (currentParent != null && !_baseFolderInfo.FullName.Equals(currentParent.FullName))
+            while (currentParent != null && !_deployFolderInfo.FullName.Equals(currentParent.FullName))
             {
                 if (_skippedFolders.Any(x => x.FullName.Equals(currentParent.FullName)))
                 {

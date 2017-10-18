@@ -1,6 +1,5 @@
 using System.Dynamic;
 using System.IO;
-using Codestellation.Galaxy.Domain;
 using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -9,8 +8,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         public void Execute(DeploymentTaskContext context)
         {
-            var deployFolder = context.GetValue<ServiceFolders>(DeploymentTaskContext.Folders).DeployFolder;
-
             dynamic hostConfig = new ExpandoObject();
 
             var hostConfigString = JsonConvert.SerializeObject(hostConfig, Formatting.Indented);
@@ -18,7 +15,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             context.BuildLog.WriteLine("Generated host config");
             context.BuildLog.WriteLine(hostConfigString);
 
-            WriteConfig(context.BuildLog, hostConfigString, (string)deployFolder);
+            WriteConfig(context.BuildLog, hostConfigString, (string)context.Folders.DeployFolder);
         }
 
         private void WriteConfig(TextWriter buildLog, string serviceFolder, string hostConfig)

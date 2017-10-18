@@ -1,5 +1,4 @@
 using System.IO;
-using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -7,8 +6,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         public void Execute(DeploymentTaskContext context)
         {
-            string config;
-            if (!context.TryGetValue<string>(DeploymentTaskContext.Config, out config) || string.IsNullOrWhiteSpace(config))
+            if (!context.TryGetValue(DeploymentTaskContext.Config, out string config)
+                || string.IsNullOrWhiteSpace(config))
             {
                 context.BuildLog.WriteLine("Service config is not provided or empty. Operation Skipped.");
                 return;
@@ -17,12 +16,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             context.BuildLog.WriteLine("Found service config:");
             context.BuildLog.WriteLine(config);
 
-            var configFolder = context
-                .GetValue<ServiceFolders>(DeploymentTaskContext.Folders)
-                .Configs
-                .ToString();
+            var configFolder = context.Folders.Configs;
 
-            var configPath = Path.Combine(configFolder, "config.json");
+            var configPath = Path.Combine((string)configFolder, "config.json");
 
             context.BuildLog.WriteLine("Write service config to '{0}'", configPath);
             File.WriteAllText(configPath, config);

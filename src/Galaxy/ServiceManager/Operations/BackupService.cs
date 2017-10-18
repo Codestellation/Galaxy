@@ -12,18 +12,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public void Execute(DeploymentTaskContext context)
         {
             _buildLog = context.BuildLog;
-            var folders = context.GetValue<ServiceFolders>(DeploymentTaskContext.Folders);
-            var backupFolder = folders.BackupFolder;
+            ;
+            var backupFolder = context.Folders.BackupFolder;
 
             Folder.EnsureExists((string)backupFolder);
 
-            if (IsNothingToBackup(folders.DeployFolder))
+            if (IsNothingToBackup(context.Folders.DeployFolder))
             {
                 _buildLog.WriteLine("Nothing to backup");
                 return;
             }
 
-            Backup(folders.DeployFolder, folders.BackupFolder);
+            Backup(context.Folders.DeployFolder, context.Folders.BackupFolder);
         }
 
         private bool IsNothingToBackup(FullPath deployFolder)

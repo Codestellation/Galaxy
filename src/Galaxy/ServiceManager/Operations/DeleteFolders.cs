@@ -5,29 +5,21 @@ namespace Codestellation.Galaxy.ServiceManager
 {
     public class DeleteFolders : IOperation
     {
-        private readonly string[] _folders;
-
-        public DeleteFolders(string[] folders)
-        {
-            _folders = folders;
-        }
-
         public void Execute(DeploymentTaskContext context)
         {
-            foreach (var folder in _folders)
+            foreach (var folder in context.Folders.ToArray())
             {
                 try
                 {
                     context.BuildLog.Write("Delete folder {0} ", folder);
                     Folder.EnsureDeleted(folder);
-                    context.BuildLog.WriteLine("succed.");
+                    context.BuildLog.WriteLine("succeed.");
                 }
-                catch 
+                catch
                 {
                     context.BuildLog.WriteLine("failed.");
                     throw;
                 }
-                
             }
         }
     }

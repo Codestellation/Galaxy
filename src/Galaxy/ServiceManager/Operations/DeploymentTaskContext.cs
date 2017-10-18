@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Codestellation.Galaxy.Domain;
 using MediatR;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -15,10 +16,13 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         public const string LogStream = "LogStream";
 
         public const string Config = "Config";
-        public const string Folders = "Folders";
 
         public readonly TextWriter BuildLog;
         private readonly Dictionary<object, object> _data;
+
+        public ServiceFolders Folders { get; set; }
+        public FileList KeepOnUpdate { get; set; }
+
 
         public DeploymentTaskContext(TextWriter buildLog)
         {

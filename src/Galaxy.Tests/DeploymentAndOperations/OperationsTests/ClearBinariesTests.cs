@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
@@ -35,7 +35,14 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var installPackage = new InstallPackage(_basePath, packageDetails, FileList.Empty);
 
             var stringWriter = new StringWriter();
-            _context = new DeploymentTaskContext(stringWriter);
+
+            _context = new DeploymentTaskContext(stringWriter)
+            {
+                Folders = new ServiceFolders
+                {
+                    DeployFolder = (FullPath)_basePath
+                }
+            };
             installPackage.Execute(_context);
         }
 
@@ -43,11 +50,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         public void Deletes_files_exclude_specified_file()
         {
             //given
-            var fileToSkip = "Codestellation.Galaxy.Host.exe.config";
-
-            var keepOnUpdate = new FileList(new[] { fileToSkip });
-
-            var operation = new ClearBinaries(_basePath, keepOnUpdate);
+            const string fileToSkip = "Codestellation.Galaxy.Host.exe.config";
+            _context.KeepOnUpdate = new FileList(new[] { fileToSkip });
+            var operation = new ClearBinaries();
 
             //when
             operation.Execute(_context);
@@ -75,9 +80,9 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             File.WriteAllText(filePath, "Please, please! Do not delete me!");
 
-            var keepOnUpdate = new FileList(new[] { folderToSkip });
+            _context.KeepOnUpdate = new FileList(new[] { folderToSkip });
 
-            var operation = new ClearBinaries(_basePath, keepOnUpdate);
+            var operation = new ClearBinaries();
 
             //when
             operation.Execute(_context);
@@ -98,7 +103,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
         {
             //given
             var fakePath = Folder.Combine(_nugetFeedFolder, "this_folder_does_not_exists");
-            var operation = new ClearBinaries(fakePath, FileList.Empty);
+            _context.Folders = new ServiceFolders { DeployFolder = (FullPath)fakePath };
+            var operation = new ClearBinaries();
 
             //when
             //then
