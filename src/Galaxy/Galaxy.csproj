@@ -228,7 +228,6 @@
     <Compile Include="Domain\FullPathConverter.cs" />
     <Compile Include="Domain\Notifications\OperationProgressNotification.cs" />
     <Compile Include="Domain\ServiceFolders.cs" />
-    <Compile Include="Infrastructure\IMainRequest.cs" />
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\SynchronizedHandler.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
@@ -423,7 +422,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Deployments\" />
-    <Folder Include="Infrastructure\Emisstar\" />
     <Folder Include="WebEnd\Api\Feeds\" />
     <Folder Include="WebEnd\Api\Tasks\" />
   </ItemGroup>
