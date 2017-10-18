@@ -1,10 +1,12 @@
-﻿using System;
+using System;
+using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
+using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.Boostrapping
 {
@@ -27,11 +29,14 @@ namespace Codestellation.Galaxy.Boostrapping
                     .For<TaskBuilder>()
                     .LifestyleTransient(),
                 Component
-                    .For<OperationBuilder>()
-                    .LifestyleTransient(),
-                Component
                     .For<DeploymentTaskProcessor>()
-                    .LifestyleSingleton());
+                    .LifestyleSingleton(),
+                Classes
+                    .FromThisAssembly()
+                    .BasedOn<IOperation>()
+                    .WithServiceSelf()
+                    .LifestyleTransient()
+            );
         }
     }
 }
