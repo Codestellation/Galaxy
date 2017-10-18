@@ -1,13 +1,13 @@
-using Codestellation.Galaxy.Infrastructure;
+using MediatR;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class DeleteDeploymentEvent : IMainRequest
+    public class DeleteDeploymentRequest : IRequest
     {
         public readonly ObjectId DeploymentId;
 
-        public DeleteDeploymentEvent(ObjectId deploymentId)
+        public DeleteDeploymentRequest(ObjectId deploymentId)
         {
             DeploymentId = deploymentId;
         }

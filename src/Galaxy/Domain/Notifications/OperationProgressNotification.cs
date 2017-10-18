@@ -1,8 +1,9 @@
-﻿using Codestellation.Galaxy.ServiceManager.Operations;
+using Codestellation.Galaxy.ServiceManager.Operations;
+using MediatR;
 
 namespace Codestellation.Galaxy.Domain.Notifications
 {
-    public class OperationProgressNotification
+    public class OperationProgressNotification : INotification
     {
         public readonly int Index;
         public readonly int Total;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Codestellation.Galaxy.Infrastructure;
 using Nejdb;
@@ -8,7 +8,7 @@ namespace Codestellation.Galaxy.Domain.Notifications
     public class NotificationBoard
     {
         private readonly List<Notification> _notifications;
-        private Collection _notificationCollection;
+        private readonly Collection _notificationCollection;
 
         public NotificationBoard(Repository repository)
         {
@@ -23,15 +23,6 @@ namespace Codestellation.Galaxy.Domain.Notifications
             {
                 _notifications.AddRange(_notificationCollection.PerformQuery<Notification>());
                 _notifications.Sort((x, y) => x.CreatedAt.CompareTo(y.CreatedAt));
-            }
-        }
-
-        public void Notify(Notification notification)
-        {
-            lock (_notifications)
-            {
-                _notificationCollection.Save(notification, false);
-                _notifications.Add(notification);
             }
         }
 

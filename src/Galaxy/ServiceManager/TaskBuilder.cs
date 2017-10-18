@@ -1,21 +1,21 @@
 using System.IO;
-using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
+using MediatR;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
     public class TaskBuilder
     {
         private readonly OperationBuilder _operations;
-        private readonly IPublisher _publisher;
+        private readonly IMediator _mediator;
 
-        public TaskBuilder(OperationBuilder operationBuilder, IPublisher publisher)
+        public TaskBuilder(OperationBuilder operationBuilder, IMediator mediator)
         {
             _operations = operationBuilder;
-            _publisher = publisher;
+            _mediator = mediator;
         }
 
         public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
@@ -68,7 +68,7 @@ namespace Codestellation.Galaxy.ServiceManager
             context
                 .SetValue(DeploymentTaskContext.TaskName, name)
                 .SetValue(DeploymentTaskContext.DeploymentId, deployment.Id)
-                .SetValue(DeploymentTaskContext.PublisherKey, _publisher)
+                .SetValue(DeploymentTaskContext.PublisherKey, _mediator)
                 .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
                 .SetValue(DeploymentTaskContext.Folders, deployment.Folders)
                 .SetValue(DeploymentTaskContext.Config, deployment.Config);

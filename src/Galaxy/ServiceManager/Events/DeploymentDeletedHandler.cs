@@ -1,20 +1,25 @@
-﻿using Codestellation.Emisstar;
-using Codestellation.Galaxy.Domain.Deployments;
+using System;
+using Codestellation.Galaxy.Infrastructure;
+using MediatR;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class DeploymentDeletedHandler : IHandler<DeploymentDeletedEvent>
+    public class DeploymentDeletedHandler : IRequestHandler<DeploymentDeletedEvent>
     {
-        private readonly DeploymentBoard _board;
+        private readonly Repository _repository;
 
-        public DeploymentDeletedHandler(DeploymentBoard board)
+        public DeploymentDeletedHandler(Repository repository)
         {
-            _board = board;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         public void Handle(DeploymentDeletedEvent message)
         {
-            _board.RemoveDeployment(message.DeploymentId);
+            using (var tx = _repository.Deployments.BeginTransaction())
+            {
+                _repository.Deployments.Delete(message.DeploymentId);
+                tx.Commit();
+            }
         }
     }
 }

@@ -1,13 +1,13 @@
-using Codestellation.Galaxy.Infrastructure;
+using MediatR;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class StopServiceEvent : IMainRequest
+    public class InstallServiceRequest : IRequest
     {
         public readonly ObjectId DeploymentId;
 
-        public StopServiceEvent(ObjectId deploymentId)
+        public InstallServiceRequest(ObjectId deploymentId)
         {
             DeploymentId = deploymentId;
         }

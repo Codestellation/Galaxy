@@ -1,8 +1,10 @@
-﻿using Codestellation.Emisstar.Testing;
+using System;
 using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes;
+using MediatR;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
@@ -10,68 +12,60 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations
     [TestFixture]
     public class DeploymentTaskTests
     {
-        private TestPublisher _publisher;
-        private TestHandler<DeploymentTaskCompletedEvent> _handler;
+        private IMediator _mediator;
+        private DeploymentTask _task;
 
         [SetUp]
         public void SetUp()
         {
-            _publisher = new TestPublisher();
-            _handler = _publisher.RegisterTestHandler<DeploymentTaskCompletedEvent>();
+            _mediator = Substitute.For<IMediator>();
         }
 
         [Test]
         public void DeploymentProcessor_sequence_success()
         {
-            var successSequenceTask = TestTaskBuilder.SequenceTaskSuccess(_publisher);
-            var result = Execute(successSequenceTask);
-            Assert.AreEqual(ResultCode.Succeed, result.ResultCode);
+            _task = TestTaskBuilder.SequenceTaskSuccess(_mediator);
+            Assert(e => e.Result.ResultCode == ResultCode.Succeed);
         }
 
         [Test]
         public void DeploymentProcessor_sequence_success_task_details()
         {
-            var sequence = TestTaskBuilder.SequenceTaskSuccess(_publisher);
+            _task = TestTaskBuilder.SequenceTaskSuccess(_mediator);
 
-            var result = Execute(sequence);
-
-            Assert.That(result.Details, Is.StringContaining(sequence.Name).And.StringContaining("succeed"));
+            Assert(e => e.Result.Details.Contains(_task.Name) && e.Result.Details.Contains("succeed"));
         }
 
         [Test]
         public void DeploymentProcessor_sequence_fail()
         {
-            var sequence = TestTaskBuilder.SequenceTaskFail(_publisher);
+            _task = TestTaskBuilder.SequenceTaskFail(_mediator);
 
-            var result = Execute(sequence);
-            Assert.AreEqual(ResultCode.Failed, result.ResultCode);
+            Assert(e => e.Result.ResultCode == ResultCode.Failed);
         }
 
         [Test]
         public void DeploymentProcessor_sequence_fail_task_details()
         {
-            var sequence = TestTaskBuilder.SequenceTaskFail(_publisher);
+            _task = TestTaskBuilder.SequenceTaskFail(_mediator);
 
-            var result = Execute(sequence);
 
-            Assert.That(result.Details, Is.StringContaining(sequence.Name).And.StringContaining("failed"));
+            Assert(e => e.Result.Details.Contains(_task.Name) && e.Result.Details.Contains("failed"));
+
         }
 
         [Test]
         public void DeploymentProcessor_sequence_fail_task_step_details()
         {
-            var sequence = TestTaskBuilder.SequenceTaskFailInTheMiddle(_publisher);
+            _task = TestTaskBuilder.SequenceTaskFailInTheMiddle(_mediator);
 
-            var result = Execute(sequence);
-
-            Assert.That(result.Details, Is.StringContaining(typeof(FakeOpFail).Name).And.StringContaining("failed"));
+            Assert(e => e.Result.Details.Contains(typeof(FakeOpFail).Name) && e.Result.Details.Contains("failed"));
         }
 
-        private OperationResult Execute(DeploymentTask task)
+        private void Assert(Predicate<DeploymentTaskCompletedEvent> matching)
         {
-            task.Process();
-            _handler.WaitUntilCalled(10* 1000);
-            return _handler.LastMessage.Result;
+            _task.Process();
+            _mediator.Received(1).Send(Arg.Is<DeploymentTaskCompletedEvent>(x => matching(x)));
         }
     }
 }

@@ -1,90 +1,89 @@
-using System.Linq;
-using Codestellation.Galaxy.Domain;
-using Codestellation.Galaxy.Domain.Deployments;
-using Codestellation.Galaxy.Infrastructure;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Codestellation.Galaxy.WebEnd.Controllers.FeedManagement;
 using Codestellation.Galaxy.WebEnd.Models;
+using MediatR;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Responses;
-using Nejdb;
+using Nancy.Security;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.WebEnd
 {
-    public class FeedModule : CrudModule
+    public class FeedModule : ModuleBase
     {
-        private readonly DeploymentBoard _deploymentBoard;
-        private readonly Collection _feeds;
+        private readonly IMediator _mediator;
         public const string Path = "feed";
 
-        public FeedModule(Repository repository, DeploymentBoard deploymentBoard)
+        public FeedModule(IMediator mediator)
             : base(Path)
         {
-            _deploymentBoard = deploymentBoard;
-            _feeds = repository.GetCollection<NugetFeed>();
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.RequiresAuthentication();
+
+            Get["/", true] = GetList;
+            Get["/create"] = GetCreate;
+            Post["/create", true] = PostCreate;
+            Get["/edit/{id}", true] = GetEdit;
+            Post["/edit/{id}", true] = PostEdit;
+            Post["/delete/{id}", true] = PostDelete;
         }
 
-        protected override CrudOperations SupportedOperations
+        private async Task<dynamic> GetList(dynamic parameters, CancellationToken token)
         {
-            get { return CrudOperations.GetList | CrudOperations.GetCreate | CrudOperations.PostCreate | CrudOperations.GetEdit | CrudOperations.PostEdit | CrudOperations.PostDelete; }
+            var request = new FeedListRequest();
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+
+            return View["list", response.Model];
         }
 
-        protected override object GetList(dynamic parameters)
-        {
-            NugetFeed[] feeds = _feeds.PerformQuery<NugetFeed>();
-            return View["list", new FeedListModel(feeds, _deploymentBoard)];
-        }
-
-        protected override object GetCreate(dynamic parameters)
+        private dynamic GetCreate(dynamic parameters)
         {
             return View["Edit", new FeedModel()];
         }
 
-        protected override object PostCreate(dynamic parameters)
+        private async Task<dynamic> PostCreate(dynamic parameters, CancellationToken token)
         {
             FeedModel model = this.Bind();
-            var feed = model.ToFeed();
-            _feeds.Save(feed, false);
+            var request = new SaveFeedRequest(model);
+            await _mediator.Send(request, token).ConfigureAwait(false);
+            return new RedirectResponse("/feed");
+        }
+
+        private async Task<dynamic> GetEdit(dynamic parameters, CancellationToken token)
+        {
+            var id = new ObjectId(parameters.id);
+            var request = new EditFeedModelRequest(id);
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+
+            return View["Edit", response.Model];
+        }
+
+        private async Task<dynamic> PostEdit(dynamic parameters, CancellationToken token)
+        {
+            var id = new ObjectId(parameters.id);
+            FeedModel model = this.Bind();
+            model.Id = id;
+            var request = new EditFeedRequest(model);
+            await _mediator.Send(request, token).ConfigureAwait(false);
 
             return new RedirectResponse("/feed");
         }
 
-        protected override object GetEdit(dynamic parameters)
+        private async Task<dynamic> PostDelete(dynamic parameters, CancellationToken token)
         {
             var id = new ObjectId(parameters.id);
-            var feed = _feeds.Load<NugetFeed>(id);
-            var model = new FeedModel(feed, false);
-            return View["Edit", model];
-        }
 
-        protected override object PostEdit(dynamic parameters)
-        {
-            var id = new ObjectId(parameters.id);
-            FeedModel model = this.Bind();
-            using (var tx = _feeds.BeginTransaction())
+            var request = new DeleteFeedRequest(id);
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+
+            if (string.IsNullOrWhiteSpace(response.Error))
             {
-                var currentFeed = _feeds.Load<NugetFeed>(id);
-                var updatedFeed = model.ToFeed();
-                currentFeed.Merge(updatedFeed);
-                _feeds.Save(currentFeed, false);
-
-                tx.Commit();
+                return "Ok";
             }
-            return new RedirectResponse("/feed");
-        }
-
-        protected override object PostDelete(dynamic parameters)
-        {
-            var id = new ObjectId(parameters.id);
-
-            var feedInUse = _deploymentBoard.Deployments.Any(x => x.FeedId.Equals(id));
-
-            if (feedInUse)
-            {
-                return new TextResponse(HttpStatusCode.BadRequest, "Feed use. Remove it from deployments to delete");
-            }
-            _feeds.Delete(id);
-            return "Ok";
+            return new TextResponse(HttpStatusCode.BadRequest, response.Error);
         }
     }
 }

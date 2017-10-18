@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Codestellation.Emisstar;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
+using MediatR;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager
@@ -16,10 +16,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private OperationResult[] _operationResults;
 
-        public IReadOnlyList<IOperation> Operations
-        {
-            get { return _operations; }
-        }
+        public IReadOnlyList<IOperation> Operations => _operations;
 
         public DeploymentTask Add(IOperation operation)
         {
@@ -27,20 +24,11 @@ namespace Codestellation.Galaxy.ServiceManager
             return this;
         }
 
-        public ObjectId DeploymentId
-        {
-            get { return Context.GetValue<ObjectId>(DeploymentTaskContext.DeploymentId); }
-        }
+        public ObjectId DeploymentId => Context.GetValue<ObjectId>(DeploymentTaskContext.DeploymentId);
 
-        public string Name
-        {
-            get { return Context.GetValue<string>(DeploymentTaskContext.TaskName); }
-        }
+        public string Name => Context.GetValue<string>(DeploymentTaskContext.TaskName);
 
-        public IPublisher Publisher
-        {
-            get { return Context.Publisher; }
-        }
+        public IMediator Mediator => Context.Mediator;
 
         public DeploymentTask(DeploymentTaskContext context)
         {
@@ -64,7 +52,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             var deploymentResult = new OperationResult(Name, _operationResults);
             var anEvent = new DeploymentTaskCompletedEvent(this, deploymentResult);
-            Publisher.Publish(anEvent);
+            Mediator.Send(anEvent).Wait();
         }
 
         private void ExecuteOperations()
@@ -136,7 +124,7 @@ namespace Codestellation.Galaxy.ServiceManager
         private void PublishProgress(int index, OperationResult result)
         {
             var notification = new OperationProgressNotification(++index, _operations.Count, result);
-            Publisher.Publish(notification);
+            Mediator.Publish(notification);
         }
 
         public override string ToString()

@@ -1,22 +1,30 @@
-﻿using Codestellation.Emisstar;
-using Codestellation.Galaxy.Domain.Deployments;
+using System;
+using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.Infrastructure;
+using MediatR;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class ConfigSampleReceivedHandler : IHandler<ConfigSampleReceived>
+    public class ConfigSampleReceivedHandler : IRequestHandler<SetConfigSampleRequest>
     {
-        private readonly DeploymentBoard _board;
+        private readonly Repository _repository;
 
-        public ConfigSampleReceivedHandler(DeploymentBoard board)
+        public ConfigSampleReceivedHandler(Repository repository)
         {
-            _board = board;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public void Handle(ConfigSampleReceived message)
+        public void Handle(SetConfigSampleRequest message)
         {
-            var deployment = _board.GetDeployment(message.DeploymentId);
-            deployment.ConfigSample = message.Sample;
-            _board.SaveDeployment(deployment);
+            var deployments = _repository.Deployments;
+
+            using (var tx = deployments.BeginTransaction())
+            {
+                var deployment = deployments.Load<Deployment>(message.DeploymentId);
+                deployment.ConfigSample = message.Sample;
+                deployments.Save(deployment, false);
+                tx.Commit();
+            }
         }
     }
 }

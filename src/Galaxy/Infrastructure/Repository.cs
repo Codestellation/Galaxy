@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.Infrastructure
     public class Repository : IDisposable
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static readonly CollectionOptions Options = new CollectionOptions(false, false, 32, 32);
+        private static readonly CollectionOptions CollectionOptions = new CollectionOptions(false, false, 32, 32);
 
         private Library _library;
         private Database _database;
@@ -30,6 +30,8 @@ namespace Codestellation.Galaxy.Infrastructure
 
         public Collection Feeds => _collections[typeof(NugetFeed)];
         public Collection Deployments => _collections[typeof(Deployment)];
+        public Collection Options => _collections[typeof(Options)];
+        public Collection Notifications => _collections[typeof(Notification)];
 
         public void Start()
         {
@@ -82,11 +84,11 @@ namespace Codestellation.Galaxy.Infrastructure
 
         private void CreateCollection(string collectionName, Type entityType, bool clear = false)
         {
-            var collection = _database.CreateCollection(collectionName, Options);
+            var collection = _database.CreateCollection(collectionName, CollectionOptions);
             if (clear)
             {
                 collection.Drop();
-                collection = _database.CreateCollection(collectionName, Options);
+                collection = _database.CreateCollection(collectionName, CollectionOptions);
                 Logger.Warn("Collection '{0}' was dropped", collectionName);
             }
             _collections.Add(entityType, collection);
@@ -113,6 +115,11 @@ namespace Codestellation.Galaxy.Infrastructure
             _library.Dispose();
         }
 
-        private string GetDatabasePath() => Folder.Combine(_dataFolder.FullName, "database", "galaxy.db");
+        private string GetDatabasePath()
+        {
+            var folderPath = Folder.Combine(_dataFolder.FullName, "database");
+            Folder.EnsureExists(folderPath);
+            return Folder.Combine(folderPath, "galaxy.db");
+        }
     }
 }

@@ -31,8 +31,8 @@ namespace Codestellation.Galaxy.ServiceManager
             {
                 var sample = result.StdOut;
                 context.BuildLog.WriteLine($"Completion result: {sample}");
-                var anEvent = new ConfigSampleReceived(_context.GetValue<ObjectId>(DeploymentTaskContext.DeploymentId), sample);
-                _context.Publisher.Publish(anEvent);
+                var request = new SetConfigSampleRequest(_context.GetValue<ObjectId>(DeploymentTaskContext.DeploymentId), sample);
+                _context.Mediator.Send(request);
             }
             else
             {

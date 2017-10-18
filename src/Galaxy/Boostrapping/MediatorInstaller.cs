@@ -5,35 +5,16 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Codestellation.Emisstar;
-using Codestellation.Emisstar.CastleWindsor.Facility;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.Infrastructure.Emisstar;
 using MediatR;
 
 namespace Codestellation.Galaxy.Boostrapping
 {
     namespace Finam.VentureFx.Core.Bootstrap
     {
-        public class EmisstarInstaller : IWindsorInstaller
+        public class MediatorInstaller : IWindsorInstaller
         {
             public void Install(IWindsorContainer container, IConfigurationStore store)
-            {
-                container.AddFacility<EmisstarFacility>(x => { x.RegisterRuleBaseDispatcher<MultiThreadDispatcher>(); });
-
-                container.Register(
-                    Classes
-                        .FromThisAssembly()
-                        .IncludeNonPublicTypes()
-                        .Where(IsPureHandler)
-                        .WithServiceAllHandlers()
-                        .Configure(x => x.IsFallback())
-                        .LifestyleTransient());
-
-                InstallMediator(container);
-            }
-
-            private void InstallMediator(IWindsorContainer container)
             {
                 container.Register(
                     Component
@@ -90,15 +71,6 @@ namespace Codestellation.Galaxy.Boostrapping
                 }
 
                 return obj.GetInterfaces().Any(iface => iface.IsGenericType && IsHandler(iface));
-            }
-
-            private bool IsPureHandler(Type type)
-            {
-                var hanldersCount = type.ImplementationOfGenericInterface(typeof(IHandler<>)).Length;
-
-                var interfaceCount = type.GetInterfaces().Length;
-
-                return hanldersCount > 0 && hanldersCount == interfaceCount;
             }
         }
     }

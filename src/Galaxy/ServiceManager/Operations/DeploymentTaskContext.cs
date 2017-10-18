@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
-using Codestellation.Emisstar;
+using MediatR;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
 {
@@ -39,8 +39,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public bool TryGetValue<TValue>(object key, out TValue value)
         {
-            object temp;
-            if (_data.TryGetValue(key, out temp))
+            if (_data.TryGetValue(key, out object temp))
             {
                 value = (TValue)temp;
                 return true;
@@ -50,9 +49,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             return false;
         }
 
-        public IPublisher Publisher
-        {
-            get { return (IPublisher)_data[PublisherKey]; }
-        }
+        public IMediator Mediator => (IMediator)_data[PublisherKey];
     }
 }

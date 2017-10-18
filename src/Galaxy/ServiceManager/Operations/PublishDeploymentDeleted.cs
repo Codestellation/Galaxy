@@ -1,9 +1,8 @@
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Events;
-using Codestellation.Galaxy.ServiceManager.Operations;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.ServiceManager
+namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class PublishDeploymentDeletedEvent : IOperation
     {
@@ -16,7 +15,9 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public void Execute(DeploymentTaskContext context)
         {
-            context.Publisher.Publish(new DeploymentDeletedEvent(_id));
+            context
+                .Mediator
+                .Send(new DeploymentDeletedEvent(_id)).Wait();
         }
     }
 }

@@ -1,9 +1,9 @@
-using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager.Operations;
+using MediatR;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class DeploymentTaskCompletedEvent : IMainRequest
+    public class DeploymentTaskCompletedEvent : IRequest
     {
         public readonly OperationResult Result;
         public readonly DeploymentTask Task;

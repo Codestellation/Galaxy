@@ -1,10 +1,11 @@
-﻿using Codestellation.Emisstar;
+using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain.Notifications;
+using MediatR;
 using Microsoft.AspNet.SignalR;
 
 namespace Codestellation.Galaxy.WebEnd.SignalR.Alerts
 {
-    public class AlertHandler : IHandler<OperationProgressNotification>
+    public class AlertHandler : IAsyncNotificationHandler<OperationProgressNotification>
     {
         private readonly IHubContext _alerthub;
 
@@ -13,10 +14,11 @@ namespace Codestellation.Galaxy.WebEnd.SignalR.Alerts
             _alerthub = factory.Create<AlertHub>();
         }
 
-        public void Handle(OperationProgressNotification message)
+        public Task Handle(OperationProgressNotification notification)
         {
-            var alertModel = AlertModel.From(message);
+            var alertModel = AlertModel.From(notification);
             _alerthub.Clients.All.onalert(alertModel);
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,9 +1,9 @@
-using Codestellation.Galaxy.Infrastructure;
+using MediatR;
 using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager.Events
 {
-    public class DeploymentDeletedEvent : IMainRequest
+    public class DeploymentDeletedEvent : IRequest
     {
         public readonly ObjectId DeploymentId;
 
