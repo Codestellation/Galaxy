@@ -283,12 +283,14 @@
     <Compile Include="WebEnd\Controllers\FeedManagement\FeedListResponse.cs" />
     <Compile Include="WebEnd\Controllers\FeedManagement\SaveFeedRequest.cs" />
     <Compile Include="WebEnd\Controllers\FeedManagement\SaveFeedResponse.cs" />
+    <Compile Include="WebEnd\Controllers\HomepageManagement\HomepageModelRequest.cs" />
+    <Compile Include="WebEnd\Controllers\HomepageManagement\HomepageModelResponse.cs" />
+    <Compile Include="WebEnd\Controllers\HomepageManagement\HomepageRequestHandler.cs" />
     <Compile Include="WebEnd\Models\DeploymentManangement\DeploymentEditModel.cs" />
     <Compile Include="Configuration\ServiceConfig.cs" />
     <Compile Include="Domain\FileList.cs" />
     <Compile Include="Domain\Notifications\Severity.cs" />
     <Compile Include="Domain\Notifications\Notification.cs" />
-    <Compile Include="Domain\Notifications\NotificationBoard.cs" />
     <Compile Include="Domain\NugetFeed.cs" />
     <Compile Include="Domain\Deployment.cs" />
     <Compile Include="Domain\Options.cs" />
@@ -424,6 +426,7 @@
     <Folder Include="Domain\Deployments\" />
     <Folder Include="WebEnd\Api\Feeds\" />
     <Folder Include="WebEnd\Api\Tasks\" />
+    <Folder Include="WebEnd\Controllers\NotificationManagement\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

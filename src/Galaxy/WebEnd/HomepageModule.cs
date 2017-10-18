@@ -1,25 +1,29 @@
-using Codestellation.Galaxy.Domain.Notifications;
-using Codestellation.Galaxy.WebEnd.Models;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Codestellation.Galaxy.WebEnd.Controllers.HomepageManagement;
+using MediatR;
 using Nancy.Security;
 
 namespace Codestellation.Galaxy.WebEnd
 {
     public class HomepageModule : ModuleBase
     {
-        private readonly NotificationBoard _notificationBoard;
+        private readonly IMediator _mediator;
 
-        public HomepageModule(NotificationBoard notificationBoard)
+        public HomepageModule(IMediator mediator)
         {
-            _notificationBoard = notificationBoard;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.RequiresAuthentication();
 
-            Get["/", true] = (parameters, token) => ProcessRequest(OnRoot, token);
+            Get["/", true] = OnRootAsync;
         }
 
-        private object OnRoot()
+        private async Task<dynamic> OnRootAsync(dynamic o, CancellationToken token)
         {
-            var model = new HomepageModel(_notificationBoard);
-            return View["Homepage", model];
+            var request = new HomepageModelRequest();
+            var response = await _mediator.Send(request, token).ConfigureAwait(false);
+            return View["Homepage", response.Model];
         }
     }
 }
