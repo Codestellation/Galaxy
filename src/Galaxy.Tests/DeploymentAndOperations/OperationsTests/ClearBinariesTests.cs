@@ -39,7 +39,11 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 {
                     DeployFolder = (FullPath)_basePath,
                 },
-                PackageDetails = new PackageDetails("Codestellation.Galaxy.Host", _nugetFeedFolder, version10)
+                KeepOnUpdate = new FileList(new string[0]),
+                PackageDetails = new PackageDetails(
+                    "Codestellation.Galaxy.Host",
+                    _nugetFeedFolder,
+                    version10)
             };
 
             new InstallPackage().Execute(_context);

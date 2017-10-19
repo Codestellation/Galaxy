@@ -1,30 +1,33 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.ServiceManager;
+using Codestellation.Galaxy.ServiceManager.Events;
 using NLog;
 
 namespace Codestellation.Galaxy.Domain
 {
     public class DeploymentTaskProcessor : IDisposable
     {
+        private readonly TaskBuilder _builder;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private readonly BlockingCollection<DeploymentTask> _taskQueue;
+        private readonly BlockingCollection<DeploymentTaskRequest> _taskQueue;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly Task _processingTask;
 
-        public DeploymentTaskProcessor()
+        public DeploymentTaskProcessor(TaskBuilder builder)
         {
-            _taskQueue = new BlockingCollection<DeploymentTask>();
+            _builder = builder;
+            _taskQueue = new BlockingCollection<DeploymentTaskRequest>();
             _cancellationSource = new CancellationTokenSource();
             _processingTask = Task.Run((Action)ProcessInternal);
         }
 
-        public void Process(DeploymentTask task)
+        public void Enqueue(DeploymentTaskRequest request)
         {
-            _taskQueue.Add(task);
+            _taskQueue.Add(request);
         }
 
         private void ProcessInternal()
@@ -32,10 +35,10 @@ namespace Codestellation.Galaxy.Domain
             DeploymentTask temp = null;
             try
             {
-                foreach (var task in _taskQueue.GetConsumingEnumerable(_cancellationSource.Token))
+                foreach (DeploymentTaskRequest request in _taskQueue.GetConsumingEnumerable(_cancellationSource.Token))
                 {
-                    temp = task;
-                    task.Process();
+                    temp = _builder.Build(request);
+                    temp.Process();
                 }
             }
             catch (OperationCanceledException)

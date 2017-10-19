@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using Codestellation.Galaxy.ServiceManager;
-using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Quarks.Collections;
@@ -30,7 +29,7 @@ namespace Codestellation.Galaxy.WebEnd
             this.RequiresAuthentication();
 
             Get["backup/{id}", true] = ShowBackups;
-            Post["backup/{id}", true] = RestoreBackup;
+
 
             Get["/build-log/{id}", true] = GetBuildLogs;
             Get["/build-log/{id}/{filename}", true] = GetBuildLog;
@@ -50,14 +49,7 @@ namespace Codestellation.Galaxy.WebEnd
             return new BackupListModel(deployment.Id, folders);
         }
 
-        private async Task<dynamic> RestoreBackup(dynamic parameters, CancellationToken token)
-        {
-            var id = new ObjectId(parameters.id);
-            string name = Request.Query.name;
-            var request = new RestoreServiceRequest(id, name);
-            await _mediator.Send(request, token).ConfigureAwait(false);
-            return "ok";
-        }
+
 
         private async Task<dynamic> GetBuildLogs(dynamic parameters, CancellationToken cancellationToken)
         {

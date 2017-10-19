@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -15,8 +15,8 @@ namespace Codestellation.Galaxy.Maintenance
 
         public void Execute(DeploymentTaskContext context)
         {
-            var folders = context.GetValue<string[]>(LogFolders);
-            var timeToLive = context.GetValue<int>(PurgeLogOlderThen);
+            string[] folders = context.Parameters.LogFolders;
+            int timeToLive = context.Parameters.PurgeLogOlderThen;
 
             if (timeToLive <= 0)
             {

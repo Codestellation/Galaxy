@@ -45,7 +45,8 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 {
                     DeployFolder = (FullPath)_targetPath
                 },
-                PackageDetails = packageDetails
+                PackageDetails = packageDetails,
+                KeepOnUpdate = FileList.Empty
             };
 
             //when

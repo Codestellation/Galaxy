@@ -38,9 +38,12 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
             var context = new DeploymentTaskContext(streamWriter)
-                .SetValue(DeploymentTaskContext.TaskName, name)
-                .SetValue(DeploymentTaskContext.PublisherKey, mediator)
-                .SetValue(DeploymentTaskContext.LogStream, stream);
+            {
+                TaskName = name,
+                Mediator = mediator,
+                LogStream = stream
+            };
+
             return context;
         }
     }

@@ -24,7 +24,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             TryFindProcess();
 
-            Context.SetValue(DeploymentTaskContext.ServiceStatus, status);
+            Context.ServiceStatus = status;
 
             if (status == ServiceControllerStatus.Stopped || status == ServiceControllerStatus.StopPending)
             {

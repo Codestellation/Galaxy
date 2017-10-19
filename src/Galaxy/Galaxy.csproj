@@ -180,6 +180,9 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
@@ -230,7 +233,9 @@
     <Compile Include="Infrastructure\ServiceVersion.cs" />
     <Compile Include="Infrastructure\SynchronizedHandler.cs" />
     <Compile Include="Infrastructure\TimeZoneCollection.cs" />
-    <Compile Include="ServiceManager\Events\RestoreServiceRequest.cs" />
+    <Compile Include="ServiceManager\DeployServiceTemplate.cs" />
+    <Compile Include="ServiceManager\Events\DeploymentTaskRequest.cs" />
+    <Compile Include="ServiceManager\ITaskTemplate.cs" />
     <Compile Include="ServiceManager\SetConfigSampleRequest.cs" />
     <Compile Include="ServiceManager\Operations\DeployServiceConfig.cs" />
     <Compile Include="ServiceManager\Events\ConfigSampleReceivedHandler.cs" />
@@ -243,10 +248,9 @@
     <Compile Include="ServiceManager\Events\DeploymentDeletedHandler.cs" />
     <Compile Include="ServiceManager\Operations\EnsureFolders.cs" />
     <Compile Include="ServiceManager\Operations\PublishDeploymentDeleted.cs" />
-    <Compile Include="ServiceManager\Events\DeleteDeploymentRequest.cs" />
-    <Compile Include="ServiceManager\Events\DeployServiceRequest.cs" />
-    <Compile Include="ServiceManager\Events\InstallServiceRequest.cs" />
     <Compile Include="ServiceManager\Operations\DeployHostConfig.cs" />
+    <Compile Include="ServiceManager\TaskTemplate.cs" />
+    <Compile Include="ServiceManager\TemplateService.cs" />
     <Compile Include="WebEnd\Api\Error.cs" />
     <Compile Include="WebEnd\Api\Response.cs" />
     <Compile Include="WebEnd\Api\ServiceControl\ServiceStatus.cs" />
@@ -349,8 +353,6 @@
     <Compile Include="WebEnd\DeploymentModule.cs" />
     <Compile Include="WebEnd\Models\OptionsModel.cs" />
     <Compile Include="WebEnd\Models\DeploymentManangement\DeploymentFilesModel.cs" />
-    <Compile Include="ServiceManager\Events\StartServiceRequest.cs" />
-    <Compile Include="ServiceManager\Events\StopServiceRequest.cs" />
     <Compile Include="WebEnd\Bootstrap\OwinExtensions.cs" />
     <Compile Include="WebEnd\SignalR\Alerts\AlertHub.cs" />
     <Compile Include="WebEnd\SignalR\HubFactory.cs" />
@@ -381,7 +383,6 @@
     <Compile Include="WebEnd\Misc\RazorConfiguration.cs" />
     <Compile Include="WebEnd\Misc\ReflectionExtensions.cs" />
     <Compile Include="WebEnd\TagBuilder\TextAreaTag.cs" />
-    <Compile Include="ServiceManager\Events\UninstallServiceRequest.cs" />
     <Compile Include="WebEnd\UserModule.cs" />
     <Compile Include="WebEnd\Misc\ViewExtensions.cs" />
     <Compile Include="WebEnd\OptionsModule.cs" />
@@ -423,6 +424,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Deployments\" />
+    <Folder Include="ServiceManager\TaskTemplates\" />
     <Folder Include="WebEnd\Api\Feeds\" />
     <Folder Include="WebEnd\Api\Tasks\" />
     <Folder Include="WebEnd\Controllers\NotificationManagement\" />

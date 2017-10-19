@@ -26,7 +26,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public ObjectId DeploymentId => Context.DeploymentId;
 
-        public string Name => Context.GetValue<string>(DeploymentTaskContext.TaskName);
+        public string Name => Context.TaskName;
 
         public IMediator Mediator => Context.Mediator;
 

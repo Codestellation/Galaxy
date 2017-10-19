@@ -1,3 +1,4 @@
+using System;
 using System.ServiceProcess;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -6,17 +7,10 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         protected override void ExecuteInternal(DeploymentTaskContext context)
         {
-            var startService = false;
-            if (context.TryGetValue(DeploymentTaskContext.ServiceStatus, out ServiceControllerStatus status))
-            {
-                startService = status == ServiceControllerStatus.Running ||
-                    status == ServiceControllerStatus.StartPending;
-            }
-
-            if (context.TryGetValue(DeploymentTaskContext.ForceStartService, out bool forceStart))
-            {
-                startService = startService || forceStart;
-            }
+            var startService =
+                context.ServiceStatus == ServiceControllerStatus.Running
+                || context.ServiceStatus == ServiceControllerStatus.StartPending
+                || ForceStartService(context.Parameters);
 
             if (startService)
             {
@@ -31,6 +25,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             else
             {
                 context.BuildLog.WriteLine("Service {0} was not started before update. Start skipped.", ServiceName);
+            }
+        }
+
+        public bool ForceStartService(dynamic parameters)
+        {
+            try
+            {
+                return parameters.ForceStartService;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

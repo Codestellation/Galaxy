@@ -1,10 +1,13 @@
 using System.IO;
 using Castle.MicroKernel;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
+using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
 using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
 using MediatR;
+using Nejdb.Bson;
 
 namespace Codestellation.Galaxy.ServiceManager
 {
@@ -12,51 +15,26 @@ namespace Codestellation.Galaxy.ServiceManager
     {
         private readonly IMediator _mediator;
         private readonly IKernel _kernel;
+        private readonly TemplateService _service;
 
-        public TaskBuilder(IMediator mediator, IKernel kernel)
+        public TaskBuilder(IMediator mediator, IKernel kernel, TemplateService service)
         {
             _mediator = mediator;
             _kernel = kernel;
+            _service = service;
         }
 
-        public DeploymentTask DeployServiceTask(Deployment deployment, NugetFeed deploymentFeed)
+        public DeploymentTask Build(DeploymentTaskRequest request)
         {
-            return CreateDeployTask("UpdateService", deployment, deploymentFeed)
-                .Add(Operation<StopService>())
-                .Add(Operation<BackupService>())
-                .Add(Operation<ClearBinaries>())
-                .Add(Operation<EnsureFolders>())
-                .Add(Operation<InstallPackage>())
-                .Add(Operation<DeployHostConfig>())
-                .Add(Operation<GetConfigSample>())
-                .Add(Operation<DeployServiceConfig>())
-                .Add(Operation<StartService>());
+            var (deployment, feed) = GetDeployment(request.DeploymentId);
+            return CreateDeployTask(request.TaskName, deployment, feed, request.Parameters);
         }
 
-        public DeploymentTask InstallServiceTask(Deployment deployment, NugetFeed feed)
+        private (Deployment deployment, NugetFeed feed) GetDeployment(ObjectId id)
         {
-            return CreateDeployTask("InstallService", deployment, feed)
-                .Add(Operation<InstallService>());
-        }
-
-        public DeploymentTask UninstallServiceTask(Deployment deployment, NugetFeed feed)
-        {
-            return CreateDeployTask("UninstallService", deployment, feed)
-                .Add(Operation<StopService>())
-                .Add(Operation < UninstallService>());
-        }
-
-        public DeploymentTask StartServiceTask(Deployment deployment, NugetFeed feed)
-        {
-            var startServiceTask = CreateDeployTask("StartService", deployment, feed)
-                .Add(Operation<StartService>());
-            startServiceTask.Context.SetValue(DeploymentTaskContext.ForceStartService, true);
-            return startServiceTask;
-        }
-
-        public DeploymentTask StopServiceTask(Deployment deployment, NugetFeed feed)
-        {
-            return CreateDeployTask("StopService", deployment, feed).Add(Operation<StopService>());
+            var request = new GetDeploymentRequest(id);
+            var response = _mediator.Send(request).Result;
+            return (response.Deployment, response.Feed);
         }
 
         private DeploymentTask CreateDeployTask(string name, Deployment deployment, NugetFeed deploymentFeed, object parameters = null, Stream logStream = null)
@@ -66,6 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             var context = new DeploymentTaskContext(streamWriter)
             {
+                TaskName = name,
                 Parameters = parameters ?? new object(),
                 DeploymentId = deployment.Id,
                 Folders = deployment.Folders,
@@ -74,15 +53,21 @@ namespace Codestellation.Galaxy.ServiceManager
                 ServiceName = string.IsNullOrWhiteSpace(deployment.InstanceName)
                     ? deployment.PackageId
                     : $"{deployment.PackageId}${deployment.InstanceName}",
-                PackageDetails = new PackageDetails(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion)
+                PackageDetails = new PackageDetails(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion),
+                Mediator = _mediator,
+                LogStream = actualLogStream,
+                Config = deployment.Config
             };
-            context
-                .SetValue(DeploymentTaskContext.TaskName, name)
-                .SetValue(DeploymentTaskContext.PublisherKey, _mediator)
-                .SetValue(DeploymentTaskContext.LogStream, actualLogStream)
-                .SetValue(DeploymentTaskContext.Config, deployment.Config);
 
-            return new DeploymentTask(context);
+            var template = _service.GetTemplate(name);
+            var task = new DeploymentTask(context);
+
+            foreach (var operationType in template.Operations)
+            {
+                var operation = (IOperation)_kernel.Resolve(operationType);
+                task.Add(operation);
+            }
+            return task;
         }
 
         private static FileStream BuildDefaultLogStream(string name, Deployment deployment)
@@ -94,43 +79,6 @@ namespace Codestellation.Galaxy.ServiceManager
             var fullPath = Path.Combine((string)deployLogFolder, filename);
             var defaultStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
             return defaultStream;
-        }
-
-        public DeploymentTask RestoreFromBackup(Deployment deployment, NugetFeed feed, object parameters = null)
-        {
-            return CreateDeployTask("Restore From Backup", deployment, feed, parameters)
-                .Add(Operation<StopService>())
-                .Add(Operation<BackupService>())
-                .Add(Operation<ClearBinaries>())
-                .Add(Operation<RestoreFromBackup>());
-        }
-
-        public DeploymentTask DeleteDeploymentTask(Deployment deployment, NugetFeed feed)
-        {
-            return CreateDeployTask("DeleteDeployment", deployment, feed, new MemoryStream(1024)) //We are going to delete directory where logs would be written. That's why we hack it!
-                .Add(Operation<StopService>())
-                .Add(Operation<UninstallService>())
-                .Add(Operation<DeleteFolders>())
-                .Add(Operation<UninstallPackage>())
-                .Add(Operation<PublishDeploymentDeletedEvent>());
-        }
-
-        public DeploymentTask MoveFolder(Deployment deployment, NugetFeed feed)
-        {
-            return CreateDeployTask("Move Folder", deployment, feed)
-                .Add(Operation<StopService>())
-                .Add(Operation<UninstallService>())
-                .Add(Operation<EnsureFolders>())
-                .Add(Operation<DeployHostConfig>())
-                .Add(Operation<DeployServiceConfig>())
-                .Add(Operation<StartService>())
-                .Add(Operation<InstallService>());
-        }
-
-        private IOperation Operation<TOperation>()
-            where TOperation : IOperation
-        {
-            return _kernel.Resolve<TOperation>();
         }
     }
 }

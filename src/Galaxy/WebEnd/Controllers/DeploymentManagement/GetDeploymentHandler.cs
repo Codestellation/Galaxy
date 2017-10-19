@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Linq;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
 using MediatR;
 
@@ -12,10 +14,16 @@ namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
+
         public GetDeploymentResponse Handle(GetDeploymentRequest message)
         {
-            var deployment = _repository.Deployments.Load<Domain.Deployment>(message.Id);
-            return new GetDeploymentResponse(deployment);
+            var deployment = _repository.Deployments.Load<Deployment>(message.Id);
+            var feed = _repository
+                .Feeds
+                .PerformQuery<NugetFeed>()
+                .Single(x => x.Id == deployment.Id);
+
+            return new GetDeploymentResponse(deployment, feed);
         }
     }
 }

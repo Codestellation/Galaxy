@@ -1,14 +1,17 @@
-﻿using System;
+using System;
+using Codestellation.Galaxy.Domain;
 
 namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
 {
     public class GetDeploymentResponse
     {
-        public Domain.Deployment Deployment { get; }
+        public NugetFeed Feed { get; }
+        public Deployment Deployment { get; }
 
-        public GetDeploymentResponse(Domain.Deployment deployment)
+        public GetDeploymentResponse(Deployment deployment, NugetFeed feed)
         {
             Deployment = deployment ?? throw new ArgumentNullException(nameof(deployment));
+            Feed = feed ?? throw new ArgumentNullException(nameof(feed));
         }
     }
 }

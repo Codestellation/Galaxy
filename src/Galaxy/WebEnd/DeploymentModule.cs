@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
 using Codestellation.Galaxy.WebEnd.Models.DeploymentManangement;
@@ -40,6 +41,8 @@ namespace Codestellation.Galaxy.WebEnd
             Post["/stop/{id}", true] = PostStop;
             Post["/uninstall/{id}", true] = PostUninstall;
             Post["/deploy/{id}/{version}", true] = PostDeploy;
+
+            Post["backup/{id}", true] = RestoreBackup;
         }
 
         private async Task<dynamic> GetList(dynamic parameters, CancellationToken token)
@@ -100,47 +103,62 @@ namespace Codestellation.Galaxy.WebEnd
         private async Task<dynamic> PostDelete(dynamic parameters, CancellationToken token)
         {
             var id = new ObjectId(parameters.id);
-            var request = new DeleteDeploymentRequest(id);
+            var request = new DeploymentTaskRequest(id, Templates.Delete);
             await _mediator.Send(request, token).ConfigureAwait(false);
             return RedirectToList();
         }
 
         private async Task<dynamic> PostInstall(dynamic parameters, CancellationToken token)
         {
-            return await SendCommand<InstallServiceRequest>(new ObjectId(parameters.id), token).ConfigureAwait(false);
-        }
-
-        private async Task<dynamic> PostStart(dynamic parameters, CancellationToken token)
-        {
-            return await SendCommand<StartServiceRequest>(new ObjectId(parameters.id), token).ConfigureAwait(false);
-        }
-
-        private async Task<dynamic> PostStop(dynamic parameters, CancellationToken token)
-        {
-            return await SendCommand<StopServiceRequest>(new ObjectId(parameters.id), token).ConfigureAwait(false);
+            var id = new ObjectId(parameters.id);
+            var request = new DeploymentTaskRequest(id, Templates.Install);
+            return await SendCommand(request, token).ConfigureAwait(false);
         }
 
         private async Task<dynamic> PostUninstall(dynamic parameters, CancellationToken token)
         {
-            return await SendCommand<UninstallServiceRequest>(new ObjectId(parameters.id), token).ConfigureAwait(false);
+            var id = new ObjectId(parameters.id);
+            var request = new DeploymentTaskRequest(id, Templates.Uninstall);
+            return await SendCommand(request, token).ConfigureAwait(false);
+        }
+
+        private async Task<dynamic> PostStart(dynamic parameters, CancellationToken token)
+        {
+            var id = new ObjectId(parameters.id);
+            var request = new DeploymentTaskRequest(id, Templates.Start);
+            return await SendCommand(request, token).ConfigureAwait(false);
+        }
+
+        private async Task<dynamic> PostStop(dynamic parameters, CancellationToken token)
+        {
+            var id = new ObjectId(parameters.id);
+            var request = new DeploymentTaskRequest(id, Templates.Stop);
+            return await SendCommand(request, token).ConfigureAwait(false);
         }
 
         private async Task<dynamic> PostDeploy(dynamic parameters, CancellationToken token)
         {
             var id = new ObjectId(parameters.id);
             var version = new Version(parameters.version);
-            var message = new DeployServiceRequest(id, version);
+            var requestParameters = new { Version = version };
+            var request = new DeploymentTaskRequest(id, Templates.Deploy, requestParameters);
 
-            await _mediator.Send(message, token).ConfigureAwait(false);
-
+            await _mediator.Send(request, token).ConfigureAwait(false);
             return "ok";
         }
 
-        private async Task<string> SendCommand<TRequest>(ObjectId id, CancellationToken token)
-            where TRequest : IRequest
+        private async Task<dynamic> RestoreBackup(dynamic parameters, CancellationToken token)
         {
-            var request = (TRequest)Activator.CreateInstance(typeof(TRequest), id);
+            var id = new ObjectId(parameters.id);
+            string name = Request.Query.name;
+            var requestParameters = new { Name = name };
+            var request = new DeploymentTaskRequest(id, Templates.Restore, requestParameters);
+            await _mediator.Send(request, token).ConfigureAwait(false);
+            return "ok";
+        }
 
+        private async Task<string> SendCommand(DeploymentTaskRequest request, CancellationToken token)
+        {
             await _mediator.Send(request, token).ConfigureAwait(false);
             return "ok";
         }

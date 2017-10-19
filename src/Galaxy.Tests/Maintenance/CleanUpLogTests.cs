@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Codestellation.Galaxy.Maintenance;
 using Codestellation.Galaxy.ServiceManager.Operations;
@@ -63,9 +63,9 @@ namespace Codestellation.Galaxy.Tests.Maintenance
 
             var stringWriter = new StringWriter();
             var context = new DeploymentTaskContext(stringWriter);
-            context.SetValue(CleanUpLog.LogFolders, new[] {_folder});
+            context.Parameters.LogFolders = new[] { _folder };
 
-            context.SetValue(CleanUpLog.PurgeLogOlderThen, timeToLive);
+            context.Parameters.PurgeLogOlderThen = timeToLive;
 
             cleanUp.Execute(context);
 
