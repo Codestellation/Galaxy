@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -24,10 +23,12 @@ namespace Codestellation.Galaxy.Boostrapping
                 Component
                     .For<Repository>()
                     .LifestyleSingleton(),
-
                 Component
                     .For<TaskBuilder>()
                     .LifestyleTransient(),
+                Component
+                    .For<TemplateService>()
+                    .LifestyleSingleton(),
                 Component
                     .For<DeploymentTaskProcessor>()
                     .LifestyleSingleton(),

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Operations;
 
 namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes

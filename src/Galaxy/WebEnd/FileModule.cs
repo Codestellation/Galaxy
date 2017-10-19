@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Infrastructure;
-using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
 using Codestellation.Galaxy.WebEnd.Models;
 using Codestellation.Quarks.Collections;
@@ -18,18 +17,15 @@ namespace Codestellation.Galaxy.WebEnd
         public const string Path = DeploymentModule.Path + "/file";
 
         private readonly IMediator _mediator;
-        private readonly TaskBuilder _taskBuilder;
 
-        public FileModule(IMediator mediator, TaskBuilder taskBuilder)
+        public FileModule(IMediator mediator)
             : base(Path)
         {
             _mediator = mediator;
-            _taskBuilder = taskBuilder;
 
             this.RequiresAuthentication();
 
             Get["backup/{id}", true] = ShowBackups;
-
 
             Get["/build-log/{id}", true] = GetBuildLogs;
             Get["/build-log/{id}/{filename}", true] = GetBuildLog;
@@ -48,8 +44,6 @@ namespace Codestellation.Galaxy.WebEnd
 
             return new BackupListModel(deployment.Id, folders);
         }
-
-
 
         private async Task<dynamic> GetBuildLogs(dynamic parameters, CancellationToken cancellationToken)
         {

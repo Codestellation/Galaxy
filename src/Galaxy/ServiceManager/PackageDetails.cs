@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Codestellation.Galaxy.ServiceManager.Operations
+namespace Codestellation.Galaxy.ServiceManager
 {
     public class PackageDetails
     {

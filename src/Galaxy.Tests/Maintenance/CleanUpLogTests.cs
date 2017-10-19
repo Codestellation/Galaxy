@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Codestellation.Galaxy.Maintenance;
+using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Quarks.IO;
 using NUnit.Framework;

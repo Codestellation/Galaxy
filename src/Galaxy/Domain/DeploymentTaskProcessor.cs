@@ -43,7 +43,7 @@ namespace Codestellation.Galaxy.Domain
             }
             catch (OperationCanceledException)
             {
-                //Operation cancelled by cancellation source
+                //Operation canceled by cancellation source
             }
             catch (Exception ex)
             {

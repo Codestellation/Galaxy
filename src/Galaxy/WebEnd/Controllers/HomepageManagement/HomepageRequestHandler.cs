@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.Infrastructure;
@@ -21,8 +21,8 @@ namespace Codestellation.Galaxy.WebEnd.Controllers.HomepageManagement
         {
             var notifications = _repository.Notifications;
             var now = DateTime.UtcNow;
-
-            var greaterThan = Criterions.GreaterThanOrEqual(now);
+            var thirtyDaysAgo = now.AddDays(-30);
+            var greaterThan = Criterions.GreaterThanOrEqual(thirtyDaysAgo);
             var criterion = Criterions.Field(nameof(Notification.CreatedAt), greaterThan);
             var builder = new QueryBuilder(criterion);
             var last30Days = notifications

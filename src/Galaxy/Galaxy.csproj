@@ -83,7 +83,7 @@
     <EmbeddedResource Include="WebEnd\Views\Deployment\List.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Deployment\Details.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\Options\Options.cshtml" />
-    <EmbeddedResource Include="WebEnd\Views\Deployment\BuildLogs.cshtml" />
+    <EmbeddedResource Include="WebEnd\Views\File\BuildLogs.cshtml" />
     <EmbeddedResource Include="WebEnd\Views\File\BackupList.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -304,13 +304,12 @@
     <Compile Include="Infrastructure\EjdbCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\PackageBoard.cs" />
-    <Compile Include="Maintenance\CleanUpLog.cs" />
+    <Compile Include="ServiceManager\Operations\CleanUpLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskCompletedHandler.cs" />
-    <Compile Include="ServiceManager\Events\DeploymentTaskCompletedNotifier.cs" />
     <Compile Include="ServiceManager\Operations\BackupService.cs" />
-    <Compile Include="ServiceManager\Operations\DeploymentTaskContext.cs" />
-    <Compile Include="ServiceManager\Operations\PackageDetails.cs" />
+    <Compile Include="ServiceManager\DeploymentTaskContext.cs" />
+    <Compile Include="ServiceManager\PackageDetails.cs" />
     <Compile Include="ServiceManager\Operations\RestoreFromBackup.cs" />
     <Compile Include="ServiceManager\TaskBuilder.cs" />
     <Compile Include="ServiceManager\Operations\ClearBinaries.cs" />
@@ -422,13 +421,7 @@
       <Name>Galaxy.Host</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Deployments\" />
-    <Folder Include="ServiceManager\TaskTemplates\" />
-    <Folder Include="WebEnd\Api\Feeds\" />
-    <Folder Include="WebEnd\Api\Tasks\" />
-    <Folder Include="WebEnd\Controllers\NotificationManagement\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

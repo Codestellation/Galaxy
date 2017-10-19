@@ -1,7 +1,6 @@
-using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Quarks.IO;
 
-namespace Codestellation.Galaxy.ServiceManager
+namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class DeleteFolders : IOperation
     {

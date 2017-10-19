@@ -21,7 +21,7 @@ namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
             var feed = _repository
                 .Feeds
                 .PerformQuery<NugetFeed>()
-                .Single(x => x.Id == deployment.Id);
+                .Single(x => x.Id == deployment.FeedId);
 
             return new GetDeploymentResponse(deployment, feed);
         }

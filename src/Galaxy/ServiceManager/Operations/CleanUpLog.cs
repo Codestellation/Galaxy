@@ -2,17 +2,13 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Quarks.DateAndTime;
 using Codestellation.Quarks.IO;
 
-namespace Codestellation.Galaxy.Maintenance
+namespace Codestellation.Galaxy.ServiceManager.Operations
 {
     public class CleanUpLog : IOperation
     {
-        public const string LogFolders = "Maintenance.LogFolders";
-        public const string PurgeLogOlderThen = "Maintenance.PurgeLogOlderThen";
-
         public void Execute(DeploymentTaskContext context)
         {
             string[] folders = context.Parameters.LogFolders;

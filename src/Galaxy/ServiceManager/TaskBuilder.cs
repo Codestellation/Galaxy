@@ -54,6 +54,7 @@ namespace Codestellation.Galaxy.ServiceManager
                     ? deployment.PackageId
                     : $"{deployment.PackageId}${deployment.InstanceName}",
                 PackageDetails = new PackageDetails(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion),
+                KeepOnUpdate = deployment.KeepOnUpdate ?? FileList.Empty,
                 Mediator = _mediator,
                 LogStream = actualLogStream,
                 Config = deployment.Config
@@ -72,7 +73,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private static FileStream BuildDefaultLogStream(string name, Deployment deployment)
         {
-            FullPath deployLogFolder = deployment.Folders.DeployFolder;
+            FullPath deployLogFolder = deployment.Folders.DeployLogsFolder;
             Folder.EnsureExists((string)deployLogFolder);
 
             var filename = $"{name}.{Clock.UtcNow.ToLocalTime():yyyy-MM-dd_HH.mm.ss}.log";

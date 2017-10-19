@@ -1,4 +1,4 @@
-﻿@using System.Linq
+@using System.Linq
 @using Codestellation.Galaxy.WebEnd
 @using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.BuildLogsModel>
@@ -13,7 +13,7 @@
     @foreach (var file in Model.Files)
     {
         <li class="list-group-item">
-          <a href="/@DeploymentModule.Path/build-log/@Model.DeploymentId/@file.Name">@file.Name</a>
+          <a href="/@FileModule.Path/build-log/@Model.DeploymentId/@file.Name">@file.Name</a>
         </li>
     }
   </ul>

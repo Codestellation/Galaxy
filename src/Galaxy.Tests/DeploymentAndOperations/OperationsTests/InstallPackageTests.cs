@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Galaxy.ServiceManager;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.Tests.Content;
 using Codestellation.Quarks.IO;

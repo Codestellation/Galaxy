@@ -1,3 +1,4 @@
+using System;
 using System.Dynamic;
 using System.IO;
 using System.ServiceProcess;
@@ -5,7 +6,7 @@ using Codestellation.Galaxy.Domain;
 using MediatR;
 using Nejdb.Bson;
 
-namespace Codestellation.Galaxy.ServiceManager.Operations
+namespace Codestellation.Galaxy.ServiceManager
 {
     public class DeploymentTaskContext
     {
@@ -29,6 +30,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
         public PackageDetails PackageDetails { get; set; }
         public Stream LogStream { get; set; }
+        public Version InstalledPackageVersion { get; set; }
 
         public DeploymentTaskContext(TextWriter buildLog)
         {

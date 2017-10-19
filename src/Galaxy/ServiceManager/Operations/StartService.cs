@@ -32,9 +32,9 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-                return parameters.ForceStartService;
+                return (bool)parameters.ForceStartService;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }

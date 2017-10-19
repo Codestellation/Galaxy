@@ -1,4 +1,5 @@
-﻿@using System.Linq
+@using System.Linq
+@using Codestellation.Galaxy.ServiceManager
 @using Codestellation.Galaxy.WebEnd
 @using Codestellation.Galaxy.WebEnd.Misc
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentManangement.DeploymentModel>
@@ -53,16 +54,16 @@
             </div>
         </li>
         <li class="list-group-item">
-            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/start/@Model.Id">Start</button>
+            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Start&id=@Model.Id&ForceStartService=true">Start</button>
         </li>
         <li class="list-group-item">
-            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/stop/@Model.Id">Stop</button>
+            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Stop&id=@Model.Id">Stop</button>
         </li>
         <li class="list-group-item">
-            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/install/@Model.Id">Install</button>
+            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Install&id=@Model.Id">Install</button>
         </li>
         <li class="list-group-item">
-            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/uninstall/@Model.Id">Uninstall</button>
+            <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Uninstall&id=@Model.Id">Uninstall</button>
         </li>
     </ul>
 </div>
@@ -74,7 +75,7 @@
     <table class="table">
         <tbody>
             <tr>
-                <td><a href="/@DeploymentModule.Path/build-log/@Model.Id">View Build Logs</a></td>
+                <td><a href="/@FileModule.Path/build-log/@Model.Id">View Build Logs</a></td>
             </tr>
             <tr>
                 <td><a href="/@FileModule.Path/backup/@Model.Id">View Backups</a></td>
@@ -104,7 +105,7 @@
         $('#btn-deploy')
             .click(function () {
                 $.ajax({
-                    url: '/@DeploymentModule.Path/deploy/@Model.Id/' + version.val(),
+                    url: '/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Deploy&id=@Model.Id&Version=' + version.val(),
                     type: 'POST'
                 });
             });
@@ -113,7 +114,7 @@
             $(this).bind('click', function () {
                 $.ajax({
                     url: $(this).val(),
-                    type: 'POST',
+                    type: 'POST'
                 });
             });
         });

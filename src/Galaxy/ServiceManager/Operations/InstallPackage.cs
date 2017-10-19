@@ -31,21 +31,24 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             _buildLog.WriteLine("Install '{0}' from '{1}' to '{2}'.", packageId, packageDetails.FeedUri, _destination);
 
-            manager.PackageInstalled += MoveFilesToDestination;
+            manager.PackageInstalled += (sender, args) => MoveFilesToDestination(args, context);
 
+            var version = GetVersion(context.Parameters);
+            _buildLog.WriteLine($"Package version to install: {version ?? "latest"}");
             if (packageDetails.Version == null)
             {
                 manager.InstallPackage(packageId);
             }
             else
             {
-                manager.InstallPackage(packageId, new SemanticVersion(packageDetails.Version));
+                manager.InstallPackage(packageId, new SemanticVersion(version));
             }
         }
 
-        private void MoveFilesToDestination(object sender, PackageOperationEventArgs e)
+        private void MoveFilesToDestination(PackageOperationEventArgs e, DeploymentTaskContext context)
         {
             var installPath = e.InstallPath;
+
             _buildLog.WriteLine("Installed '{0}.{1}' to '{2}'.", e.Package.Id, e.Package.Version, installPath);
 
             foreach (var file in e.Package.GetFiles())
@@ -55,6 +58,8 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             _buildLog.WriteLine("Delete '{0}'", installPath);
             Folder.EnsureDeleted(installPath);
+
+            context.InstalledPackageVersion = e.Package.Version.Version;
         }
 
         private void MoveFileToDestination(string installPath, IPackageFile file)
@@ -86,6 +91,18 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             {
                 _buildLog.WriteLine("Failed: {0}", ex);
                 throw;
+            }
+        }
+
+        private Version GetVersion(dynamic parameters)
+        {
+            try
+            {
+                return new Version(parameters.Version);
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }
