@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.ServiceProcess;
@@ -31,6 +32,9 @@ namespace Codestellation.Galaxy.ServiceManager
         public PackageDetails PackageDetails { get; set; }
         public Stream LogStream { get; set; }
         public Version InstalledPackageVersion { get; set; }
+
+        public ServiceFolders NewFolders { get; set; }
+
 
         public DeploymentTaskContext(TextWriter buildLog)
         {

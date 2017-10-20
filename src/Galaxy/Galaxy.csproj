@@ -236,6 +236,7 @@
     <Compile Include="ServiceManager\DeployServiceTemplate.cs" />
     <Compile Include="ServiceManager\Events\DeploymentTaskRequest.cs" />
     <Compile Include="ServiceManager\ITaskTemplate.cs" />
+    <Compile Include="ServiceManager\Operations\MoveFolder.cs" />
     <Compile Include="ServiceManager\SetConfigSampleRequest.cs" />
     <Compile Include="ServiceManager\Operations\DeployServiceConfig.cs" />
     <Compile Include="ServiceManager\Events\ConfigSampleReceivedHandler.cs" />
@@ -250,6 +251,7 @@
     <Compile Include="ServiceManager\Operations\PublishDeploymentDeleted.cs" />
     <Compile Include="ServiceManager\Operations\DeployHostConfig.cs" />
     <Compile Include="ServiceManager\TaskTemplate.cs" />
+    <Compile Include="ServiceManager\Templates.cs" />
     <Compile Include="ServiceManager\TemplateService.cs" />
     <Compile Include="WebEnd\Api\Error.cs" />
     <Compile Include="WebEnd\Api\Response.cs" />

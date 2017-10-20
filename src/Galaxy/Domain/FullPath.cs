@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -9,6 +9,8 @@ namespace Codestellation.Galaxy.Domain
     public struct FullPath : IEquatable<FullPath>
     {
         private readonly string _value;
+
+        public bool IsEmpty => string.IsNullOrWhiteSpace(_value);
 
         public FullPath(string value)
         {
@@ -31,10 +33,7 @@ namespace Codestellation.Galaxy.Domain
             _value = value;
         }
 
-        public override string ToString()
-        {
-            return _value;
-        }
+        public override string ToString() => _value;
 
         public bool Equals(FullPath other) => string.Equals(_value, other._value);
 

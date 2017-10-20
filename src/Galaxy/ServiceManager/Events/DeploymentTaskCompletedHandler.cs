@@ -34,7 +34,9 @@ namespace Codestellation.Galaxy.ServiceManager.Events
                 }
 
                 deployment.Status = message.Result.Details;
-                deployment.PackageVersion = message.Task.Context.InstalledPackageVersion ?? deployment.PackageVersion;
+                DeploymentTaskContext context = message.Task.Context;
+                deployment.PackageVersion = context.InstalledPackageVersion ?? deployment.PackageVersion;
+                deployment.Folders = context.NewFolders ?? deployment.Folders;
                 deployments.Save(deployment, false);
                 tx.Commit();
             }

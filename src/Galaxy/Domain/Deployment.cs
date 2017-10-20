@@ -23,7 +23,7 @@ namespace Codestellation.Galaxy.Domain
 
         public string Config { get; set; }
 
-        public ServiceFolders Folders { get; }
+        public ServiceFolders Folders { get; set; }
 
         public bool HasInstanceName => !string.IsNullOrWhiteSpace(InstanceName);
 
