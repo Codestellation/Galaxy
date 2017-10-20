@@ -12,13 +12,13 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             var actual = context.Folders;
             var folderName = (string)context.Parameters.FolderName;
-            var folderValue = (FullPath)context.Parameters.FolderValue;
+            var folderValue = (FullPath)(string)context.Parameters.FolderValue;
             var errors = ValidateFolders(actual, folderName, folderValue);
             if (errors.Count > 0)
             {
                 var message = "Could not move folders. Reasons: "
-                              + Environment.NewLine
-                              + string.Join(Environment.NewLine, errors);
+                    + Environment.NewLine
+                    + string.Join(Environment.NewLine, errors);
                 throw new InvalidOperationException(message);
             }
             MoveFolders(actual, folderName, folderValue, context);
@@ -28,13 +28,13 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             var cloned = actual.Clone();
 
-                var source = (string)actual[folderName];
-                var destination = path;
-                context.BuildLog.Write($"Moving from '{source}' to '{destination}'...");
-                Directory.Move(source, (string)destination);
-                context.BuildLog.Write($"Ok");
-                context.BuildLog.WriteLine();
-                cloned[folderName] = destination;
+            var source = (string)actual[folderName];
+            var destination = path;
+            context.BuildLog.Write($"Moving from '{source}' to '{destination}'...");
+            Directory.Move(source, (string)destination);
+            context.BuildLog.Write($"Ok");
+            context.BuildLog.WriteLine();
+            cloned[folderName] = destination;
 
             context.NewFolders = cloned;
         }
@@ -44,7 +44,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
             var errors = new List<string>();
             var actualDictionary = actual.ToDictionary();
 
-            if (!Path.IsPathRooted((string) path))
+            if (!Path.IsPathRooted((string)path))
             {
                 var error = $"Path must be rooted, not relative, but was '{path}'.";
                 errors.Add(error);
@@ -67,7 +67,6 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
                 errors.Add(error);
                 return errors;
             }
-
 
             // folder path should be valid
             var result = Folder.EnsureExists((string)path);

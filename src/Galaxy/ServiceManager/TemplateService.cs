@@ -90,7 +90,7 @@ namespace Codestellation.Galaxy.ServiceManager
                 });
 
             yield return new TaskTemplate(
-                Templates.Deploy,
+                Templates.MoveFolder,
                 new[]
                 {
                     typeof(StopService),
