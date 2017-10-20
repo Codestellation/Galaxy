@@ -9,7 +9,7 @@ version: '{build}'
 # Tests
 test: off
 
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 cache:
   - packages -> **\*packages.config
