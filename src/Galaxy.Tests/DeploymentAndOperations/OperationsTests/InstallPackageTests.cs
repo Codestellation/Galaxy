@@ -49,6 +49,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                 PackageDetails = packageDetails,
                 KeepOnUpdate = FileList.Empty
             };
+            context.Parameters.Version = version10.ToString();
 
             //when
             op.Execute(context);

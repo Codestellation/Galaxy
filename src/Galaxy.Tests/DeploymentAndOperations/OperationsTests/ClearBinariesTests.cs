@@ -46,7 +46,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
                     _nugetFeedFolder,
                     version10)
             };
-
+            _context.Parameters.Version = version10.ToString();
             new InstallPackage().Execute(_context);
         }
 

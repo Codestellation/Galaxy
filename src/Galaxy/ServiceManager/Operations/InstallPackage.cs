@@ -98,7 +98,7 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
         {
             try
             {
-                return new Version(parameters.Version);
+                return new Version((string)parameters.Version);
             }
             catch (Exception)
             {
