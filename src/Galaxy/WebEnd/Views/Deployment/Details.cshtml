@@ -65,6 +65,22 @@
         <li class="list-group-item">
             <button class="btn btn-primary" type="button" value="/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Uninstall&id=@Model.Id">Uninstall</button>
         </li>
+        
+        @foreach (var folder in Model.Folders)
+        {
+            <li class="list-group-item">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon3">@folder.Key</span>
+                    <input id="@folder.Key" type="text" class="form-control" aria-describedby="basic-addon3" value="@folder.Value">
+                    <span class="input-group-btn">
+                        <button 
+                            data-key="@folder.Key"
+                            data-value="/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.MoveFolder&id=@Model.Id&FolderName=@folder.Key&FolderValue="
+                            class="btn btn-primary" type="button">Move</button>
+                    </span>
+                </div>
+            </li>
+        }
     </ul>
 </div>
 
@@ -83,12 +99,6 @@
             <tr>
                 <td><b>State</b>: @Model.State</td>
             </tr>
-            @foreach (var folder in Model.Folders)
-            {
-                <tr>
-                    <td><b>@folder.Key</b>: @folder.Value</td>
-                </tr>
-            }
         </tbody>
 
 
@@ -114,6 +124,17 @@
             $(this).bind('click', function () {
                 $.ajax({
                     url: $(this).val(),
+                    type: 'POST'
+                });
+            });
+        });
+        
+        $('button[data-value]').each(function () {
+            var key = $(this).attr("data-key");
+            var folder = $('#' + key);
+            $(this).bind('click', function () {
+                $.ajax({
+                    url: $(this).val() + folder.val(),
                     type: 'POST'
                 });
             });
