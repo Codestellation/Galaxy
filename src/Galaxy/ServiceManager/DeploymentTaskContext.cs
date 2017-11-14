@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.ServiceProcess;
+using System.Text;
 using Codestellation.Galaxy.Domain;
 using MediatR;
 using Nejdb.Bson;
@@ -35,10 +35,10 @@ namespace Codestellation.Galaxy.ServiceManager
 
         public ServiceFolders NewFolders { get; set; }
 
-
-        public DeploymentTaskContext(TextWriter buildLog)
+        public DeploymentTaskContext()
         {
-            BuildLog = buildLog;
+            LogStream = new MemoryStream(32 * 1024);
+            BuildLog = new StreamWriter(LogStream, Encoding.UTF8);
             Parameters = new ExpandoObject();
         }
     }

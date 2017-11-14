@@ -4,8 +4,6 @@ using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
 using Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement;
-using Codestellation.Quarks.DateAndTime;
-using Codestellation.Quarks.IO;
 using MediatR;
 using Nejdb.Bson;
 
@@ -39,10 +37,8 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private DeploymentTask CreateDeployTask(string name, Deployment deployment, NugetFeed deploymentFeed, object parameters = null, Stream logStream = null)
         {
-            var actualLogStream = logStream ?? BuildDefaultLogStream(name, deployment);
-            var streamWriter = new StreamWriter(actualLogStream);
 
-            var context = new DeploymentTaskContext(streamWriter)
+            var context = new DeploymentTaskContext()
             {
                 TaskName = name,
                 Parameters = parameters ?? new object(),
@@ -56,7 +52,6 @@ namespace Codestellation.Galaxy.ServiceManager
                 PackageDetails = new PackageDetails(deployment.PackageId, deploymentFeed.Uri, deployment.PackageVersion),
                 KeepOnUpdate = deployment.KeepOnUpdate ?? FileList.Empty,
                 Mediator = _mediator,
-                LogStream = actualLogStream,
                 Config = deployment.Config
             };
 
@@ -71,15 +66,5 @@ namespace Codestellation.Galaxy.ServiceManager
             return task;
         }
 
-        private static FileStream BuildDefaultLogStream(string name, Deployment deployment)
-        {
-            FullPath deployLogFolder = deployment.Folders.DeployLogsFolder;
-            Folder.EnsureExists((string)deployLogFolder);
-
-            var filename = $"{name}.{Clock.UtcNow.ToLocalTime():yyyy-MM-dd_HH.mm.ss}.log";
-            var fullPath = Path.Combine((string)deployLogFolder, filename);
-            var defaultStream = File.Open(fullPath, FileMode.Create, FileAccess.Write);
-            return defaultStream;
-        }
     }
 }

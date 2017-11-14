@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Codestellation.Galaxy.Domain;
 using Codestellation.Galaxy.Domain.Notifications;
 using Codestellation.Galaxy.ServiceManager.Events;
 using Codestellation.Galaxy.ServiceManager.Operations;
+using Codestellation.Quarks.DateAndTime;
+using Codestellation.Quarks.IO;
 using MediatR;
 using Nejdb.Bson;
 
@@ -47,12 +51,31 @@ namespace Codestellation.Galaxy.ServiceManager
             finally
             {
                 Context.BuildLog.Flush();
+                WriteBuildLogToDisk();
                 Context.BuildLog.Dispose();
             }
 
             var deploymentResult = new OperationResult(Name, _operationResults);
             var anEvent = new DeploymentTaskCompletedEvent(this, deploymentResult);
             Mediator.Send(anEvent).Wait();
+        }
+
+        private void WriteBuildLogToDisk()
+        {
+            FullPath deployLogFolder =
+                Context.NewFolders?.DeployLogsFolder
+                ??  Context.Folders.DeployLogsFolder;
+
+            Folder.EnsureExists((string)deployLogFolder);
+
+            var filename = $"{Context.TaskName}.{Clock.UtcNow.ToLocalTime():yyyy-MM-dd_HH.mm.ss}.log";
+            var fullPath = Path.Combine((string)deployLogFolder, filename);
+
+            using (var fileStream = File.Open(fullPath, FileMode.Create, FileAccess.Write))
+            {
+                Context.LogStream.CopyTo(fileStream);
+                fileStream.Flush();
+            }
         }
 
         private void ExecuteOperations()
