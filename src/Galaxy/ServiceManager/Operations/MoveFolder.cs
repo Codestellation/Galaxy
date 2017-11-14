@@ -30,13 +30,41 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
 
             var source = (string)actual[folderName];
             var destination = path;
-            context.BuildLog.Write($"Moving from '{source}' to '{destination}'...");
-            Directory.Move(source, (string)destination);
-            context.BuildLog.Write($"Ok");
-            context.BuildLog.WriteLine();
-            cloned[folderName] = destination;
 
+            var haveSameRoot = Path.GetPathRoot(source) == Path.GetPathRoot((string) destination);
+
+            if (haveSameRoot)
+            {
+                MoveSimple(context.BuildLog, source, destination);
+            }
+            else
+            {
+                CopyAndDelete(context.BuildLog, source, destination);
+            }
+
+            cloned[folderName] = destination;
             context.NewFolders = cloned;
+        }
+
+        private static void MoveSimple(TextWriter buildLog, string source, FullPath destination)
+        {
+            buildLog.Write($"Moving from '{source}' to '{destination}'...");
+            Directory.Move(source, (string) destination);
+            buildLog.Write($"Ok");
+            buildLog.WriteLine();
+        }
+
+        private void CopyAndDelete(TextWriter buildLog, string source, FullPath destination)
+        {
+            buildLog.Write($"Copy from '{source}' to '{destination}'...");
+            Folder.Copy(source, (string) destination);
+            buildLog.Write($"Ok");
+            buildLog.WriteLine();
+
+            buildLog.Write($"Delete source folder '{source}'");
+            Folder.EnsureDeleted(source);
+            buildLog.Write($"Ok");
+            buildLog.WriteLine();
         }
 
         private List<string> ValidateFolders(ServiceFolders actual, string folderName, FullPath path)
