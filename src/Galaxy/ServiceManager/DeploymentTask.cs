@@ -62,9 +62,14 @@ namespace Codestellation.Galaxy.ServiceManager
 
         private void WriteBuildLogToDisk()
         {
-            FullPath deployLogFolder =
+            FullPath? deployLogFolder =
                 Context.NewFolders?.DeployLogsFolder
-                ??  Context.Folders.DeployLogsFolder;
+                ??  Context.Folders?.DeployLogsFolder;
+
+            if (deployLogFolder == null)
+            {
+                return;
+            }
 
             Folder.EnsureExists((string)deployLogFolder);
 

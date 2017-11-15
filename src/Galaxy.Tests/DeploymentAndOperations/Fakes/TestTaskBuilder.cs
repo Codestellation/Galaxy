@@ -35,13 +35,10 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.Fakes
 
         public static DeploymentTaskContext CreateContext(string name, IMediator mediator)
         {
-            var stream = new MemoryStream();
-            var streamWriter = new StreamWriter(stream);
-            var context = new DeploymentTaskContext(streamWriter)
+            var context = new DeploymentTaskContext()
             {
                 TaskName = name,
                 Mediator = mediator,
-                LogStream = stream
             };
 
             return context;

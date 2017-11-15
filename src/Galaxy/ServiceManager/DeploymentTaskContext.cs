@@ -14,7 +14,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public string TaskName { get; set; }
 
         public ObjectId DeploymentId { get; set; }
-        public readonly TextWriter BuildLog;
+        public TextWriter BuildLog { get; }
 
         public string Config { get; set; }
 
@@ -30,7 +30,7 @@ namespace Codestellation.Galaxy.ServiceManager
         public IMediator Mediator { get; set; }
 
         public PackageDetails PackageDetails { get; set; }
-        public Stream LogStream { get; set; }
+        public Stream LogStream { get; }
         public Version InstalledPackageVersion { get; set; }
 
         public ServiceFolders NewFolders { get; set; }

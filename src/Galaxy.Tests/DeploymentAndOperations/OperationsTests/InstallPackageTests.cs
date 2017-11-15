@@ -39,8 +39,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
             var packageDetails = new PackageDetails("TestNugetPackage", _nugetFeedFolder, version10);
 
             var op = new InstallPackage();
-            var stringWriter = new StringWriter();
-            var context = new DeploymentTaskContext(stringWriter)
+            var context = new DeploymentTaskContext
             {
                 Folders = new ServiceFolders
                 {

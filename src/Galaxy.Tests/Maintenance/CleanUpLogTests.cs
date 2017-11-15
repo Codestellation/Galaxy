@@ -61,15 +61,12 @@ namespace Codestellation.Galaxy.Tests.Maintenance
         {
             var cleanUp = new CleanUpLog();
 
-            var stringWriter = new StringWriter();
-            var context = new DeploymentTaskContext(stringWriter);
+            var context = new DeploymentTaskContext();
             context.Parameters.LogFolders = new[] { _folder };
 
             context.Parameters.PurgeLogOlderThen = timeToLive;
 
             cleanUp.Execute(context);
-
-            Console.WriteLine(stringWriter.ToString());
         }
     }
 }

@@ -32,9 +32,7 @@ namespace Codestellation.Galaxy.Tests.DeploymentAndOperations.OperationsTests
 
             _basePath = Folder.Combine(_nugetFeedFolder, "extracted");
 
-            var stringWriter = new StringWriter();
-
-            _context = new DeploymentTaskContext(stringWriter)
+            _context = new DeploymentTaskContext()
             {
                 Folders = new ServiceFolders
                 {
