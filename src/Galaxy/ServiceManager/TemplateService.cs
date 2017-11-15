@@ -96,6 +96,7 @@ namespace Codestellation.Galaxy.ServiceManager
                     typeof(StopService),
                     typeof(UninstallService),
                     typeof(MoveFolder),
+                    typeof(DeployHostConfig),
                     typeof(InstallService),
                     typeof(StartService),
                 });

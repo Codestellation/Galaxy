@@ -1,6 +1,7 @@
 using System.Dynamic;
 using System.IO;
 using Codestellation.Galaxy.Domain;
+using Codestellation.Quarks.IO;
 using Newtonsoft.Json;
 
 namespace Codestellation.Galaxy.ServiceManager.Operations
@@ -9,6 +10,12 @@ namespace Codestellation.Galaxy.ServiceManager.Operations
     {
         public void Execute(DeploymentTaskContext context)
         {
+            if (!Folder.Exists((string) context.Folders.DeployFolder))
+            {
+                context.BuildLog.WriteLine($"Directory '{context.Folders.DeployFolder}' does not exist. Host config will not be deployed.");
+                return;
+            }
+
             dynamic hostConfig = new ExpandoObject();
             hostConfig.Configs = (string)context.Folders.Configs;
             hostConfig.Logs = (string)context.Folders.Logs;
