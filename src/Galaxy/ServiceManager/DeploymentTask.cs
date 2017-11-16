@@ -64,7 +64,7 @@ namespace Codestellation.Galaxy.ServiceManager
         {
             FullPath? deployLogFolder =
                 Context.NewFolders?.DeployLogsFolder
-                ??  Context.Folders?.DeployLogsFolder;
+                ?? Context.Folders?.DeployLogsFolder;
 
             if (deployLogFolder == null)
             {
@@ -78,6 +78,7 @@ namespace Codestellation.Galaxy.ServiceManager
 
             using (var fileStream = File.Open(fullPath, FileMode.Create, FileAccess.Write))
             {
+                Context.LogStream.Position = 0;
                 Context.LogStream.CopyTo(fileStream);
                 fileStream.Flush();
             }
