@@ -1,4 +1,5 @@
-﻿@using Codestellation.Galaxy.WebEnd
+@using Codestellation.Galaxy.ServiceManager
+@using Codestellation.Galaxy.WebEnd
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Codestellation.Galaxy.WebEnd.Models.DeploymentManangement.DeploymentListModel>
 @{ Layout = "Master";}
 
@@ -80,7 +81,7 @@
             $(this).bind('click', function () {
                 var button = $(this);
                 $.ajax({
-                    url: "/@DeploymentModule.Path/delete/" + button.val(),
+                    url: "/@DeploymentModule.Path/@DeploymentModule.TaskPath?task=@Templates.Delete&id=" + button.val(),
                     type: 'POST',
                 });
             });
