@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -31,19 +32,19 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             return configAware;
         }
 
-        private static void LoadFileConfig(IService service, Type consulAware, HostConfig hostConfig)
+        private static void LoadFileConfig(IService service, Type configAware, HostConfig hostConfig)
         {
             var serviceConfigFile = new FileInfo(Path.Combine(hostConfig.Configs.FullName, "config.json"));
 
-            var configType = GetConfigType(consulAware);
+            Type configType = GetConfigType(configAware);
 
             if (!serviceConfigFile.Exists)
             {
                 throw new FileNotFoundException($"Could not find config file '${serviceConfigFile.FullName}'", serviceConfigFile.FullName);
             }
 
-            var serviceConfig = ReadConfig(configType, serviceConfigFile);
-            ProvideConfigToService(service, consulAware, serviceConfig);
+            object serviceConfig = ReadConfig(configType, serviceConfigFile);
+            ProvideConfigToService(service, configAware, serviceConfig);
         }
 
         private static object ReadConfig(Type configType, FileInfo serviceConfigFile)
@@ -53,21 +54,25 @@ namespace Codestellation.Galaxy.Host.ConfigManagement
             return serviceConfig;
         }
 
-        private static void ProvideConfigToService(IService service, Type consulAware, object serviceConfig)
+        private static void ProvideConfigToService(IService service, Type configAware, object serviceConfig)
         {
-            var acceptMethod = consulAware.GetMethod("Accept");
+            MethodInfo acceptMethod = configAware.GetMethod("Accept");
+            if (acceptMethod == null)
+            {
+                throw new InvalidOperationException($"Accept method not found for {service.GetType()}");
+            }
 
-            var result = (ValidationResult)acceptMethod.Invoke(service, new[] { serviceConfig });
+            var result = (ValidationResult)acceptMethod.Invoke(service, new[] {serviceConfig});
 
             if (!result.IsValid)
             {
-                throw new InvalidOperationException("Invalid consul config: " + result);
+                throw new InvalidOperationException("Invalid config: " + result);
             }
         }
 
-        private static Type GetConfigType(Type consulAware)
+        private static Type GetConfigType(Type configAware)
         {
-            var configType = consulAware.GenericTypeArguments[0];
+            Type configType = configAware.GenericTypeArguments[0];
             return configType;
         }
 
