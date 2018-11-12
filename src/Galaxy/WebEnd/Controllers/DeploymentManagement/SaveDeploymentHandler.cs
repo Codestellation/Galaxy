@@ -27,7 +27,7 @@ namespace Codestellation.Galaxy.WebEnd.Controllers.DeploymentManagement
                 throw new InvalidOperationException("Deployment must be new deployment");
             }
 
-            var options = _repository.Options.PerformQuery<Options>().Single();
+            var options = _repository.Options.PerformQuery<Options>().SingleOrDefault() ?? new Options();
 
             FillServiceFolders(deployment, options);
 
